@@ -12,6 +12,12 @@ module.exports = {
         foreground: "var(--foreground)",
       },
     },
+    
+    fontFamily: {
+      sutonnyN: ['SutonnyMJ_Normal','Regular'],
+      sutonnyB: ['SutonnyMJ_Bold','Bold'],
+    },
   },
+
   plugins: [],
 };
