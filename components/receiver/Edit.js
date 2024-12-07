@@ -88,7 +88,7 @@ const Edit = ({ message, id, data }) => {
 
                         <div className="px-4 pb-6 text-black">
                             <form onSubmit={updateHandler} >
-                                <div className="grid grid-cols-1 gap-4 my-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4">
                                     <TextEn Title="Identify" Id="identify" Change={e => setIdentify(e.target.value)} Value={identify} Chr={150} />
                                     <TextEn Title="Name (Bank Account Head)" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={150} />
                                     <TextEn Title="Bank Name" Id="bank" Change={e => setBank(e.target.value)} Value={bank} Chr={150} />

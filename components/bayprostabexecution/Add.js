@@ -1,30 +1,18 @@
 import React, { useState } from "react";
-import { BtnSubmit, TextEn } from "@/components/Form";
+import { BtnSubmit, TextBn, TextEn, TextNum } from "@/components/Form";
 import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 const Add = ({ message }) => {
-    const [identify, setIdentify] = useState('');
-    const [name, setName] = useState('');
-    const [bank, setBank] = useState('');
-    const [account, setAccount] = useState('');
-    const [branch, setBranch] = useState('');
-    const [routing, setRouting] = useState('');
-    const [thana, setThana] = useState('');
-    const [district, setDistrict] = useState('');
-    const [mobile, setMobile] = useState('');   
+    const [item, setItem] = useState('');
+    const [nos, setNos] = useState('');
+    const [taka, setTaka] = useState('');   
     const [show, setShow] = useState(false);
 
 
     const resetVariables = () => {
-        setIdentify('');
-        setName('');
-        setBank('');
-        setAccount('');
-        setBranch('');
-        setRouting('');
-        setThana('');
-        setDistrict('');
-        setMobile('');        
+        setItem('');
+        setNos('');
+        setTaka('');        
     }
 
 
@@ -42,15 +30,9 @@ const Add = ({ message }) => {
     const createObject = () => {
         return {
             id: Date.now(),
-            identify: identify,
-            name: name,
-            bank: bank,
-            account: account,
-            branch: branch,
-            routing: routing,
-            thana: thana,
-            district: district,
-            mobile: mobile            
+            item: item,
+            nos: nos,
+            taka: taka            
         }
     }
 
@@ -59,11 +41,11 @@ const Add = ({ message }) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await addDataToIndexedDB('receiver', newObject);
+            const msg = await addDataToIndexedDB('bayprostabexecution', newObject);
             message(msg);
         } catch (error) {
-            console.error("Error saving receiver data:", error);
-            message("Error saving receiver data.");
+            console.error("Error saving bayprostabexecution data:", error);
+            message("Error saving bayprostabexecution data.");
         } finally {
             setShow(false);
         }
@@ -85,16 +67,10 @@ const Add = ({ message }) => {
                         </div>
                         <div className="px-4 pb-6 text-black">
                             <form onSubmit={saveHandler}>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4">
-                                    <TextEn Title="Identify" Id="identify" Change={e => setIdentify(e.target.value)} Value={identify} Chr={150} />
-                                    <TextEn Title="Name (Bank Account Head)" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={150} />
-                                    <TextEn Title="Bank Name" Id="bank" Change={e => setBank(e.target.value)} Value={bank} Chr={150} />
-                                    <TextEn Title="Account Number" Id="account" Change={e => setAccount(e.target.value)} Value={account} Chr={150} />
-                                    <TextEn Title="Branch Name" Id="branch" Change={e => setBranch(e.target.value)} Value={branch} Chr={150} />
-                                    <TextEn Title="Routing Number" Id="routing" Change={e => setRouting(e.target.value)} Value={routing} Chr={150} />
-                                    <TextEn Title="Thana" Id="thana" Change={e => setThana(e.target.value)} Value={thana} Chr={150} />
-                                    <TextEn Title="District" Id="district" Change={e => setDistrict(e.target.value)} Value={district} Chr={150} />
-                                    <TextEn Title="Bank Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={150} /> 
+                                <div className="grid grid-cols-1 gap-4 my-4">
+                                    <TextBn Title="Item (Bangla-SutonnyMJ" Id="item" Change={e => setItem(e.target.value)} Value={item} Chr={150} />
+                                    <TextNum Title="Nos (English)" Id="nos" Change={e => setNos(e.target.value)} Value={nos} />
+                                    <TextEn Title="Taka (English)" Id="taka" Change={e => setTaka(e.target.value)} Value={taka} Chr={150} />
                                 </div>
                                 <div className="w-full flex justify-start">
                                     <input type="button" onClick={closeAddForm} value="Close" className="bg-pink-600 hover:bg-pink-800 text-white text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 cursor-pointer" />

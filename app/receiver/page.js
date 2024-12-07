@@ -42,7 +42,7 @@ const Receiver = () => {
             </div>
 
 
-            <div className="w-full lg:w-3/4 mx-auto border-2 border-gray-200 p-4 shadow-md rounded-md">
+            <div className="w-full mx-auto border-2 border-gray-200 p-4 shadow-md rounded-md">
                 <div className="w-full overflow-auto">
                     <table className="w-full border border-gray-200">
                         <thead>

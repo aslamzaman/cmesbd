@@ -1,30 +1,29 @@
 import React, { useState } from "react";
-import { BtnSubmit, TextEn } from "@/components/Form";
+import { BtnSubmit, DropdownBn, TextBn, TextDt, TextNum } from "@/components/Form";
 import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { formatedDate } from "@/lib/utils";
 
 const Add = ({ message }) => {
-    const [identify, setIdentify] = useState('');
-    const [name, setName] = useState('');
-    const [bank, setBank] = useState('');
-    const [account, setAccount] = useState('');
-    const [branch, setBranch] = useState('');
-    const [routing, setRouting] = useState('');
-    const [thana, setThana] = useState('');
-    const [district, setDistrict] = useState('');
-    const [mobile, setMobile] = useState('');   
+    const [dt, setDt] = useState('');
+    const [place1, setPlace1] = useState('');
+    const [tm1, setTm1] = useState('');
+    const [place2, setPlace2] = useState('');
+    const [tm2, setTm2] = useState('');
+    const [vehicle, setVehicle] = useState('');
+    const [taka, setTaka] = useState('');
+    const [cause, setCause] = useState('');
     const [show, setShow] = useState(false);
 
 
     const resetVariables = () => {
-        setIdentify('');
-        setName('');
-        setBank('');
-        setAccount('');
-        setBranch('');
-        setRouting('');
-        setThana('');
-        setDistrict('');
-        setMobile('');        
+        setDt(formatedDate(new Date()));
+        setPlace1('');
+        setTm1('');
+        setPlace2('');
+        setTm2('');
+        setVehicle('');
+        setTaka('');
+        setCause('');
     }
 
 
@@ -42,15 +41,14 @@ const Add = ({ message }) => {
     const createObject = () => {
         return {
             id: Date.now(),
-            identify: identify,
-            name: name,
-            bank: bank,
-            account: account,
-            branch: branch,
-            routing: routing,
-            thana: thana,
-            district: district,
-            mobile: mobile            
+            dt: dt,
+            place1: place1,
+            tm1: tm1,
+            place2: place2,
+            tm2: tm2,
+            vehicle: vehicle,
+            taka: taka,
+            cause: cause
         }
     }
 
@@ -59,11 +57,11 @@ const Add = ({ message }) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await addDataToIndexedDB('receiver', newObject);
+            const msg = await addDataToIndexedDB('tabill', newObject);
             message(msg);
         } catch (error) {
-            console.error("Error saving receiver data:", error);
-            message("Error saving receiver data.");
+            console.error("Error saving tabill data:", error);
+            message("Error saving tabill data.");
         } finally {
             setShow(false);
         }
@@ -85,16 +83,27 @@ const Add = ({ message }) => {
                         </div>
                         <div className="px-4 pb-6 text-black">
                             <form onSubmit={saveHandler}>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4">
-                                    <TextEn Title="Identify" Id="identify" Change={e => setIdentify(e.target.value)} Value={identify} Chr={150} />
-                                    <TextEn Title="Name (Bank Account Head)" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={150} />
-                                    <TextEn Title="Bank Name" Id="bank" Change={e => setBank(e.target.value)} Value={bank} Chr={150} />
-                                    <TextEn Title="Account Number" Id="account" Change={e => setAccount(e.target.value)} Value={account} Chr={150} />
-                                    <TextEn Title="Branch Name" Id="branch" Change={e => setBranch(e.target.value)} Value={branch} Chr={150} />
-                                    <TextEn Title="Routing Number" Id="routing" Change={e => setRouting(e.target.value)} Value={routing} Chr={150} />
-                                    <TextEn Title="Thana" Id="thana" Change={e => setThana(e.target.value)} Value={thana} Chr={150} />
-                                    <TextEn Title="District" Id="district" Change={e => setDistrict(e.target.value)} Value={district} Chr={150} />
-                                    <TextEn Title="Bank Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={150} /> 
+                                <div className="grid grid-cols-1 gap-4 my-4">
+                                    <TextDt Title="Date" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
+                                    <TextBn Title="Starte Place" Id="place1" Change={e => setPlace1(e.target.value)} Value={place1} Chr={150} />
+                                    <TextNum Title="Start Time" Id="tm1" Change={e => setTm1(e.target.value)} Value={tm1} />
+                                    <TextBn Title="End Place" Id="place2" Change={e => setPlace2(e.target.value)} Value={place2} Chr={150} />
+                                    <TextNum Title="End Time" Id="tm2" Change={e => setTm2(e.target.value)} Value={tm2} />
+                                    <DropdownBn Title="Vehicle" Id="vehicle" Change={e => setVehicle(e.target.value)} Value={vehicle}>
+                                        <option value="evm">evm</option>
+                                        <option value="wmGbwR">wmGbwR</option>
+                                        <option value="wi·v">wi·v</option>
+                                        <option value="ûÛv">ûÛv</option>
+                                        <option value="f¨vb">f¨vb</option>
+                                        <option value="†bŠKv">†bŠKv</option>
+                                        <option value="UÖvK">UÖvK</option>
+                                        <option value="†ijMvwo">†ijMvwo</option>
+                                        <option value="evBmvB‡Kj">evBmvB‡Kj</option>
+                                        <option value="A‡UvwiKkv">A‡UvwiKkv</option>
+                                        <option value="wba©vwiZ">wba©vwiZ</option>
+                                    </DropdownBn>
+                                    <TextNum Title="Taka" Id="taka" Change={e => setTaka(e.target.value)} Value={taka} />
+                                    <TextBn Title="Cause" Id="cause" Change={e => setCause(e.target.value)} Value={cause} Chr={150} />
                                 </div>
                                 <div className="w-full flex justify-start">
                                     <input type="button" onClick={closeAddForm} value="Close" className="bg-pink-600 hover:bg-pink-800 text-white text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 cursor-pointer" />
@@ -114,4 +123,4 @@ const Add = ({ message }) => {
     )
 }
 export default Add;
-  
+
