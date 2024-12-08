@@ -187,7 +187,7 @@ const Bayprostabexecution = () => {
 
                 <TextDt Title="Executon Date *" Id="dt2" Change={e => setDt2(e.target.value)} Value={dt2} />
                 <TextNum Title="Advance Taka *" Id="dt2" Change={e => setAdvance(e.target.value)} Value={advance} />
-                <TextareaBn Title="Note" Id="note" Rows="1" Change={e => setNote(e.target.value)} Value={note} />
+                <TextareaBn Title="Note (SutonnyMJ)" Id="note" Rows="1" Change={e => setNote(e.target.value)} Value={note} />
               </div>
               <div className="w-full flex justify-start">
                 <BtnSubmit Title="Create PDF" Class="bg-blue-600 hover:bg-blue-800 text-white" />

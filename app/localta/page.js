@@ -207,7 +207,7 @@ const Localta = () => {
                                     {projectData.length ? projectData.map(project => <option value={project.name} key={project.id}>{project.name}</option>) : null}
                                 </DropdownEn>
                                 <TextDt Title="Date" Id="dt" Change={(e) => { setDt(e.target.value) }} Value={dt} />
-                                <TextBn Title="Subject" Id="subject" Change={(e) => { setSubject(e.target.value) }} Value={subject} Chr="150" />
+                                <TextBn Title="Subject (SutonnyMJ)" Id="subject" Change={(e) => { setSubject(e.target.value) }} Value={subject} Chr="150" />
                                 <TextNum Title="Lunch Taka" Id="tk" Change={(e) => { setTk(e.target.value) }} Value={tk} />
                             </div>
                             <div className="w-full flex justify-start">

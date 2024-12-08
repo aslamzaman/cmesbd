@@ -1,34 +1,20 @@
 import React, { useState } from "react";
-import { BtnSubmit, DropdownBn, TextBn, TextDt, TextNum } from "@/components/Form";
+import { BtnSubmit, TextEn } from "@/components/Form";
 import { updateDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
-import { formatedDate } from "@/lib/utils";
 
-const Edit = ({ message, id, data }) => {
-    const [dt, setDt] = useState('');
-    const [place1, setPlace1] = useState('');
-    const [tm1, setTm1] = useState('');
-    const [place2, setPlace2] = useState('');
-    const [tm2, setTm2] = useState('');
-    const [vehicle, setVehicle] = useState('');
-    const [taka, setTaka] = useState('');
-    const [cause, setCause] = useState('');
+const Edit = ({ message, id, data  }) => {
+    const [name, setName] = useState('');
+    const [taka, setTaka] = useState('');   
     const [show, setShow] = useState(false);
 
 
-    const showEditForm = () => {
+  const showEditForm = () => {
         message("Ready to edit");
         setShow(true);
-        console.log(id, data)
         try {
-            const { dt, place1, tm1, place2, tm2, vehicle, taka, cause } = data;
-            setDt(formatedDate(dt));
-            setPlace1(place1);
-            setTm1(tm1);
-            setPlace2(place2);
-            setTm2(tm2);
-            setVehicle(vehicle);
+            const { name, taka } = data;
+            setName(name);
             setTaka(taka);
-            setCause(cause);
         } catch (err) {
             console.log(err);
         }
@@ -43,14 +29,8 @@ const Edit = ({ message, id, data }) => {
     const createObject = () => {
         return {
             id: id,
-            dt: dt,
-            place1: place1,
-            tm1: tm1,
-            place2: place2,
-            tm2: tm2,
-            vehicle: vehicle,
-            taka: taka,
-            cause: cause
+            name: name,
+            taka: taka            
         }
     }
 
@@ -59,11 +39,11 @@ const Edit = ({ message, id, data }) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await updateDataToIndexedDB('tabill', id, newObject);
+            const msg = await updateDataToIndexedDB('price', id, newObject);
             message(msg);
         } catch (error) {
-            console.error("Error updating tabill data:", error);
-            message("Error updating tabill data.");
+            console.error("Error updating price data:", error);
+            message("Error updating price data.");
         } finally {
             setShow(false);
         }
@@ -88,26 +68,8 @@ const Edit = ({ message, id, data }) => {
                         <div className="px-4 pb-6 text-black">
                             <form onSubmit={updateHandler} >
                                 <div className="grid grid-cols-1 gap-4 my-4">
-                                    <TextDt Title="Date" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
-                                    <TextBn Title="Start Place (SutonnyMJ)" Id="place1" Change={e => setPlace1(e.target.value)} Value={place1} Chr={150} />
-                                    <TextNum Title="Start Time" Id="tm1" Change={e => setTm1(e.target.value)} Value={tm1} />
-                                    <TextBn Title="End Place (SutonnyMJ)" Id="place2" Change={e => setPlace2(e.target.value)} Value={place2} Chr={150} />
-                                    <TextNum Title="End Time" Id="tm2" Change={e => setTm2(e.target.value)} Value={tm2} />
-                                    <DropdownBn Title="Vehicle" Id="vehicle" Change={e => setVehicle(e.target.value)} Value={vehicle}>
-                                        <option value="evm">evm</option>
-                                        <option value="wmGbwR">wmGbwR</option>
-                                        <option value="wi·v">wi·v</option>
-                                        <option value="ûÛv">ûÛv</option>
-                                        <option value="f¨vb">f¨vb</option>
-                                        <option value="†bŠKv">†bŠKv</option>
-                                        <option value="UÖvK">UÖvK</option>
-                                        <option value="†ijMvwo">†ijMvwo</option>
-                                        <option value="evBmvB‡Kj">evBmvB‡Kj</option>
-                                        <option value="A‡UvwiKkv">A‡UvwiKkv</option>
-                                        <option value="wba©vwiZ">wba©vwiZ</option>
-                                    </DropdownBn>
-                                    <TextNum Title="Taka" Id="taka" Change={e => setTaka(e.target.value)} Value={taka} />
-                                    <TextBn Title="Cause (SutonnyMJ)" Id="cause" Change={e => setCause(e.target.value)} Value={cause} Chr={150} />
+                                    <TextEn Title="Name" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={150} />
+                                    <TextEn Title="Taka" Id="taka" Change={e => setTaka(e.target.value)} Value={taka} Chr={150} />                                
                                 </div>
                                 <div className="w-full flex justify-start">
                                     <input type="button" onClick={closeEditForm} value="Close" className="bg-pink-600 hover:bg-pink-800 text-white text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 cursor-pointer" />
@@ -129,4 +91,4 @@ const Edit = ({ message, id, data }) => {
     )
 }
 export default Edit;
-
+  

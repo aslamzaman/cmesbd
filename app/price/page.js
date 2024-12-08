@@ -1,76 +1,68 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Add from "@/components/project/Add";
-import Edit from "@/components/project/Edit";
-import Delete from "@/components/project/Delete";
+import Edit from "@/components/price/Edit";
 import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
-const projectData = [
+const priceData = [
     {
-        "id": "mldUtGg1vsvmPGnTeYlw",
-        "name": "3rd AC"
+        "id": "2ihLY7ZNyJgYKT3fO03v",
+        "name": "Rod",
+        "taka": "125"
     },
     {
-        "id": "XURBsgVT2oexdmdqJunO",
-        "name": "3rd AC Field"
+        "id": "4wIhMnVTz4T63tuiNl5o",
+        "name": "Tiles",
+        "taka": "80"
     },
     {
-        "id": "NN6Fv1myIqVLI6AFKtsK",
-        "name": "CateringField"
+        "id": "7sr2LdUOcYRCuWzeDvaF",
+        "name": "Labor",
+        "taka": "400"
     },
     {
-        "id": "4r0ZBqH0BUyOecMdG6aS",
-        "name": "COL"
+        "id": "AXc2dF5VYHRVc0KtW5i7",
+        "name": "Brick",
+        "taka": "12"
     },
     {
-        "id": "M3gjHxlC9JKYCakZ4Za1",
-        "name": "CORE"
+        "id": "BPdiFFWadoXdzVhBg9tj",
+        "name": "Flatbar",
+        "taka": "120"
     },
     {
-        "id": "jfCQq336xm69KkC8iLWq",
-        "name": "EDM"
+        "id": "PoYjiI0qdpXEPpHSvbmx",
+        "name": "Khoa",
+        "taka": "80"
     },
     {
-        "id": "hYTP7vS5JYfi3pJV6luM",
-        "name": "GO"
+        "id": "SFlvASnMa3RjbPgzz0Tw",
+        "name": "Sand",
+        "taka": "20"
     },
     {
-        "id": "dQtIiBrvLBPmgZ5FYAVO",
-        "name": "IDCOL"
+        "id": "SXTILtVdWvOfdubnzuKn",
+        "name": "Mason",
+        "taka": "600"
     },
     {
-        "id": "ZGCSojweVzizfqhl8dsk",
-        "name": "MC"
+        "id": "aj4THFRGdOZjs0QNPlrF",
+        "name": "Cement",
+        "taka": "550"
     },
     {
-        "id": "1ZDFqk2zqyZRXUgkH4QN",
-        "name": "PLAN"
+        "id": "mtgAaRyWBPxCOLjBXHn4",
+        "name": "Angel Bar",
+        "taka": "125"
     },
     {
-        "id": "PSe1CShzWGeNjTPuPDNw",
-        "name": "SDC & SIDA"
-    },
-    {
-        "id": "wIKHYdUrzwUxC81S2bKo",
-        "name": "Trade AC"
-    },
-    {
-        "id": "zxCaatU3KNwozg6kfaGH",
-        "name": "TrustFund"
-    },
-    {
-        "id": "oxaN35cKVGXnByvDdIuT",
-        "name": "Unicef"
-    },
-    {
-        "id": "WTRxNKG7KSBMJKwgpwN6",
-        "name": "YSES"
+        "id": "s62d8HMIXkC2Wh2CtNVd",
+        "name": "Paint",
+        "taka": "1500"
     }
-]
+];
 
-
-const Project = () => {
-    const [projects, setProjects] = useState([]);
+const Price = () => {
+    const [prices, setPrices] = useState([]);
     const [waitMsg, setWaitMsg] = useState("");
     const [msg, setMsg] = useState("");
 
@@ -79,12 +71,12 @@ const Project = () => {
         const load = async () => {
             setWaitMsg('Please Wait...');
             try {
-                const data = await getDataFromIndexedDB("project");
+                const data = await getDataFromIndexedDB("price");
                 if (data.length > 0) {
-                    setProjects(data);
+                    setPrices(data);
                 } else {
-                    await setDataToIndexedDB('project', projectData);
-                    setProjects(projectData);
+                    await setDataToIndexedDB('price', priceData);
+                    setPrices(priceData);
                 }
                 setWaitMsg('');
             } catch (error) {
@@ -103,34 +95,36 @@ const Project = () => {
     return (
         <>
             <div className="w-full mb-3 mt-8">
-                <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Project</h1>
+                <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Price</h1>
                 <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
                 <p className="w-full text-sm text-center text-pink-600">&nbsp;{msg}&nbsp;</p>
             </div>
 
-
             <div className="w-full lg:w-3/4 mx-auto border-2 border-gray-200 p-4 shadow-md rounded-md">
                 <div className="w-full overflow-auto">
+
                     <table className="w-full border border-gray-200">
                         <thead>
                             <tr className="w-full bg-gray-200">
+                                <th className="text-center border-b border-gray-200 px-4 py-2">SL</th>
                                 <th className="text-start border-b border-gray-200 px-4 py-2">Name</th>
+                                <th className="text-center border-b border-gray-200 px-4 py-2">Taka</th>
                                 <th className="w-[100px] font-normal">
                                     <div className="w-full flex justify-end items-center pr-2.5 font-normal">
-                                        <Add message={messageHandler} />
                                     </div>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                projects.length ? projects.map(project => {
+                                prices.length ? prices.map((price,i) => {
                                     return (
-                                        <tr className="border-b border-gray-200 hover:bg-gray-100" key={project.id}>
-                                            <td className="text-start py-2 px-4">{project.name}</td>
+                                        <tr className="border-b border-gray-200 hover:bg-gray-100" key={price.id}>
+                                            <td className="text-center py-2 px-4">{i+1}</td>
+                                            <td className="text-start py-2 px-4">{price.name}</td>
+                                            <td className="text-center py-2 px-4">{price.taka}</td>
                                             <td className="flex justify-end items-center mt-1">
-                                                <Edit message={messageHandler} id={project.id} data={project} />
-                                                <Delete message={messageHandler} id={project.id} data={project} />
+                                                <Edit message={messageHandler} id={price.id} data={price} />
                                             </td>
                                         </tr>
                                     )
@@ -145,5 +139,5 @@ const Project = () => {
     );
 };
 
-export default Project;
+export default Price;
 

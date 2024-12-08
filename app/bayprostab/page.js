@@ -167,7 +167,7 @@ const Bayprostab = () => {
           <form onSubmit={handleCreate}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 my-2">
               <div className="w-full col-span-2">
-                <TextEn Title="Budget Head" Id="budgetHead" Change={(e) => { setBudgetHead(e.target.value) }} Value={budgetHead} Chr="150" />
+                <TextEn Title="Budget Head (English)" Id="budgetHead" Change={(e) => { setBudgetHead(e.target.value) }} Value={budgetHead} Chr="150" />
               </div>
 
               <DropdownEn Title="Staff Name" Id="staff" Change={(e) => { setStaff(e.target.value) }} Value={staff}>
@@ -179,10 +179,10 @@ const Bayprostab = () => {
               </DropdownEn>
 
               <TextDt Title="Date" Id="dt" Change={(e) => { setDt(e.target.value) }} Value={dt} />
-              <TextBn Title="Department" Id="dpt" Change={(e) => { setDpt(e.target.value) }} Value={dpt} Chr="50" />
+              <TextBn Title="Department (SutonnyMJ)" Id="dpt" Change={(e) => { setDpt(e.target.value) }} Value={dpt} Chr="50" />
 
               <div className="w-full col-span-2">
-                <TextBn Title="Subject" Id="subject" Change={(e) => { setSubject(e.target.value) }} Value={subject} Chr="150" />
+                <TextBn Title="Subject (SutonnyMJ)" Id="subject" Change={(e) => { setSubject(e.target.value) }} Value={subject} Chr="150" />
               </div>
 
 
@@ -201,7 +201,7 @@ const Bayprostab = () => {
                 }
          
               <div className="w-full col-span-2">
-                <TextareaBn Title="Notes" Id="note" Rows="2" Change={(e) => { setNote(e.target.value) }} Value={note} />
+                <TextareaBn Title="Notes (SutonnyMJ)" Id="note" Rows="2" Change={(e) => { setNote(e.target.value) }} Value={note} />
               </div>
 
             </div>

@@ -3,7 +3,26 @@ import React, { useState, useEffect } from "react";
 import Add from "@/components/author/Add";
 import Edit from "@/components/author/Edit";
 import Delete from "@/components/author/Delete";
-import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+
+const authorData =[
+    {
+        "id": "9UBviLljcrc6STbFRzwP",
+        "name": "Chairman (Muhammad Ibrahim)",
+        "post": "Chairman"
+    },
+    {
+        "id": "h4HRQxSyukRfH8guCutR",
+        "name": "Apurba Roy",
+        "post": "Deputy Project Coordinator"
+    },
+    {
+        "id": "sFUf6YDE5oeKS5ed2w7k",
+        "name": "Md. Omar Faruque Haider",
+        "post": "Executive Director"
+    }
+];
+
 
 
 const Author = () => {
@@ -16,9 +35,14 @@ const Author = () => {
         const load = async () => {
             setWaitMsg('Please Wait...');
             try {
+
                 const data = await getDataFromIndexedDB("author");
-                const result = data.sort((a, b) => parseInt(b.id) > parseInt(a.id) ? 1 : -1);
-                setAuthors(result);
+                if (data.length > 0) {
+                    setAuthors(data);
+                } else {
+                    await setDataToIndexedDB('author', authorData);
+                    setAuthors(authorData);
+                }
                 setWaitMsg('');
             } catch (error) {
                 console.log(error);
@@ -40,7 +64,6 @@ const Author = () => {
                 <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
                 <p className="w-full text-sm text-center text-pink-600">&nbsp;{msg}&nbsp;</p>
             </div>
-
 
             <div className="w-full lg:w-3/4 mx-auto border-2 border-gray-200 p-4 shadow-md rounded-md">
                 <div className="w-full overflow-auto">
