@@ -70,7 +70,6 @@ Total Taka                                 = ${(parseFloat(el_taka[1]) + parseFl
             </div>
 
             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
-
                 <form onSubmit={cmdCalculate}>
                     <div className="w-full grid grid-cols-1 gap-3 border p-4">
                         <TextDt Title="Joininig Date" Change={e => setJoin(e.target.value)} Value={join} />
