@@ -4,10 +4,11 @@ import Add from "@/components/staff/Add";
 import Edit from "@/components/staff/Edit";
 import Delete from "@/components/staff/Delete";
 import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { sortArray } from "@/lib/utils";
 
 const staffData = [
     {
-        "id": "vyHF2dpFwt5rprnlUYZc",
+        "id": "1733759251576",
         "nameEn": "Md. Omar Faruque Haider",
         "nameBn": "†gv: Igi dviæK nvq`vi",
         "gender": "Male",
@@ -17,7 +18,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "oSjpwTWWJQcclZyKPif1",
+        "id": "1733759260288",
         "nameEn": "Apurba Roy",
         "nameBn": "Ac~e© ivq",
         "gender": "Male",
@@ -27,7 +28,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "PkdoAsaNCvpztvXK9FWG",
+        "id": "1733759268600",
         "nameEn": "Sk. Shamsuzzaman",
         "nameBn": "†kL mvgQy¾vgvb",
         "gender": "Male",
@@ -37,7 +38,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "nMlAPC5uCixjZhbEmrKn",
+        "id": "1733759278392",
         "nameEn": "Md. Mofigul Huq",
         "nameBn": "†gvt gwdRyj nK",
         "gender": "Male",
@@ -47,7 +48,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "NDoyXnVIB7JBymh6Ufej",
+        "id": "1733759288576",
         "nameEn": "Aslam Zaman",
         "nameBn": "Avmjvg Rvgvb",
         "gender": "Male",
@@ -57,7 +58,7 @@ const staffData = [
         "mobile": "01720025151"
     },
     {
-        "id": "7OZtnanYgTSCTROoygYM",
+        "id": "1733759300600",
         "nameEn": "Md. Zohurul Haque",
         "nameBn": "†gvt Rûiæj nK",
         "gender": "Male",
@@ -67,7 +68,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "vzJTa7HwGP3mRJia2kvb",
+        "id": "1733759311904",
         "nameEn": "Md. Abul Kashem",
         "nameBn": "†gv: Aveyj Kv‡mg",
         "gender": "Male",
@@ -77,7 +78,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "HDnwLPiv0wwQaxAORtb0",
+        "id": "1733759321567",
         "nameEn": "Gita Mitra",
         "nameBn": "MxZv wgÎ",
         "gender": "Female",
@@ -87,7 +88,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "6Z4OReJuEG5xHX7BMBCu",
+        "id": "1733759332543",
         "nameEn": "Dewan Emrul Kayes",
         "nameBn": "†`Iqvb Bgiæj Kv‡qm",
         "gender": "Male",
@@ -97,7 +98,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "I6llm6vpTbPHK03Xxi79",
+        "id": "1733759342943",
         "nameEn": "Amit Kumare Mohury",
         "nameBn": "AwgZ Kzgvi gûix",
         "gender": "Male",
@@ -107,7 +108,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "hL7PoUR4QjzpXrj68tyf",
+        "id": "1733759352087",
         "nameEn": "Zakia Akter",
         "nameBn": "RvwKqv Av³vi",
         "gender": "Female",
@@ -117,7 +118,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "XXA8NKl8DztgV6MePJQ0",
+        "id": "1733759362399",
         "nameEn": "Md. Abdur Rahman",
         "nameBn": "†gv: Avãyi ingvb",
         "gender": "Male",
@@ -127,7 +128,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "QOLs2daU3ex6kQV8VPG2",
+        "id": "1733759376087",
         "nameEn": "Mohammad Rejaul Karim",
         "nameBn": "†gvnv¤§` †iRvDj Kwig",
         "gender": "Male",
@@ -137,7 +138,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "5k5jrfAe9HWiblALUTei",
+        "id": "1733759385479",
         "nameEn": "Al-Amin Hossain",
         "nameBn": "Avj Avwgb †nv‡mb",
         "gender": "Male",
@@ -147,7 +148,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "XwwCBSbk4BVU0QK8H2Ff",
+        "id": "1733759393831",
         "nameEn": "Md. Tuhin Akter",
         "nameBn": "†gv: Zzwnb Av³vi",
         "gender": "Male",
@@ -157,7 +158,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "rQyAFO5hxTB2odp6l6IR",
+        "id": "1733759401215",
         "nameEn": "Md. Liton Patuary",
         "nameBn": "†gvt wjUb cv‡Uvqvix",
         "gender": "Male",
@@ -167,7 +168,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "WtOv4pBuhTfqsIX1Z5B4",
+        "id": "1733759411647",
         "nameEn": "Md. Jasim Uddin",
         "nameBn": "†gv: Rwmg DwÏb",
         "gender": "Male",
@@ -177,7 +178,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "qDDUkxWNBU0eFINGu1EJ",
+        "id": "1733759422559",
         "nameEn": "Md. Abul Bashar",
         "nameBn": "†gv: Aveyj evkvi",
         "gender": "Male",
@@ -187,7 +188,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "Yzv9dgFQvifkhOqQ8PC2",
+        "id": "1733759431295",
         "nameEn": "Md. Jamal Uddin",
         "nameBn": "†gv: Rvgvj DwÏb",
         "gender": "Male",
@@ -197,7 +198,7 @@ const staffData = [
         "mobile": "123456789"
     },
     {
-        "id": "V9ltYswYltmxMNH1pjMZ",
+        "id": "1733759441695",
         "nameEn": "Ms. Marzina Khatun",
         "nameBn": "†gvQv: gwR©bv LvZzb",
         "gender": "Female",
@@ -219,10 +220,10 @@ const Staff = () => {
         const load = async () => {
             setWaitMsg('Please Wait...');
             try {
-
                 const data = await getDataFromIndexedDB("staff");
                 if (data.length > 0) {
-                    setStaffs(data);
+                    const sortStaff = data.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase())) ;
+                    setStaffs(sortStaff);
                 } else {
                     await setDataToIndexedDB('staff', staffData);
                     setStaffs(staffData);

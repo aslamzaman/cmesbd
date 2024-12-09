@@ -7,17 +7,17 @@ import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedD
 
 const authorData =[
     {
-        "id": "9UBviLljcrc6STbFRzwP",
+        "id": "1733758962403",
         "name": "Chairman (Muhammad Ibrahim)",
         "post": "Chairman"
     },
     {
-        "id": "h4HRQxSyukRfH8guCutR",
+        "id": "1733758969883",
         "name": "Apurba Roy",
         "post": "Deputy Project Coordinator"
     },
     {
-        "id": "sFUf6YDE5oeKS5ed2w7k",
+        "id": "1733758977618",
         "name": "Md. Omar Faruque Haider",
         "post": "Executive Director"
     }

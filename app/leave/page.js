@@ -33,9 +33,9 @@ const LeavePage = () => {
           getDataFromIndexedDB("staff"),
           getDataFromIndexedDB("project")
         ]);
+        const sortStaff = staffs.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
 
-
-        setStaffData(staffs);
+        setStaffData(sortStaff);
         setProjects(projects);
         setWaitMsg("");
       } catch (err) {

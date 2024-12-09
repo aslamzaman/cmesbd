@@ -85,7 +85,7 @@ const Colhelper = () => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = "Formater.xlsx";
+            a.download = "Formated_Participant_list.xlsx";
             document.body.appendChild(a);
             a.click();
             a.remove();

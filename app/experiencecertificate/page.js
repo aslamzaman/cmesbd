@@ -35,8 +35,8 @@ const Experiencecertificate = () => {
           getDataFromIndexedDB("staff"),
           getDataFromIndexedDB("author")
         ]);
-    
-        setStaffs(staffs);
+        const sortStaff = staffs.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
+        setStaffs(sortStaff);
         setAuthors(authors);
       } catch (err) {
         console.log(err);

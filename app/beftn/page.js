@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 import { BtnSubmit, TextDt, TextEn, DropdownEn, TextNum } from "@/components/Form";
-import { formatedDate, formatedDateDot, inwordEnglish, numberWithComma, titleCamelCase } from "@/lib/utils";
+import { formatedDate, formatedDateDot, inwordEnglish, numberWithComma, sortArray, titleCamelCase } from "@/lib/utils";
 import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+
 
 const Beftn = () => {
     const [waitMsg, setWaitMsg] = useState("");
@@ -32,7 +33,8 @@ const Beftn = () => {
 
                 setSenders(responseSender);
                 setReceivers(responseReceiver);
-                setStaffs(responseStaff);
+                const sortStaff = responseStaff.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
+                setStaffs(sortStaff);
 
                 console.log({ responseSender, responseReceiver, responseStaff })
                 setWaitMsg(' ');
@@ -132,7 +134,7 @@ const Beftn = () => {
                                 </DropdownEn>
                             </div>
                             <div className="w-full flex justify-start">
-                                <BtnSubmit Title="Save" Class="bg-blue-600 hover:bg-blue-800 text-white" />
+                                <BtnSubmit Title="Create BEFTN" Class="bg-blue-600 hover:bg-blue-800 text-white" />
                             </div>
                         </form>
                     </div>
