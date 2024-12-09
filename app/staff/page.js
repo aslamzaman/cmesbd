@@ -223,6 +223,7 @@ const Staff = () => {
                 const data = await getDataFromIndexedDB("staff");
                 if (data.length > 0) {
                     const sortStaff = data.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase())) ;
+                    console.log(sortStaff);
                     setStaffs(sortStaff);
                 } else {
                     await setDataToIndexedDB('staff', staffData);
