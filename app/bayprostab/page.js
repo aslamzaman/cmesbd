@@ -68,6 +68,7 @@ const Bayprostab = () => {
         console.log(locaData);
         const addSubTotal = locaData.map(bayprostab => {
           const subtotal = parseFloat(bayprostab.nos) * evaluate(bayprostab.taka);
+          console.log(subtotal);
           return {
             ...bayprostab, subtotal
           }
