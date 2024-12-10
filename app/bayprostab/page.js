@@ -70,7 +70,8 @@ const Bayprostab = () => {
           const subtotal = parseFloat(bayprostab.nos) * evaluate(bayprostab.taka);
           console.log(subtotal);
           return {
-            ...bayprostab, subtotal
+            ...bayprostab,
+            subtotal:subtotal?subtotal:0
           }
         })
 
