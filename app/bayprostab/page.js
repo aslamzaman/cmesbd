@@ -16,6 +16,15 @@ import { getDataFromIndexedDB } from '@/lib/DatabaseIndexedDB';
 
 
 
+const evaluatingError = (strNum)=>{
+  try{
+    return evaluate(strNum);
+  }catch(err){
+    console.log(err);
+    return 0;
+  }
+}
+
 
 const dtAdd15Days = (d1) => {
   const dt1 = new Date(d1);
@@ -67,11 +76,11 @@ const Bayprostab = () => {
         const locaData = await getDataFromIndexedDB('bayprostab');
         console.log(locaData);
         const addSubTotal = locaData.map(bayprostab => {
-          const subtotal = parseFloat(bayprostab.nos) * evaluate(bayprostab.taka);
+          const subtotal = parseFloat(bayprostab.nos) * evaluatingError(bayprostab.taka);
+          
           console.log(subtotal);
           return {
-            ...bayprostab,
-            subtotal:subtotal?subtotal:0
+            ...bayprostab, subtotal
           }
         })
 
