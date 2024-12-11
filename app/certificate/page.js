@@ -4,7 +4,7 @@ import { jsPDF } from "jspdf";
 import * as XLSX from 'xlsx';
 require("@/public/fonts/Lobster-Regular-normal");
 require("@/public/fonts/OpenSansCondensed-Light-normal");
-import { BtnSubmit, DropdownEn, TextDt, TextEn } from "@/components/Form";
+import { BtnSubmit, DropdownEn, TextDt, TextEn, TextPw } from "@/components/Form";
 import { formatedDateSlash, formatedDate } from "@/lib/utils";
 
 
@@ -122,7 +122,7 @@ const Certificate = () => {
                             <input type="file" onChange={fileChangeHandler} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                         </div>
 
-                        <TextEn Title="Password" Id="pw" Change={(e) => { setPw(e.target.value) }} Value={pw} />
+                        <TextPw Title="Password" Id="pw" Change={(e) => { setPw(e.target.value) }} Value={pw} Chr="10" />
                         <DropdownEn Title="Select Qurter" Id="quart" Change={(e) => { setQuart(e.target.value) }} Value={quart}>
                             <option value="1">Qurter-1</option>
                             <option value="2">Qurter-2</option>

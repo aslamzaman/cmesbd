@@ -6,10 +6,9 @@ import Add from "@/components/bayprostabexecution/Add";
 import Edit from "@/components/bayprostabexecution/Edit";
 import Delete from "@/components/bayprostabexecution/Delete";
 
-import { numberWithComma, inwordBangla, formatedDate, formatedDateDot, localStorageGetItem, sortArray } from "@/lib/utils";
+import { numberWithComma, inwordBangla, formatedDate, formatedDateDot, localStorageGetItem, sortArray, evaluateNumber } from "@/lib/utils";
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
-import { evaluate } from 'mathjs';
 import { getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 
@@ -53,7 +52,7 @@ const Bayprostabexecution = () => {
 
         const getLocalData = await getDataFromIndexedDB("bayprostabexecution");
         const addSubtotal = getLocalData.map(item => {
-          const subtotal = parseFloat(item.nos) * evaluate(item.taka);
+          const subtotal = parseFloat(item.nos) * evaluateNumber(item.taka);
           return {
             ...item, subtotal
           }
@@ -111,7 +110,7 @@ const Bayprostabexecution = () => {
       setWaitMsg("No data!!");
       return false;
     }
-    const totalTaka = x.reduce((t, c) => t + (evaluate(c.taka) * parseFloat(c.nos)), 0);
+    const totalTaka = x.reduce((t, c) => t + (evaluateNumber(c.taka) * parseFloat(c.nos)), 0);
 
     setWaitMsg("Please wait...");
     setTimeout(() => {
@@ -129,9 +128,9 @@ const Bayprostabexecution = () => {
       let gt = 0;
 
       for (let i = 0; i < x.length; i++) {
-        const total = parseFloat(x[i].nos) * evaluate(x[i].taka);
+        const total = parseFloat(x[i].nos) * evaluateNumber(x[i].taka);
         const no = parseFloat(x[i].nos);
-        const tk = evaluate(x[i].taka);
+        const tk = evaluateNumber(x[i].taka);
         const line = doc.splitTextToSize(`${x[i].item}`, 50);
 
         doc.text(line, 17, y, { maxWidth: 50, align: 'left' });
@@ -216,7 +215,7 @@ const Bayprostabexecution = () => {
                       bayprostabexecutions.length ? bayprostabexecutions.map(bayprostabexecution => {
                         return (
                           <tr className="border-b border-gray-200 hover:bg-gray-100" key={bayprostabexecution.id}>
-                            <td className={`text-center py-2 px-4 ${parseInt(evaluate(bayprostabexecution.taka)) === 0 ? 'font-sans' : 'font-sutonnyN'}`}>{bayprostabexecution.item}</td>
+                            <td className={`text-center py-2 px-4 ${parseInt(evaluateNumber(bayprostabexecution.taka)) === 0 ? 'font-sans' : 'font-sutonnyN'}`}>{bayprostabexecution.item}</td>
                             <td className="text-center py-2 px-4">{bayprostabexecution.nos}</td>
                             <td title={bayprostabexecution.subtotal} className="text-center py-2 px-4">{bayprostabexecution.taka}</td>
                             <td className="flex justify-end items-center mt-1">

@@ -7,30 +7,11 @@ import Edit from "@/components/bayprostab/Edit";
 import Delete from "@/components/bayprostab/Delete";
 
 
-import { formatedDate, sortArray } from '@/lib/utils';
+import { dateAdd, evaluateNumber, formatedDate, sortArray } from '@/lib/utils';
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
 import { BayprostabPreparation } from '@/lib/BayprostabPreparation';
-import { evaluate } from 'mathjs';
 import { getDataFromIndexedDB } from '@/lib/DatabaseIndexedDB';
-
-
-
-const evaluatingError = (strNum)=>{
-  try{
-    return evaluate(strNum);
-  }catch(err){
-    console.log(err);
-    return 0;
-  }
-}
-
-
-const dtAdd15Days = (d1) => {
-  const dt1 = new Date(d1);
-  const dt2 = dt1.getTime() + (15 * 24 * 60 * 60 * 1000);
-  return new Date(dt2);
-}
 
 
 
@@ -38,7 +19,7 @@ const Bayprostab = () => {
   const [bayprostabs, setBayprostabs] = useState([]);
   const [waitMsg, setWaitMsg] = useState('');
   const [msg, setMsg] = useState("Data ready");
-
+ 
 
   const [staffData, setStaffData] = useState([]);
   const [projectData, setProjectData] = useState([]);
@@ -74,11 +55,8 @@ const Bayprostab = () => {
 
         //-------------------------------------------------------
         const locaData = await getDataFromIndexedDB('bayprostab');
-        console.log(locaData);
         const addSubTotal = locaData.map(bayprostab => {
-          const subtotal = parseFloat(bayprostab.nos) * evaluatingError(bayprostab.taka);
-          
-          console.log(subtotal);
+          const subtotal = parseFloat(bayprostab.nos) * evaluateNumber(bayprostab.taka);
           return {
             ...bayprostab, subtotal
           }
@@ -125,7 +103,7 @@ const Bayprostab = () => {
       project: project,
       dt: dt,
       dateStart: dt,
-      dateEnd: dtAdd15Days(dt),
+      dateEnd: dateAdd(dt,15),
       dpt: dpt,
       subject: subject,
       note: note,
@@ -164,15 +142,13 @@ const Bayprostab = () => {
   }
 
 
-
   return (
     <>
       <div className="w-full mb-3 mt-8">
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Bayprostab</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
-
-
+    
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-x-4">
         <div className="w-full border-2 p-4 shadow-md rounded-md">
 
@@ -198,20 +174,20 @@ const Bayprostab = () => {
               </div>
 
 
-                <DropdownEn Title="Payment Type" Id="payType" Change={e => setPayType(e.target.value)} Value={payType}>
-                  <option value="ft">Fund Transfer</option>
-                  <option value="ace">A/C Pay English</option>
-                  <option value="acb">A/C Pay Bangla</option>
-                  <option value="br">Bearer Cheque</option>
-                </DropdownEn>
-                {
-                  payType === '' ? null
-                    : payType === 'ft' ? null
-                      : payType === 'ace' ? <TextEn Title="Name (English)" Id="cheque" Change={e => setCheque(e.target.value)} Value={cheque} Chr="100" />
-                        : payType === 'acb' ? <TextBn Title="Name (SutonnyMJ)" Id="cheque" Change={e => setCheque(e.target.value)} Value={cheque} Chr="100" />
-                          : null
-                }
-         
+              <DropdownEn Title="Payment Type" Id="payType" Change={e => setPayType(e.target.value)} Value={payType}>
+                <option value="ft">Fund Transfer</option>
+                <option value="ace">A/C Pay English</option>
+                <option value="acb">A/C Pay Bangla</option>
+                <option value="br">Bearer Cheque</option>
+              </DropdownEn>
+              {
+                payType === '' ? null
+                  : payType === 'ft' ? null
+                    : payType === 'ace' ? <TextEn Title="Name (English)" Id="cheque" Change={e => setCheque(e.target.value)} Value={cheque} Chr="100" />
+                      : payType === 'acb' ? <TextBn Title="Name (SutonnyMJ)" Id="cheque" Change={e => setCheque(e.target.value)} Value={cheque} Chr="100" />
+                        : null
+              }
+
               <div className="w-full col-span-2">
                 <TextareaBn Title="Notes (SutonnyMJ)" Id="note" Rows="2" Change={(e) => { setNote(e.target.value) }} Value={note} />
               </div>
