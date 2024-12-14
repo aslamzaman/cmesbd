@@ -27,9 +27,10 @@ const Brickflatsolling = () => {
             setWaitMsg('Please Wait...');
             try {
                 const response = await getDataFromIndexedDB('price');
-                const brickPrice = response.find(brick => brick.id === 'AXc2dF5VYHRVc0KtW5i7');
-                const sandPrice = response.find(sand => sand.id === 'SFlvASnMa3RjbPgzz0Tw');
-                console.log({brickPrice,sandPrice});
+               // console.log(response)
+                const brickPrice = response.find(brick => parseInt(brick.id) === 1733758796668);
+                const sandPrice = response.find(sand => parseInt(sand.id) === 1733758823444);
+               // console.log({brickPrice,sandPrice});
                 setBrickPrice(brickPrice.taka);
                 setSandPrice(sandPrice.taka);
                 setWaitMsg('');
@@ -43,7 +44,14 @@ const Brickflatsolling = () => {
 
     const resultHandler = (e) => {
         e.preventDefault();
+        const extraOperator = w.slice(- 1);
+        if (extraOperator === "+" || extraOperator === "-") {
+            setWaitMsg(" *Type error!");
+            return false;
+        }
+        setWaitMsg(" ");
 
+        
         let x = evaluate(w);
         let brick = 0;
         let sand = 0;

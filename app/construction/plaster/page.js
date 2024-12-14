@@ -36,8 +36,9 @@ const Plasterwork = () => {
             setWaitMsg('Please Wait...');
             try {
                 const response = await getDataFromIndexedDB('price');
-                          const cementPrice = response.find(cement => cement.id === 'aj4THFRGdOZjs0QNPlrF');
-                const sandPrice = response.find(sand => sand.id === 'SFlvASnMa3RjbPgzz0Tw');
+                const cementPrice = response.find(cement => parseInt(cement.id) === 1733758840844);
+                const sandPrice = response.find(sand => parseInt(sand.id) === 1733758823444);
+
                 setCementPrice(cementPrice.taka);
                 setSandPrice(sandPrice.taka);
                 setWaitMsg('');
@@ -51,6 +52,14 @@ const Plasterwork = () => {
 
     const resultHandler = (e) => {
         e.preventDefault();
+
+        const extraOperator = w.slice(- 1);
+        if (extraOperator === "+" || extraOperator === "-") {
+            setWaitMsg(" *Type error!");
+            return false;
+        }
+        setWaitMsg(" ");
+        
 
         let x = evaluate(w);
         let cement = 0;
@@ -107,7 +116,7 @@ const Plasterwork = () => {
             <div className="py-2 border-b border-gray-300">
                 <h1 className="text-center text-xl font-bold text-blue-600">Plaster Works</h1>
                 <p className="text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
-            </div> 
+            </div>
             <div className="w-full p-4 flex flex-col">
                 <form onSubmit={resultHandler}>
                     <div className="w-full grid grid-cols-1 gap-y-2">

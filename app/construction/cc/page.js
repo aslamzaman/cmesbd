@@ -37,10 +37,10 @@ const Ccwork = () => {
             try {
                 const response = await getDataFromIndexedDB('price');
                 console.log(response);
-                const cementPrice = response.find(cement => cement.id === 'aj4THFRGdOZjs0QNPlrF');
-                const sandPrice = response.find(sand => sand.id === 'SFlvASnMa3RjbPgzz0Tw');
-                const khoaPrice = response.find(khoa => khoa.id === 'PoYjiI0qdpXEPpHSvbmx');
-
+                         
+                const khoaPrice = response.find(khoa => parseInt(khoa.id) === 1733758814756);
+                const cementPrice = response.find(cement => parseInt(cement.id) === 1733758840844);
+                const sandPrice = response.find(sand => parseInt(sand.id) === 1733758823444);
    
                 setCementPrice(cementPrice.taka);
                 setSandPrice(sandPrice.taka);
@@ -57,6 +57,15 @@ const Ccwork = () => {
 
     const resultHandler = (e) => {
         e.preventDefault();
+
+        const extraOperator = w.slice(- 1);
+        if (extraOperator === "+" || extraOperator === "-") {
+            setWaitMsg(" *Type error!");
+            return false;
+        }
+        setWaitMsg(" ");
+
+
 
         let x = evaluate(w);
         let cement = 0;

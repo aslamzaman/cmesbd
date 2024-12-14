@@ -7,11 +7,12 @@ import Edit from "@/components/bayprostab/Edit";
 import Delete from "@/components/bayprostab/Delete";
 
 
-import { dateAdd, evaluateNumber, formatedDate, sortArray } from '@/lib/utils';
+import { dateAdd, formatedDate, sortArray } from '@/lib/utils';
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
 import { BayprostabPreparation } from '@/lib/BayprostabPreparation';
 import { getDataFromIndexedDB } from '@/lib/DatabaseIndexedDB';
+import { evaluate } from 'mathjs';
 
 
 
@@ -19,7 +20,7 @@ const Bayprostab = () => {
   const [bayprostabs, setBayprostabs] = useState([]);
   const [waitMsg, setWaitMsg] = useState('');
   const [msg, setMsg] = useState("Data ready");
- 
+
 
   const [staffData, setStaffData] = useState([]);
   const [projectData, setProjectData] = useState([]);
@@ -41,9 +42,10 @@ const Bayprostab = () => {
     const getData = async () => {
       setWaitMsg('Please wait...');
       try {
-        const [staffs, projects] = await Promise.all([
+        const [staffs, projects, locaData] = await Promise.all([
           getDataFromIndexedDB('staff'),
-          getDataFromIndexedDB('project')
+          getDataFromIndexedDB('project'),
+          getDataFromIndexedDB('bayprostab')
         ]);
 
         const sortData = staffs.sort((a, b) => sortArray(a.nameEn, b.nameEn));
@@ -54,19 +56,19 @@ const Bayprostab = () => {
         setProjectData(withGO);
 
         //-------------------------------------------------------
-        const locaData = await getDataFromIndexedDB('bayprostab');
         const addSubTotal = locaData.map(bayprostab => {
-          const subtotal = parseFloat(bayprostab.nos) * evaluateNumber(bayprostab.taka);
+          const subtotal = parseFloat(bayprostab.nos) * evaluate(bayprostab.taka);
           return {
-            ...bayprostab, subtotal
+            ...bayprostab, subtotal,
+            evalTaka: evaluate(bayprostab.taka)
           }
         })
 
-        const gt = addSubTotal.reduce((t, c) => t + c.subtotal, 0);
+        const gt = addSubTotal.reduce((t, c) => t + parseFloat(c.subtotal), 0);
         setBayprostabs(addSubTotal);
         setTotal(gt);
-
         setPayType('');
+
         setWaitMsg('');
       } catch (err) {
         console.log(err);
@@ -103,7 +105,7 @@ const Bayprostab = () => {
       project: project,
       dt: dt,
       dateStart: dt,
-      dateEnd: dateAdd(dt,15),
+      dateEnd: dateAdd(dt, 15),
       dpt: dpt,
       subject: subject,
       note: note,
@@ -113,27 +115,29 @@ const Bayprostab = () => {
       cheque: cheque
     }
 
-    console.log({ payType, cheque });
+
     setTimeout(() => {
       BayprostabPreparation.central({ doc, data });
-      BayprostabPreparation.tableOne({ doc }, bayprostabs, 14.3, 90.5, 102, 131.5, 101, 55);
-      BayprostabPreparation.payment({ doc }, data, 174.7, 172, 49, payType);
+      BayprostabPreparation.tableOne({ doc }, bayprostabs, 101);
+      BayprostabPreparation.payment({ doc }, data, payType);
+
       doc.addPage("a4", "p");
       BayprostabPreparation.completePlan({ doc, data });
-      BayprostabPreparation.tableOne({ doc }, bayprostabs, 14.3, 90.5, 102, 131.5, 107, 55);
-      BayprostabPreparation.payment({ doc }, data, 166, 172, 64.5, payType);
+      BayprostabPreparation.tableOne({ doc }, bayprostabs, 107);
+      BayprostabPreparation.payment({ doc }, data, payType);
 
       if (project === 'GO') {
         doc.addPage("a4", "p");
         BayprostabPreparation.go({ doc, data });
-        BayprostabPreparation.tableTwo({ doc }, bayprostabs, 19, 30, 131, 78, 74);
+        BayprostabPreparation.tableTwo({ doc }, bayprostabs, 77);
       }
 
       if (payType === 'br') {
         doc.addPage("a4", "p");
         BayprostabPreparation.bearer({ doc, data });
-        BayprostabPreparation.tableTwo({ doc }, bayprostabs, 25, 33, 131, 121, 71);
+        BayprostabPreparation.tableTwo({ doc }, bayprostabs, 121);
       }
+
 
       doc.save(new Date().toISOString() + "-Bayprostab.pdf");
       setWaitMsg("");
@@ -142,13 +146,13 @@ const Bayprostab = () => {
   }
 
 
+
   return (
     <>
       <div className="w-full mb-3 mt-8">
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Bayprostab</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
-    
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-x-4">
         <div className="w-full border-2 p-4 shadow-md rounded-md">
 

@@ -6,18 +6,19 @@ import Add from "@/components/bayprostabexecution/Add";
 import Edit from "@/components/bayprostabexecution/Edit";
 import Delete from "@/components/bayprostabexecution/Delete";
 
-import { numberWithComma, inwordBangla, formatedDate, formatedDateDot, localStorageGetItem, sortArray, evaluateNumber } from "@/lib/utils";
+import { numberWithComma, inwordBangla, formatedDate, formatedDateDot, sortArray } from "@/lib/utils";
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
-import { getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { evaluate } from "mathjs";
 
 
 
 const Bayprostabexecution = () => {
   const [staffData, setStaffData] = useState([]);
   const [projectData, setProjectData] = useState([]);
-
   const [bayprostabexecutions, setBayprostabexecutions] = useState([]);
+
   const [msg, setMsg] = useState("Data ready");
   const [waitMsg, setWaitMsg] = useState("");
 
@@ -36,9 +37,10 @@ const Bayprostabexecution = () => {
     const getData = async () => {
       setWaitMsg("Please wait...");
       try {
-        const [staffs, projects] = await Promise.all([
+        const [staffs, projects, getLocalData] = await Promise.all([
           getDataFromIndexedDB('staff'),
-          getDataFromIndexedDB('project')
+          getDataFromIndexedDB('project'),
+          getDataFromIndexedDB("bayprostabexecution")
         ]);
 
         const sortData = staffs.sort((a, b) => sortArray(a.nameEn, b.nameEn));
@@ -49,29 +51,18 @@ const Bayprostabexecution = () => {
         setProjectData(withGO);
 
         //-------------------------------------------------------------
-
-        const getLocalData = await getDataFromIndexedDB("bayprostabexecution");
         const addSubtotal = getLocalData.map(item => {
-          const subtotal = parseFloat(item.nos) * evaluateNumber(item.taka);
+          const subtotal = parseFloat(item.nos) * evaluate(item.taka);
           return {
-            ...item, subtotal
+            ...item, subtotal,
+            evalTaka: evaluate(item.taka) 
           }
         })
-        console.log("Aslam", addSubtotal);
         setBayprostabexecutions(addSubtotal);
-
-        const total = addSubtotal.reduce((t, c) => t + c.subtotal, 0);
+        const total = addSubtotal.reduce((t, c) => t + parseFloat(c.subtotal), 0);
         setTotal(total);
-        setDt2(formatedDate(new Date()));
         //---------------------------------------------------
-        const bayprostabexecutionData = await getValueFromIndexedDB('bayprostabexecutionData');
-        if (bayprostabexecutionData) {
-          setStaff(bayprostabexecutionData.staff);
-          setProject(bayprostabexecutionData.project);
-          setAdvance(bayprostabexecutionData.advance);
-          setNote(bayprostabexecutionData.note);
-        }
-
+        setDt2(formatedDate(new Date()));
         setWaitMsg("");
       } catch (err) {
         console.log(err);
@@ -99,20 +90,12 @@ const Bayprostabexecution = () => {
     });
 
 
-    //----------------------------
-    const bayprostabexecutionData = { staff, project, advance, note };
-    await setDataToIndexedDB('bayprostabexecutionData', bayprostabexecutionData);
-    //-------------------------------
-
-
-    const x = await getDataFromIndexedDB("bayprostabexecution");
-    if (x.length < 1) {
+    if (bayprostabexecutions.length < 1) {
       setWaitMsg("No data!!");
       return false;
     }
-    const totalTaka = x.reduce((t, c) => t + (evaluateNumber(c.taka) * parseFloat(c.nos)), 0);
-
     setWaitMsg("Please wait...");
+
     setTimeout(() => {
 
       doc.addImage("/images/formats/bayprostab2.png", "PNG", 0, 0, 210, 297);
@@ -121,17 +104,16 @@ const Bayprostabexecution = () => {
       doc.text(`${project}`, 168.438, 26, null, null, "left");
       doc.setFont("SutonnyMJ", "normal");
       doc.text(`${staff} `, 38, 37, null, null, "left");
-      doc.text(`${dt1 ? formatedDateDot(dt1) : ""}`, 150, 45, null, null, "left");
-      doc.text(`${numberWithComma(parseFloat(advance), false)}/-`, 65, 45, null, null, "right");
+      doc.text(`${dt1 ? formatedDateDot(dt1, true) : ""}`, 150, 45, null, null, "left");
+      doc.text(`${numberWithComma(advance, false)}/-`, 65, 45, null, null, "right");
 
       let y = 100;
-      let gt = 0;
 
-      for (let i = 0; i < x.length; i++) {
-        const total = parseFloat(x[i].nos) * evaluateNumber(x[i].taka);
-        const no = parseFloat(x[i].nos);
-        const tk = evaluateNumber(x[i].taka);
-        const line = doc.splitTextToSize(`${x[i].item}`, 50);
+      for (let i = 0; i < bayprostabexecutions.length; i++) {
+
+        const no = parseFloat(bayprostabexecutions[i].nos);
+        const tk = parseFloat(bayprostabexecutions[i].evalTaka);
+        const line = doc.splitTextToSize(`${bayprostabexecutions[i].item}`, 50);
 
         doc.text(line, 17, y, { maxWidth: 50, align: 'left' });
         if (no > 1) {
@@ -141,18 +123,18 @@ const Bayprostabexecution = () => {
           doc.text("-", 81, y, null, null, "center");
           doc.text("-", 101.408, y, null, null, "center");
         }
-        doc.text(`${numberWithComma(total)}/-`, 132, y, null, null, "right");
+        doc.text(`${numberWithComma(bayprostabexecutions[i].subtotal)}/-`, 132, y, null, null, "right");
         const lineNumber = line.length;
         y += lineNumber * 6;
 
       }
 
-      doc.text(`${numberWithComma(parseInt(totalTaka))}/-`, 65, 53, null, null, "right");
-      doc.text(`${numberWithComma(parseFloat(advance) - parseInt(totalTaka))}/-`, 65, 61, null, null, "right");
+      doc.text(`${numberWithComma(total, false)}/-`, 65, 53, null, null, "right");
+      doc.text(`${numberWithComma((advance - parseInt(total)), false)}/-`, 65, 61, null, null, "right");
       doc.text(`${note ? note : ""}`, 174.347, 100, { maxWidth: 45, align: 'center' });
-      doc.text(`${numberWithComma(parseInt(totalTaka))}/-`, 132, 235, null, null, "right");
-      doc.text(`${inwordBangla(parseInt(totalTaka))} UvKv gvÎ`, 45, 241.5, null, null, "left");
-      doc.text(`${formatedDateDot(dt2)}`, 60, 247.5, null, null, "left");
+      doc.text(`${numberWithComma(total, false)}/-`, 132, 235, null, null, "right");
+      doc.text(`${inwordBangla(parseFloat(total))} UvKv gvÎ`, 45, 241.5, null, null, "left");
+      doc.text(`${formatedDateDot(dt2, true)}`, 60, 247.5, null, null, "left");
       doc.save(new Date().toISOString() + "Bayprostab-Execution.pdf");
       setWaitMsg("");
     }, 0);
@@ -215,7 +197,7 @@ const Bayprostabexecution = () => {
                       bayprostabexecutions.length ? bayprostabexecutions.map(bayprostabexecution => {
                         return (
                           <tr className="border-b border-gray-200 hover:bg-gray-100" key={bayprostabexecution.id}>
-                            <td className={`text-center py-2 px-4 ${parseInt(evaluateNumber(bayprostabexecution.taka)) === 0 ? 'font-sans' : 'font-sutonnyN'}`}>{bayprostabexecution.item}</td>
+                            <td className={`text-center py-2 px-4 ${parseInt(evaluate(bayprostabexecution.taka)) === 0 ? 'font-sans' : 'font-sutonnyN'}`}>{bayprostabexecution.item}</td>
                             <td className="text-center py-2 px-4">{bayprostabexecution.nos}</td>
                             <td title={bayprostabexecution.subtotal} className="text-center py-2 px-4">{bayprostabexecution.taka}</td>
                             <td className="flex justify-end items-center mt-1">

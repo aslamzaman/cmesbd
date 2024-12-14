@@ -27,15 +27,16 @@ const Brickwork = () => {
     const [totalTaka, setTotalTaka] = useState(0);
 
 
+
     useEffect(() => {
         const load = async () => {
             setWaitMsg('Please Wait...');
             try {
                 const response = await getDataFromIndexedDB('price');
                 console.log(response);
-                const brickPrice = response.find(brick => brick.id === 'AXc2dF5VYHRVc0KtW5i7');
-                const cementPrice = response.find(cement => cement.id === 'aj4THFRGdOZjs0QNPlrF');
-                const sandPrice = response.find(sand => sand.id === 'SFlvASnMa3RjbPgzz0Tw');
+                const brickPrice = response.find(brick => parseInt(brick.id) === 1733758796668);
+                const cementPrice = response.find(cement => parseInt(cement.id) === 1733758840844);
+                const sandPrice = response.find(sand => parseInt(sand.id) === 1733758823444);
   
                 setBrickPrice(brickPrice.taka);
                 setCementPrice(cementPrice.taka);
@@ -52,6 +53,16 @@ const Brickwork = () => {
 
     const resultHandler = (e) => {
         e.preventDefault();
+
+        const extraOperator = w.slice(- 1);
+        if (extraOperator === "+" || extraOperator === "-") {
+            setWaitMsg(" *Type error!");
+            return false;
+        }
+        setWaitMsg(" ");
+
+
+
 
         let x = evaluate(w);
         let brick = 0;

@@ -5,14 +5,16 @@ import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 const Add = ({ message }) => {
     const [item, setItem] = useState('');
     const [nos, setNos] = useState('');
-    const [taka, setTaka] = useState('');   
+    const [taka, setTaka] = useState('');
     const [show, setShow] = useState(false);
+
+    const [msg, setMsg] = useState("");
 
 
     const resetVariables = () => {
         setItem('');
         setNos('');
-        setTaka('');        
+        setTaka('');
     }
 
 
@@ -32,13 +34,19 @@ const Add = ({ message }) => {
             id: Date.now(),
             item: item,
             nos: nos,
-            taka: taka            
+            taka: taka
         }
     }
 
 
     const saveHandler = async (e) => {
         e.preventDefault();
+        const extraOperator = taka.slice(- 1);
+        if (extraOperator === "+" || extraOperator === "-") {
+            setMsg(" *Type error!");
+            return false;
+        }
+
         try {
             const newObject = createObject();
             const msg = await addDataToIndexedDB('bayprostab', newObject);
@@ -66,11 +74,12 @@ const Add = ({ message }) => {
                             </button>
                         </div>
                         <div className="px-6 pb-6 text-black">
+                           
                             <form onSubmit={saveHandler}>
                                 <div className="grid grid-cols-1 gap-4 my-4">
                                     <TextBn Title="Item (SutonnyMJ)" Id="item" Change={e => setItem(e.target.value)} Value={item} Chr={150} />
-                                    <TextNum Title="Nos (English)" Id="nos" Change={e => setNos(e.target.value)} Value={nos}  />
-                                    <TextEn Title="Taka (English)" Id="taka" Change={e => setTaka(e.target.value)} Value={taka} Chr={150} />                                
+                                    <TextNum Title="Nos (English)" Id="nos" Change={e => setNos(e.target.value)} Value={nos} />
+                                    <TextEn Title={`Taka (English) ${msg}`} Id="taka" Change={e => setTaka(e.target.value)} Value={taka} Chr={150} />
                                 </div>
                                 <div className="w-full flex justify-start">
                                     <input type="button" onClick={closeAddForm} value="Close" className="bg-pink-600 hover:bg-pink-800 text-white text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 cursor-pointer" />
@@ -90,4 +99,4 @@ const Add = ({ message }) => {
     )
 }
 export default Add;
-  
+

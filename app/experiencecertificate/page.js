@@ -1,11 +1,12 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
-import { TextEn, BtnSubmit, DropdownEn, TextDt, TextareaEn } from "../../components/Form";
-import { formatedDate, formatedDateDot, sortArray } from "@/lib/utils";
-import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
-const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+import { TextEn, BtnSubmit, DropdownEn, TextDt } from "../../components/Form";
+import { formatedDate, formatedDateDot, localStorageSetItem, sortArray } from "@/lib/utils";
+import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+import { useRouter } from "next/navigation";
 
 
 
@@ -22,8 +23,9 @@ const Experiencecertificate = () => {
 
   const [staffs, setStaffs] = useState([]);
   const [authors, setAuthors] = useState([]);
-  const [singleAutor, setSingleAutor] = useState({});
 
+
+  const router = useRouter();
 
 
 
@@ -35,7 +37,7 @@ const Experiencecertificate = () => {
           getDataFromIndexedDB("staff"),
           getDataFromIndexedDB("author")
         ]);
-        const sortStaff = staffs.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
+        const sortStaff = staffs.sort((a, b) => sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
         setStaffs(sortStaff);
         setAuthors(authors);
       } catch (err) {
@@ -50,59 +52,23 @@ const Experiencecertificate = () => {
 
 
 
-
-
   const createCertificate = (e) => {
     e.preventDefault();
-    setMsg("Please wait...");
+    const splitName = nm.split(",");
+    const name = splitName[0];
+    const gender = splitName[1];
+    const post = splitName[2];
 
-    const doc = new jsPDF({
-      orientation: 'p',
-      unit: 'mm',
-      format: 'a4',
-      putOnlyUsedFonts: true,
-      floatPrecision: 16 // or "smart", default is 16
-    });
-  const name = nm.split(",");
+    const splitAuthor = certify.split(",");
+    const authorName = splitAuthor[0];
+    const authorPost = splitAuthor[1];
 
-    const txt1 = `This is to certify that ${name[0]}, ${name[1] === "Male" ? 'son' : 'daughter'} of ${fnm}, residing at ${address}, has been an invaluable member of our organization, serving as the ${name[2]} since ${formatedDateDot(dt1,true)}, and continuing to excel in her role to date.`;
-
-    const txt2 = `This is to certify that ${name[0]}, ${name[1] === "Male" ? 'son' : 'daughter'} of ${fnm}, residing at ${address}, served as the ${name[2]} in our organization from ${formatedDate(dt1)}, to ${formatedDate(dt2)}.`
-
-    const lastPara = `We acknowledge ${name[1] === "Male" ? 'his' : 'her'} valuable contributions to our organization and wish ${name[1] === "Male" ? 'his' : 'her'} continued success in ${name[1] === "Male" ? 'his' : 'her'} professional endeavors.`;
-    const fontStyleNormal = "font-size: 5px; font-weight: normal; font-family: 'Times New Roman', Times, serif;  line-height: 1.25;";
-
-
-
-
-    setTimeout(() => {
-const auth = certify.split(",");
-
-      const ss = `
-      <div style="width:225px; padding:88px 40px 10px 25px;">
-                <p style="${fontStyleNormal} text-align: justify;">${present === '1' ? txt1 : txt2}<br /><br />${lastPara}</p>
-    <br />
-    <p style="${fontStyleNormal} text-align: left;">${auth[0]}<br \>${auth[1]}</p>     
-    </div>
-    `;
-
-      doc.addImage("/images/formats/experiencecertificate.png", "PNG", 0, 0, 210, 297);
-      doc.html(ss, {
-        callback: function (dc) {
-          dc.setFont("times", "normal");
-          dc.setFontSize(12);
-          dc.setFont("times", "normal");
-          dc.text(`${formatedDateDot(dt,true)}`, 185, 62, null, null, "right");
-
-          dc.setFontSize(16);
-          dc.setFont("times", "normal");
-          dc.save(new Date().toISOString() + "-experience-certificate.pdf");;
-        }
-      });
-
-      setMsg("Experience dertificate create completed")
-    }, 0);
+    const data = { dt, dt1, dt2, name, gender, post, present, fnm, address, authorName, authorPost};
+    localStorage.setItem('exp', JSON.stringify(data));
+    router.push("/experiencecertificateprint");
   }
+
+
 
 
 
@@ -112,6 +78,7 @@ const auth = certify.split(",");
         <div className="w-full mb-3 mt-8">
           <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Experience Certificate</h1>
         </div>
+
         <div className="w-11/12 lg:w-9/12 mx-auto mt-10 p-4 border shadow-lg">
           <form onSubmit={createCertificate}>
             <div className="grid grid-col-3 gap-4">
@@ -119,7 +86,7 @@ const auth = certify.split(",");
               <TextDt Title="Joining Date" Id="dt1" Change={e => setDt1(e.target.value)} Value={dt1} />
               <TextDt Title="End Date" Id="dt2" Change={e => setDt2(e.target.value)} Value={dt2} />
 
-              <DropdownEn Title="Name" Id="nm" Change={e=>setNm(e.target.value)} Value={nm}>
+              <DropdownEn Title="Name" Id="nm" Change={e => setNm(e.target.value)} Value={nm}>
                 {staffs.length ? staffs.map(staff => <option value={`${staff.nameEn},${staff.gender},${staff.postEn}`} key={staff.id}>{staff.nameEn}</option>) : null}
               </DropdownEn>
               <TextEn Title="Father's Name" Id="fnm" Change={(e) => setFnm(e.target.value)} Value={fnm} Chr="50" />
@@ -133,7 +100,7 @@ const auth = certify.split(",");
               </div>
 
               <div className="col-span-3">
-                <DropdownEn Title="Certifying Person" Id="certify" Change={e=>setCertify(e.target.value)} Value={certify}>
+                <DropdownEn Title="Certifying Person" Id="certify" Change={e => setCertify(e.target.value)} Value={certify}>
                   {authors.map(author => <option value={`${author.name},${author.post}`} key={author.id}>{author.name}</option>)}
                 </DropdownEn>
 

@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { BtnSubmit, TextBn, TextEn, TextNum } from "@/components/Form";
 import { updateDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
-const Edit = ({ message, id, data  }) => {
+const Edit = ({ message, id, data }) => {
     const [item, setItem] = useState('');
     const [nos, setNos] = useState('');
-    const [taka, setTaka] = useState('');   
+    const [taka, setTaka] = useState('');
     const [show, setShow] = useState(false);
 
+    const [msg, setMsg] = useState("");
 
-  const showEditForm = () => {
+    const showEditForm = () => {
         message("Ready to edit");
         setShow(true);
         try {
@@ -33,13 +34,20 @@ const Edit = ({ message, id, data  }) => {
             id: id,
             item: item,
             nos: nos,
-            taka: taka            
+            taka: taka
         }
     }
 
 
     const updateHandler = async (e) => {
         e.preventDefault();
+
+        const extraOperator = taka.slice(- 1);
+        if (extraOperator === "+" || extraOperator === "-") {
+            setMsg(" *Type error!");
+            return false;
+        }
+
         try {
             const newObject = createObject();
             const msg = await updateDataToIndexedDB('bayprostab', id, newObject);
@@ -73,7 +81,7 @@ const Edit = ({ message, id, data  }) => {
                                 <div className="grid grid-cols-1 gap-4 my-4">
                                     <TextBn Title="Item (SutonnyMJ)" Id="item" Change={e => setItem(e.target.value)} Value={item} Chr={150} />
                                     <TextNum Title="Nos (English)" Id="nos" Change={e => setNos(e.target.value)} Value={nos} />
-                                    <TextEn Title="Taka (English)" Id="taka" Change={e => setTaka(e.target.value)} Value={taka} Chr={150} /> 
+                                    <TextEn Title={`Taka (English) ${msg}`} Id="taka" Change={e => setTaka(e.target.value)} Value={taka} Chr={150} />
                                 </div>
                                 <div className="w-full flex justify-start">
                                     <input type="button" onClick={closeEditForm} value="Close" className="bg-pink-600 hover:bg-pink-800 text-white text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 cursor-pointer" />
@@ -95,4 +103,4 @@ const Edit = ({ message, id, data  }) => {
     )
 }
 export default Edit;
-  
+
