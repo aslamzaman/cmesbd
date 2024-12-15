@@ -90,7 +90,8 @@ const ExpPrint = () => {
           <br /><br />
 
           <p className="w-full text-justify">
-            This letter verifies that {data.name}, {data.gender === 'Male' ? 'son' : 'daughter'} of {data.fnm}, residing at {data.address}, was employed by our organization as a {data.post} from {formatedDateEnglish(data.dt1)}, to {formatedDateEnglish(data.dt2)}.
+          This is to certify that {data.name}, {data.gender === 'Male' ? 'son' : 'daughter'} of {data.fnm}, residing at {data.address}, was employed by our organization as a {data.post} from {formatedDateEnglish(data.dt1)}, {data.present==="1"?`and continues to hold this position`:`to ${formatedDateEnglish(data.dt2)}`}.
+
 
             <br /><br />
             We appreciate {data.gender === 'Male' ? 'his' : 'her'} hard work and dedication to our organization and wish {data.gender === 'Male' ? 'him' : 'her'} all the best in {data.gender === 'Male' ? 'his' : 'her'} future career.

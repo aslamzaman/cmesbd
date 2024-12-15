@@ -8,7 +8,7 @@ import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedD
 const authorData =[
     {
         "id": "1733758962403",
-        "name": "Chairman (Muhammad Ibrahim)",
+        "name": "Dr.Muhammad Ibrahim",
         "post": "Chairman"
     },
     {

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import { TextEn, BtnSubmit, DropdownEn, TextDt } from "../../components/Form";
-import { formatedDate, formatedDateDot, localStorageSetItem, sortArray } from "@/lib/utils";
+import { dateAdd, formatedDate, formatedDateDot, localStorageSetItem, sortArray } from "@/lib/utils";
 import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -30,7 +30,6 @@ const Experiencecertificate = () => {
 
 
   useEffect(() => {
-
     const getData = async () => {
       try {
         const [staffs, authors] = await Promise.all([
@@ -40,14 +39,33 @@ const Experiencecertificate = () => {
         const sortStaff = staffs.sort((a, b) => sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
         setStaffs(sortStaff);
         setAuthors(authors);
+        //---------------------------------------
+        const localData = localStorage.getItem('exp');
+        if (localData) {
+          const jsonData = JSON.parse(localData);
+
+          const name = `${jsonData.name},${jsonData.gender},${jsonData.post}`;
+          const authorNm = `${jsonData.authorName},${jsonData.authorPost}`;
+          setDt(jsonData.dt);
+          setDt1(jsonData.dt1);
+          setDt2(jsonData.dt2);
+          setNm(name);
+          setFnm(jsonData.fnm);
+          setAddress(jsonData.address);
+          setPresent(jsonData.present);
+          setCertify(authorNm);
+        }
+
       } catch (err) {
         console.log(err);
       }
     }
     getData();
-
+    const tenYrsBack = 365 * 15;
+    const backDate = dateAdd(new Date(), -tenYrsBack);
     setDt(formatedDate(new Date()));
-    setDt1(formatedDate(new Date()));
+    setDt1(formatedDate(backDate));
+    setDt2(formatedDate(new Date()));
   }, [])
 
 
@@ -63,7 +81,7 @@ const Experiencecertificate = () => {
     const authorName = splitAuthor[0];
     const authorPost = splitAuthor[1];
 
-    const data = { dt, dt1, dt2, name, gender, post, present, fnm, address, authorName, authorPost};
+    const data = { dt, dt1, dt2, name, gender, post, present, fnm, address, authorName, authorPost };
     localStorage.setItem('exp', JSON.stringify(data));
     router.push("/experiencecertificateprint");
   }
