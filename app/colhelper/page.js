@@ -144,21 +144,13 @@ const Colhelper = () => {
   }
 
 
-
-  const dd = () => {
-    const x = mobileCheck("01720025151");
-    console.log(x);
-  }
-
   return (
     <>
       <div className="w-full mb-3 mt-8">
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">CMES COL PROJECT</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
-
-      <button onClick={dd}>Click Me</button>
-
+   
       <div className="px-4 lg:px-6">
         <div className="w-full grid grid-cols-1 gap-y-4">
           <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
