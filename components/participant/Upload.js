@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { BtnEn } from "../Form";
 import { Close } from "../Icons";
 
-
-import { formatedDate } from "@/lib/utils";
 import { setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 import { excelDateToJSDate, jsonDataFromExcelSheet } from "@/lib/ColHelper";
+import { formatedDate } from "@/lib/utils";
 
 
 
@@ -20,33 +19,19 @@ const Upload = ({ message }) => {
         setShow(true);
     }
 
-
-
-
     const uploadHandler = async () => {
         if (file) {
             try {
                 const response = await jsonDataFromExcelSheet(file, ["sl", "name", "dt", "mobile"]);
                 const withId = response.map((item, i) => {
-                    const numberDt = isNaN(item.dt);
-                    const longDt = numberDt ? "1900-01-01" : excelDateToJSDate(item.dt);
-                    //-----------------------------------------------------
-                    const daysCalculation = (Date.now() - new Date(longDt).getTime()) / (1000 * 60 * 60 * 24 * 365);
-                    const yrs = Math.round(daysCalculation);
-                    const finalDt = yrs < 12 || yrs > 60 || numberDt ? "1900-01-01" : formatedDate(longDt);
-
-                    //-------------------------------------------------
-                    const mobileShotr = parseInt(item.mobile).toString();
-                    const finalMobile = mobileShotr.length !== 10 || mobileShotr.charAt(0) !== '1' ? '999999999' : `${mobileShotr}`;
-                    const id = Date.now()+"_"+ (i+1)
+                    const id = `1734449892500_${i+1}`;
                     return {
-                        ...item,
                         id: id,
-                        dt: finalDt,
-                        mobile: finalMobile
+                        ...item,
+                        dt: formatedDate(excelDateToJSDate(item.dt))
                     }
                 })
-                console.log(withId);
+               // console.log(withId);
                 await setDataToIndexedDB("participant", withId);
                 message("Data loaded successfully");
                 setShow(false);

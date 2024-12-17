@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import Edit from "@/components/participant/Edit";
 import Upload from "@/components/participant/Upload";
 import { DropdownEn, BtnSubmit, TextNum, BtnEn } from "@/components/Form";
-import { formatedDate, sortArray } from "@/lib/utils";
+import { dateDifferenceInDays, formatedDate, sortArray } from "@/lib/utils";
 import { delKeyFromIndexedDB, getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { excelDateToJSDate } from "@/lib/ColHelper";
 
 
 
@@ -17,16 +18,11 @@ const Colhelper = () => {
   const [unit, setUnit] = useState("");
   const [sl, setSl] = useState("");
 
-  const mobileCheck = (number) => {
-    const mobileStr = parseInt(number).toString();
-    const finalMobile = mobileStr.length !== 10 || mobileStr.charAt(0) !== '1' ? '999999999' : `${mobileStr}`;
-    return finalMobile;
-  }
 
   const dtCheck = (dt) => {
-    const daysCalculation = (Date.now() - new Date(dt).getTime()) / (1000 * 60 * 60 * 24 * 365);
+    const daysCalculation = dateDifferenceInDays(new Date(dt), new Date(), true) / 365;
     const yrs = Math.round(daysCalculation);
-    const finalDt = yrs < 12 || yrs > 60 ? "1900-01-01" : formatedDate(dt);
+    const finalDt = yrs < 12 || yrs > 55 ? false : true;
     return finalDt;
   }
 
@@ -37,12 +33,14 @@ const Colhelper = () => {
       try {
         const data = await getDataFromIndexedDB("participant");
         const checkData = data.map(item => {
+          const mobileStr = parseInt(item.mobile).toString();
           return {
             ...item,
-            dt: dtCheck(item.dt),
-            mobile: mobileCheck(item.mobile)
+            isDate: dtCheck(item.dt),
+            isMobile: mobileStr.length !== 10 || mobileStr.charAt(0) !== '1' ? false : true
           }
         })
+
         const result = checkData.sort((a, b) => sortArray(parseInt(a.id), parseInt(b.id)));
         console.log(result);
         setParticipants(result);
@@ -62,43 +60,43 @@ const Colhelper = () => {
 
 
 
-      const handleCreate = async (e) => {
-        e.preventDefault();
-        if (participants.length < 1) {
-          setMsg("No data found!");
-          return false;
-        }
-        setMsg("Please wait...");
-        try {
-          const newData = { unit: unit, sl: sl, participants: participants };
-          const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/format`;
-          const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newData)
-          };
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    if (participants.length < 1) {
+      setMsg("No data found!");
+      return false;
+    }
+    setMsg("Please wait...");
+    try {
+      const newData = { unit: unit, sl: sl, participants: participants };
+      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/format`;
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData)
+      };
 
-          const response = await fetch(apiUrl, requestOptions);
+      const response = await fetch(apiUrl, requestOptions);
 
-          if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "Formated_Participant_list.xlsx";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            console.log("Excel file created and downloaded.");
-          } else {
-            throw new Error("Failed to create Excel file");
-          }
-          setMsg("");
-        } catch (error) {
-          console.error("Error saving data:", error);
-        }
-
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "Formated_Participant_list.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        console.log("Excel file created and downloaded.");
+      } else {
+        throw new Error("Failed to create Excel file");
       }
+      setMsg("");
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
+
+  }
 
 
 
@@ -147,6 +145,10 @@ const Colhelper = () => {
 
 
 
+  const dd = () => {
+    const x = mobileCheck("01720025151");
+    console.log(x);
+  }
 
   return (
     <>
@@ -155,6 +157,7 @@ const Colhelper = () => {
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
 
+      <button onClick={dd}>Click Me</button>
 
       <div className="px-4 lg:px-6">
         <div className="w-full grid grid-cols-1 gap-y-4">
@@ -192,8 +195,8 @@ const Colhelper = () => {
                           <tr className="border-b border-gray-200 hover:bg-gray-100" key={participant.id}>
                             <td className="text-start py-2 px-4">{participant.sl}</td>
                             <td className="text-start py-2 px-4">{participant.name}</td>
-                            <td className={`text-center py-2 px-4 ${participant.dt === '1900-01-01' ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.dt}</td>
-                            <td className={`text-center py-2 px-4 ${participant.mobile === '999999999' ? 'line-through font-bold' : 'no-underline font-normal'}`}>0{participant.mobile}</td>
+                            <td className={`text-center py-2 px-4 ${participant.isDate === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.dt}</td>
+                            <td className={`text-center py-2 px-4 ${participant.isMobile === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.mobile}</td>
                             <td className="flex justify-end items-center mt-1">
                               <Edit message={messageHandler} id={participant.id} data={participant} />
                             </td>
