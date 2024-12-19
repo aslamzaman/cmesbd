@@ -4,8 +4,8 @@ import { Close } from "../Icons";
 
 import { setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 import { excelDateToJSDate, jsonDataFromExcelSheet } from "@/lib/ColHelper";
-import { formatedDate } from "@/lib/utils";
-
+import { dateDifferenceInDays, formatedDate } from "@/lib/utils";
+import * as XLSX from 'xlsx';
 
 
 const Upload = ({ message }) => {
@@ -19,19 +19,19 @@ const Upload = ({ message }) => {
         setShow(true);
     }
 
-    const uploadHandler = async () => {
+    const uploadHandler1 = async () => {
         if (file) {
             try {
                 const response = await jsonDataFromExcelSheet(file, ["sl", "name", "dt", "mobile"]);
                 const withId = response.map((item, i) => {
-                    const id = `1734449892500_${i+1}`;
+                    const id = `1734449892500_${i + 1}`;
                     return {
                         id: id,
                         ...item,
                         dt: formatedDate(excelDateToJSDate(item.dt))
                     }
                 })
-               // console.log(withId);
+                // console.log(withId);
                 await setDataToIndexedDB("participant", withId);
                 message("Data loaded successfully");
                 setShow(false);
@@ -43,6 +43,45 @@ const Upload = ({ message }) => {
             setShow(false);
         }
     }
+
+
+    const convertCsvToJson = (csv) => {
+        const lines = csv.split("\n"); // Trim and split into rows
+        const dataRows = lines.slice(1);
+        return dataRows.map((item, index) => {
+            const values = item.split(",").map(value => value.trim());
+            return {
+                id: index + 1,
+                name: values[0],
+                date: values[1],
+                mobile: values[2]
+            }
+        })
+    }
+    const uploadHandler = () => {
+        if (!file) {
+            message("Please select a file.");
+            return;
+        }
+        try {
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const workbook = XLSX.read(event.target.result, { type: "binary" });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_csv(worksheet);
+                const data = convertCsvToJson(jsonData);
+                console.log(data);
+                await setDataToIndexedDB("participant", data);
+                message("Data loaded successfully");
+                setShow(false);
+            }
+            reader.readAsArrayBuffer(file);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
 
 
 

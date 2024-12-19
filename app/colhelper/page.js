@@ -19,11 +19,16 @@ const Colhelper = () => {
   const [sl, setSl] = useState("");
 
 
-  const dtCheck = (dt) => {
-    const daysCalculation = dateDifferenceInDays(new Date(dt), new Date(), true) / 365;
-    const yrs = Math.round(daysCalculation);
-    const finalDt = yrs < 12 || yrs > 55 ? false : true;
-    return finalDt;
+  const checkDate = (dt) => {
+    const days = dateDifferenceInDays(new Date(dt), new Date(), true) / 365;
+    const yrs = Math.round(days);
+    return yrs < 12 || yrs > 55 ? false : true;
+  }
+
+  const checkMobile = (number)=>{
+    const numberToString = number.toString();
+    const mobile = parseInt(number).toString();
+    return mobile.length !== 10 || mobile.charAt(0) !== '1' || numberToString.length !== 11 ? false :true; 
   }
 
 
@@ -33,11 +38,10 @@ const Colhelper = () => {
       try {
         const data = await getDataFromIndexedDB("participant");
         const checkData = data.map(item => {
-          const mobileStr = parseInt(item.mobile).toString();
           return {
             ...item,
-            isDate: dtCheck(item.dt),
-            isMobile: mobileStr.length !== 10 || mobileStr.charAt(0) !== '1' ? false : true
+            isDate: checkDate(item.date),
+            isMobile: checkMobile(item.mobile)
           }
         })
 
@@ -173,7 +177,6 @@ const Colhelper = () => {
                 <table className="w-full border border-gray-200">
                   <thead>
                     <tr className="w-full bg-gray-200">
-                      <th className="text-start border-b border-gray-200 px-4 py-2">SL</th>
                       <th className="text-start border-b border-gray-200 px-4 py-2">Name</th>
                       <th className="text-center border-b border-gray-200 px-4 py-2">Date</th>
                       <th className="text-center border-b border-gray-200 px-4 py-2">Mobile</th>
@@ -185,9 +188,8 @@ const Colhelper = () => {
                       participants.length ? participants.map(participant => {
                         return (
                           <tr className="border-b border-gray-200 hover:bg-gray-100" key={participant.id}>
-                            <td className="text-start py-2 px-4">{participant.sl}</td>
                             <td className="text-start py-2 px-4">{participant.name}</td>
-                            <td className={`text-center py-2 px-4 ${participant.isDate === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.dt}</td>
+                            <td className={`text-center py-2 px-4 ${participant.isDate === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{formatedDate(participant.date)}</td>
                             <td className={`text-center py-2 px-4 ${participant.isMobile === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.mobile}</td>
                             <td className="flex justify-end items-center mt-1">
                               <Edit message={messageHandler} id={participant.id} data={participant} />

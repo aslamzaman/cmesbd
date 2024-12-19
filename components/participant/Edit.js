@@ -5,7 +5,6 @@ import { formatedDate } from "@/lib/utils";
 import { updateDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 const Edit = ({ message, id, data }) => {
-    const [sl, setSl] = useState('');
     const [name, setName] = useState('');
     const [dt, setDt] = useState('');
     const [mobile, setMobile] = useState('');
@@ -16,10 +15,9 @@ const Edit = ({ message, id, data }) => {
         message("Ready to edit");
         setShow(true);
         try {
-            const {sl, name, dt, mobile } = data;
-            setSl(sl);
+            const {name, date, mobile } = data;
             setName(name);
-            setDt(formatedDate(dt));
+            setDt(formatedDate(date));
             setMobile(mobile);
 
         } catch (err) {
@@ -36,9 +34,8 @@ const Edit = ({ message, id, data }) => {
     const createObject = () => {
         return {
             id: id,
-            sl: sl,
             name: name,
-            dt: dt,
+            date: dt,
             mobile: mobile
         }
     }
@@ -48,6 +45,7 @@ const Edit = ({ message, id, data }) => {
         e.preventDefault();
         try {
             const newObject = createObject();
+            console.log(newObject);
             const msg = await updateDataToIndexedDB('participant', id, newObject);
             message(msg);
         } catch (error) {
@@ -76,7 +74,6 @@ const Edit = ({ message, id, data }) => {
                         <div className="px-6 pb-6 text-black">
                             <form onSubmit={updateHandler} >
                                 <div className="grid grid-cols-1 gap-4 my-4">
-                                    <TextEn Title="Sl" Id="sl" Change={e => setSl(e.target.value)} Value={sl} Chr={10} />
                                     <TextEn Title="Name" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={150} />
                                     <TextDt Title="Date" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
                                     <TextEn Title="Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={11} />
