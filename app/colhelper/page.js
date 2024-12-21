@@ -5,9 +5,8 @@ import Upload from "@/components/participant/Upload";
 import { DropdownEn, BtnSubmit, TextNum, BtnEn } from "@/components/Form";
 import { dateDifferenceInDays, formatedDate, sortArray } from "@/lib/utils";
 import { delKeyFromIndexedDB, getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
-import { excelDateToJSDate } from "@/lib/ColHelper";
 
-
+import XlsxPopulate from 'xlsx-populate/browser/xlsx-populate';
 
 
 const Colhelper = () => {
@@ -25,10 +24,10 @@ const Colhelper = () => {
     return yrs < 12 || yrs > 55 ? false : true;
   }
 
-  const checkMobile = (number)=>{
+  const checkMobile = (number) => {
     const numberToString = number.toString();
     const mobile = parseInt(number).toString();
-    return mobile.length !== 10 || mobile.charAt(0) !== '1' || numberToString.length !== 11 ? false :true; 
+    return mobile.length !== 10 || mobile.charAt(0) !== '1' || numberToString.length !== 11 ? false : true;
   }
 
 
@@ -63,38 +62,66 @@ const Colhelper = () => {
 
 
 
-
   const handleCreate = async (e) => {
     e.preventDefault();
     if (participants.length < 1) {
       setMsg("No data found!");
       return false;
     }
+
     setMsg("Please wait...");
+
     try {
-      const newData = { unit: unit, sl: sl, participants: participants };
-      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/format`;
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newData)
-      };
+      const workbook = await XlsxPopulate.fromBlankAsync();
+      const sheet = workbook.sheet("Sheet1").name("Worksheet");
+      //---------------------------------------------------------
+      // Header with style
+      sheet.column("A").width(30).hidden(false);
+      sheet.column("B").width(20).hidden(false);
+      sheet.column("C").width(20).hidden(false);
+      sheet.column("D").width(10).hidden(false);
+      sheet.column("E").width(45).hidden(false);
+      sheet.column("F").width(30).hidden(false);
 
-      const response = await fetch(apiUrl, requestOptions);
+      sheet.cell('A1').value("Name").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
+      sheet.cell('B1').value("Date of Birth").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
+      sheet.cell('C1').value("Mobile No").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
+      sheet.cell('D1').value("Age").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
+      sheet.cell('E1').value("Rgistration No.").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
+      sheet.cell('F1').value("Learner ID").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "Formated_Participant_list.xlsx";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        console.log("Excel file created and downloaded.");
-      } else {
-        throw new Error("Failed to create Excel file");
+
+      const age = (dt) => {
+        const getAge = dateDifferenceInDays(dt, new Date());
+        return Math.round(getAge / 365);
       }
+
+      // Create rows
+      participants.forEach((item, i) => {
+        const fourDigit = `0000000${parseInt(sl) + i}`;
+        const reg = `CMES-${unit}-${fourDigit.slice(-4)}-${item.name}`;
+        const lId = `CMES-${unit}-${fourDigit.slice(-4)}`;
+
+        sheet.cell(`A${i + 2}`).value(item.name).style({ numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
+        sheet.cell(`B${i + 2}`).value(formatedDate(item.date)).style({ numberFormat: 'YYYY-MM-DD', horizontalAlignment: 'center', verticalAlignment: 'center' });
+        sheet.cell(`C${i + 2}`).value(item.mobile).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
+        sheet.cell(`D${i + 2}`).value(age(item.date)).style({ numberFormat: '#,##0_);(#,##0)', horizontalAlignment: 'center', verticalAlignment: 'center' });
+        sheet.cell(`E${i + 2}`).value(reg).style({ numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
+        sheet.cell(`F${i + 2}`).value(lId).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
+      })
+
+
+      // Generate the Excel file as a blob
+      const blob = await workbook.outputAsync();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "Formated_Participant_list.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      console.log("Excel file created and downloaded.");
+
       setMsg("");
     } catch (error) {
       console.error("Error saving data:", error);
@@ -104,32 +131,33 @@ const Colhelper = () => {
 
 
 
-
   const downloadExcelFormat = async (e) => {
     e.preventDefault();
     setMsg("Please wait...");
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/format`;
-      const requestOptions = {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      };
+      const workbook = await XlsxPopulate.fromBlankAsync();
+      const sheet = workbook.sheet("Sheet1").name("Worksheet");
+      //--------------------------------------------------------
+      //Header with style
+      sheet.column("A").width(40).hidden(false);
+      sheet.cell('A1').value("Participant Name").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
 
-      const response = await fetch(apiUrl, requestOptions);
+      sheet.column("B").width(25).hidden(false);
+      sheet.cell('B1').value("Date Of Birth").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "Participant_list.xlsx";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        console.log("Excel file created and downloaded.");
-      } else {
-        throw new Error("Failed to create Excel file");
-      }
+      sheet.column("C").width(25).hidden(false);
+      sheet.cell('C1').value("Mobile No").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
+
+
+      // Generate the Excel file as a buffer
+      const blob = await workbook.outputAsync();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Participant_list_format.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
       setMsg("");
     } catch (error) {
       console.error("Error saving data:", error);
@@ -148,6 +176,8 @@ const Colhelper = () => {
   }
 
 
+
+
   return (
     <>
       <div className="w-full mb-3 mt-8">
@@ -160,8 +190,6 @@ const Colhelper = () => {
           <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
             <div className="overflow-auto">
               <p className="w-full text-sm text-red-700">{msg}</p>
-
-
 
               <div className="overflow-auto">
                 <div className="w-full grid grid-cols-2">
@@ -201,10 +229,7 @@ const Colhelper = () => {
                     }
                   </tbody>
                 </table>
-
               </div>
-
-
 
             </div>
           </div>
@@ -229,8 +254,6 @@ const Colhelper = () => {
             </form>
             <button className="text-blue-600 underline py-4" onClick={downloadExcelFormat} >Download Excel Format</button>
           </div>
-
-
 
         </div>
       </div>

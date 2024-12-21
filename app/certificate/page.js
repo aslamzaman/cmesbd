@@ -39,14 +39,18 @@ const Certificate = () => {
 
 
     const fileChangeHandler = async (e) => {
-        const data = await jsonDataFromExcelSheet(e.target.files[0], ["sl", "name", "trade", "reg"]);
-        setStdData(data);
+        try {
+            const data = await jsonDataFromExcelSheet(e.target.files[0], ["sl", "name", "trade", "reg"]);
+            setStdData(data);
+        } catch (err) {
+            console.log("Messages: "+err);
+        }
     }
 
 
     const createPdfHanler = (e) => {
         e.preventDefault();
-        const envPw = process.env.NEXT_PUBLIC_COL_PW;
+        const envPw = "zohurcmes";
         if (stdData.length < 1) {
             setMsg("Please select a xlsx file");
             return false;
@@ -96,7 +100,7 @@ const Certificate = () => {
             doc.addPage("a4", "l");
 
             i = i + 1;
-            setMsg(`Page Created: ${i}}`);
+            setMsg(`Page Created: ${i}`);
             if (i >= stdData.length) {
                 clearInterval(myTimer);
                 doc.deletePage((stdData.length + 1));
