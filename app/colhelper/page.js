@@ -21,13 +21,14 @@ const Colhelper = () => {
   const checkDate = (dt) => {
     const days = dateDifferenceInDays(new Date(dt), new Date(), true) / 365;
     const yrs = Math.round(days);
-    return yrs < 12 || yrs > 55 ? false : true;
+    const isNum = yrs ? 1 : 0;
+    //console.log(yrs);
+    return yrs < 12 || yrs > 55 || isNum === 0 ? false : true;
   }
 
   const checkMobile = (number) => {
-    const numberToString = number.toString();
     const mobile = parseInt(number).toString();
-    return mobile.length !== 10 || mobile.charAt(0) !== '1' || numberToString.length !== 11 ? false : true;
+    return mobile.charAt(0) !== '1' || mobile.length !== 10 ? false : true;
   }
 
 
@@ -101,10 +102,14 @@ const Colhelper = () => {
         const fourDigit = `0000000${parseInt(sl) + i}`;
         const reg = `CMES-${unit}-${fourDigit.slice(-4)}-${item.name}`;
         const lId = `CMES-${unit}-${fourDigit.slice(-4)}`;
+        //-------------------------------------------
+        const mobleElevenDigit = `0000${parseInt(item.mobile)}`;
+        const correctMobile = mobleElevenDigit.slice(-11);
+
 
         sheet.cell(`A${i + 2}`).value(item.name).style({ numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
         sheet.cell(`B${i + 2}`).value(formatedDate(item.date)).style({ numberFormat: 'YYYY-MM-DD', horizontalAlignment: 'center', verticalAlignment: 'center' });
-        sheet.cell(`C${i + 2}`).value(item.mobile).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
+        sheet.cell(`C${i + 2}`).value(correctMobile).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell(`D${i + 2}`).value(age(item.date)).style({ numberFormat: '#,##0_);(#,##0)', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell(`E${i + 2}`).value(reg).style({ numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
         sheet.cell(`F${i + 2}`).value(lId).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
@@ -134,6 +139,7 @@ const Colhelper = () => {
   const downloadExcelFormat = async (e) => {
     e.preventDefault();
     setMsg("Please wait...");
+
     try {
       const workbook = await XlsxPopulate.fromBlankAsync();
       const sheet = workbook.sheet("Sheet1").name("Worksheet");
@@ -184,7 +190,7 @@ const Colhelper = () => {
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">CMES COL PROJECT</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
-   
+
       <div className="px-4 lg:px-6">
         <div className="w-full grid grid-cols-1 gap-y-4">
           <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
@@ -217,7 +223,7 @@ const Colhelper = () => {
                         return (
                           <tr className="border-b border-gray-200 hover:bg-gray-100" key={participant.id}>
                             <td className="text-start py-2 px-4">{participant.name}</td>
-                            <td className={`text-center py-2 px-4 ${participant.isDate === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{formatedDate(participant.date)}</td>
+                            <td className={`text-center py-2 px-4 ${participant.isDate === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.date}</td>
                             <td className={`text-center py-2 px-4 ${participant.isMobile === false ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.mobile}</td>
                             <td className="flex justify-end items-center mt-1">
                               <Edit message={messageHandler} id={participant.id} data={participant} />

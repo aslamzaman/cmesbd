@@ -12,6 +12,7 @@ const Upload = ({ message }) => {
 
     const showModal = () => {
         setShow(true);
+        setFile(null)
     }
 
 
@@ -43,8 +44,8 @@ const Upload = ({ message }) => {
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
                 const csvFile = XLSX.utils.sheet_to_csv(worksheet);
+              //  console.log(csvFile);
                 const data = convertCsvToJson(csvFile);
-                console.log(data);
                 await setDataToIndexedDB("participant", data);
                 message("Data loaded successfully");
                 setShow(false);
