@@ -62,7 +62,6 @@ const Colhelper = () => {
   }
 
 
-
   const handleCreate = async (e) => {
     e.preventDefault();
     if (participants.length < 1) {
@@ -91,7 +90,6 @@ const Colhelper = () => {
       sheet.cell('E1').value("Rgistration No.").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
       sheet.cell('F1').value("Learner ID").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
 
-
       const age = (dt) => {
         const getAge = dateDifferenceInDays(dt, new Date());
         return Math.round(getAge / 365);
@@ -106,7 +104,6 @@ const Colhelper = () => {
         const mobleElevenDigit = `0000${parseInt(item.mobile)}`;
         const correctMobile = mobleElevenDigit.slice(-11);
 
-
         sheet.cell(`A${i + 2}`).value(item.name).style({ numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
         sheet.cell(`B${i + 2}`).value(formatedDate(item.date)).style({ numberFormat: 'YYYY-MM-DD', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell(`C${i + 2}`).value(correctMobile).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
@@ -114,7 +111,6 @@ const Colhelper = () => {
         sheet.cell(`E${i + 2}`).value(reg).style({ numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
         sheet.cell(`F${i + 2}`).value(lId).style({ numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
       })
-
 
       // Generate the Excel file as a blob
       const blob = await workbook.outputAsync();
@@ -131,9 +127,7 @@ const Colhelper = () => {
     } catch (error) {
       console.error("Error saving data:", error);
     }
-
   }
-
 
 
   const downloadExcelFormat = async (e) => {
@@ -154,7 +148,6 @@ const Colhelper = () => {
       sheet.column("C").width(25).hidden(false);
       sheet.cell('C1').value("Mobile No").style({ horizontalAlignment: 'center', verticalAlignment: 'center', bold: true });
 
-
       // Generate the Excel file as a buffer
       const blob = await workbook.outputAsync();
       const url = URL.createObjectURL(blob);
@@ -170,8 +163,6 @@ const Colhelper = () => {
     }
   }
 
-
-
   const clearDataHandler = async () => {
     try {
       await delKeyFromIndexedDB("participant");
@@ -180,9 +171,6 @@ const Colhelper = () => {
       console.log(err);
     }
   }
-
-
-
 
   return (
     <>
@@ -239,7 +227,6 @@ const Colhelper = () => {
 
             </div>
           </div>
-
           <div className="w-full border-2 p-4 mb-32 shadow-md rounded-md">
             <form onSubmit={handleCreate}>
               <div className="grid grid-cols-1 gap-2 my-2">
@@ -260,12 +247,10 @@ const Colhelper = () => {
             </form>
             <button className="text-blue-600 underline py-4" onClick={downloadExcelFormat} >Download Excel Format</button>
           </div>
-
         </div>
       </div>
     </>
   )
-
 }
 
 export default Colhelper;
