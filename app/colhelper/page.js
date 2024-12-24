@@ -23,7 +23,7 @@ const Colhelper = () => {
     const yrs = Math.round(days);
     const isNum = yrs ? 1 : 0;
     //console.log(yrs);
-    return yrs < 12 || yrs > 55 || isNum === 0 ? false : true;
+    return yrs < 14 || yrs > 70 || isNum === 0 ? false : true;
   }
 
   const checkMobile = (number) => {
@@ -100,8 +100,8 @@ const Colhelper = () => {
       // Create rows
       participants.forEach((item, i) => {
         const fourDigit = `0000000${parseInt(sl) + i}`;
-        const reg = `CMES-${unit}-${fourDigit.slice(-4)}-${item.name}`;
-        const lId = `CMES-${unit}-${fourDigit.slice(-4)}`;
+        const reg = `CMES-COL-${unit}-${fourDigit.slice(-4)}-${item.name}`;
+        const lId = `CMES-COL-${unit}-${fourDigit.slice(-4)}`;
         //-------------------------------------------
         const mobleElevenDigit = `0000${parseInt(item.mobile)}`;
         const correctMobile = mobleElevenDigit.slice(-11);
@@ -245,11 +245,11 @@ const Colhelper = () => {
               <div className="grid grid-cols-1 gap-2 my-2">
                 <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
                   <option value="SRJ">SRJ</option>
-                  <option value="NDR">NDR</option>
+                  <option value="NDY">NDY</option>
                   <option value="JAL">JAL</option>
-                  <option value="DUT">DUT</option>
+                  <option value="DEUTY">DEUTY</option>
                   <option value="RNB">RNB</option>
-                  <option value="DMK">DMK</option>
+                  <option value="DAM">DAM</option>
                   <option value="JNP">JNP</option>
                 </DropdownEn>
                 <TextNum Title="Serial Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />

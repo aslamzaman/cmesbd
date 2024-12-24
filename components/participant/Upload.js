@@ -20,7 +20,7 @@ const Upload = ({ message }) => {
         const lines = csv.split("\n"); // Trim and split into rows
         const dataRows = lines.slice(1);
         return dataRows.map((item, index) => {
-            const values = item.split(",").map(value => value.trim());
+            const values = item.split(";").map(value => value.trim());
             return {
                 id: index + 1,
                 name: values[0],
@@ -43,7 +43,7 @@ const Upload = ({ message }) => {
                 const workbook = XLSX.read(event.target.result, { type: "binary" });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const csvFile = XLSX.utils.sheet_to_csv(worksheet);
+                const csvFile = XLSX.utils.sheet_to_csv(worksheet,{FS:";"});
               //  console.log(csvFile);
                 const data = convertCsvToJson(csvFile);
                 await setDataToIndexedDB("participant", data);
