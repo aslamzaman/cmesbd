@@ -36,9 +36,8 @@ const Plasterwork = () => {
             setWaitMsg('Please Wait...');
             try {
                 const response = await getDataFromIndexedDB('price');
-                const cementPrice = response.find(cement => parseInt(cement.id) === 1733758840844);
-                const sandPrice = response.find(sand => parseInt(sand.id) === 1733758823444);
-
+                const sandPrice = response.find(sand => sand.id === "SFlvASnMa3RjbPgzz0Tw");
+                const cementPrice = response.find(cement => cement.id === "aj4THFRGdOZjs0QNPlrF");
                 setCementPrice(cementPrice.taka);
                 setSandPrice(sandPrice.taka);
                 setWaitMsg('');

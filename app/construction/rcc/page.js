@@ -40,11 +40,11 @@ const Rccwork = () => {
             try {
                 const response = await getDataFromIndexedDB('price');
                 console.log(response);
-                
-                const khoaPrice = response.find(khoa => parseInt(khoa.id) === 1733758814756);
-                const cementPrice = response.find(cement => parseInt(cement.id) === 1733758840844);
-                const sandPrice = response.find(sand => parseInt(sand.id) === 1733758823444);
-                const rodPrice = response.find(rod => parseInt(rod.id) === 1733758767653);
+              
+                const sandPrice = response.find(sand => sand.id === "SFlvASnMa3RjbPgzz0Tw");
+                const cementPrice = response.find(cement => cement.id === "aj4THFRGdOZjs0QNPlrF");    
+                const khoaPrice = response.find(khoa => khoa.id === "PoYjiI0qdpXEPpHSvbmx"); 
+                const rodPrice = response.find(rod => rod.id === "2ihLY7ZNyJgYKT3fO03v");
 
                 setCementPrice(cementPrice.taka);
                 setSandPrice(sandPrice.taka);
