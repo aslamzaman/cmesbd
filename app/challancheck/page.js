@@ -13,12 +13,8 @@ const Inwordconverter = ({ Msg }) => {
 
     const checkHandler = (e) => {
         e.preventDefault();
-        if (num1.length === 4 && num2.length === 11) {
             const st = `http://103.48.16.132/echalan/details.php?challanNo=${num1}-${num2}`;
             window.open(st, "_blank");
-        } else {
-            setMsg("Challan number format is not correct! Enter the correct format number.")
-        }
     }
 
 
@@ -33,9 +29,9 @@ const Inwordconverter = ({ Msg }) => {
                 <div className="w-full p-4 overflow-auto">
                     <form onSubmit={checkHandler}>
                         <div className="grid grid-cols-3 gap-2">
-                            <TextNum Title="4 Digit" Id="num1" Change={e => setNum1(e.target.value)} Value={num1} />
+                            <TextNum Title="First Part" Id="num1" Change={e => setNum1(e.target.value)} Value={num1} />
                             <div className="col-span-2">
-                                <TextNum Title="11 Digit" Id="num2" Change={e => setNum2(e.target.value)} Value={num2} />
+                                <TextNum Title="Second Part" Id="num2" Change={e => setNum2(e.target.value)} Value={num2} />
                             </div>
                         </div>
                         <div className="w-full flex justify-start">
