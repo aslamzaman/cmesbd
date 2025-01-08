@@ -147,7 +147,7 @@ const Imagestopdf = () => {
             <div className="w-full lg:w-1/2 p-4 mx-auto grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
                 <form onSubmit={createPdfHandler}>
                     <div className="w-full grid grid-cols-1 gap-3 border p-4">
-                        <input type="file" onChange={fileChangeHandlerImage} accept="image/*,image/.heic" multiple />
+                        <input type="file" onChange={fileChangeHandlerImage} accept="image/*,image/heic" multiple />
                     </div>
                     <BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />
                 </form>
