@@ -114,11 +114,11 @@ const Imagestopdf = () => {
                         img = cropPotrait(item.width, item.height);
                     }
 
+                    const originType = item.name.split(".").slice(-1)[0].toUpperCase();
                     const x = Math.round((210 - img.width) / 2);
                     const y = Math.round((297 - img.height) / 3);
 
-
-                    doc.addImage(`${item.url}`, "PNG", x, y, img.width, img.height);
+                    doc.addImage(`${item.url}`, `${originType}`, x, y, img.width, img.height);
 
                     // const nm = item.name.split(".").slice(0, -1).join(".");
                     const textY = y + img.height + 10;
@@ -126,7 +126,7 @@ const Imagestopdf = () => {
                     doc.addPage();
                 })
                 doc.deletePage(imageDatas.length + 1);
-                doc.save(new Date().toISOString() + "-pictures.pdf");
+                doc.save(new Date().toISOString() + "-CMES-COL.pdf");
                 setMsg("PDF created completed.");
                 setImageDatas([]);
             }, 100);
@@ -144,10 +144,10 @@ const Imagestopdf = () => {
             </div>
 
 
-            <div className="w-full lg:w-1/2 p-4 mx-auto grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
+            <div className="w-full lg:w-1/2 p-4 mx-auto mt-20 grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
                 <form onSubmit={createPdfHandler}>
                     <div className="w-full grid grid-cols-1 gap-3 border p-4">
-                        <input type="file" onChange={fileChangeHandlerImage} accept="image/*" multiple />
+                        <input type="file" onChange={fileChangeHandlerImage} accept=".jpg, .jpeg, .png, .bmp" multiple />
                     </div>
                     <BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />
                 </form>
