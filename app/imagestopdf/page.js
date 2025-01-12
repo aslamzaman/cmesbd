@@ -1,15 +1,17 @@
 "use client";
-import { BtnSubmit } from "@/components/Form";
+import { BtnSubmit, DropdownEn, TextEn } from "@/components/Form";
 import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 
-
+const unit = ['SRJ','DEUTY','DAM','JAL','NDR','RNB','JNP'];
 
 
 
 const Imagestopdf = () => {
 
     const [imageDatas, setImageDatas] = useState("");
+    const [qt, setQt] = useState("");
+    const [activity, setActivity] = useState("1322.1");
     const [msg, setMsg] = useState("");
 
 
@@ -105,7 +107,7 @@ const Imagestopdf = () => {
             setMsg("Please wait...");
             //--------------------------------------------------------------------
             setTimeout(() => {
-                imageDatas.forEach((item) => {
+                imageDatas.forEach((item,i) => {
                     const ratio = item.width / item.height;
                     let img = {};
                     if (ratio > 1) {
@@ -122,7 +124,8 @@ const Imagestopdf = () => {
 
                     // const nm = item.name.split(".").slice(0, -1).join(".");
                     const textY = y + img.height + 10;
-                    doc.text(`${item.name}`, 105, textY, null, null, "center");
+                    const nm = `Activity_${activity}_${qt}_CMES(${unit[i]}).png`;
+                    doc.text(`${nm}`, 105, textY, null, null, "center");
                     doc.addPage();
                 })
                 doc.deletePage(imageDatas.length + 1);
@@ -144,10 +147,19 @@ const Imagestopdf = () => {
             </div>
 
 
-            <div className="w-full lg:w-1/2 p-4 mx-auto mt-20 grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
+            <div className="w-full lg:w-3/4 p-4 mx-auto mt-20 grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
                 <form onSubmit={createPdfHandler}>
-                    <div className="w-full grid grid-cols-1 gap-3 border p-4">
+                    <div className="w-full grid grid-cols-3 gap-3 border p-4">
+                        <div className="mt-4">
                         <input type="file" onChange={fileChangeHandlerImage} accept=".jpg, .jpeg, .png, .bmp" multiple />
+                        </div>
+                        <DropdownEn Title="Quarter" Id="qt" Change={e => setQt(e.target.value)} Value={qt}>
+                            <option value="Q1">Q1</option>
+                            <option value="Q2">Q2</option>
+                            <option value="Q3">Q3</option>
+                            <option value="Q4">Q4</option>
+                        </DropdownEn>
+                         <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
                     </div>
                     <BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />
                 </form>
