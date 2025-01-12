@@ -3,7 +3,6 @@ import { BtnSubmit, DropdownEn, TextEn } from "@/components/Form";
 import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 
-const unit = ['SRJ','DEUTY','DAM','JAL','NDR','RNB','JNP'];
 
 
 
@@ -89,6 +88,16 @@ const Imagestopdf = () => {
         return { width, height };
     }
 
+
+
+
+
+    //------------------------------------------
+
+    const unit = ['SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
+
+
+
     const createPdfHandler = (e) => {
         e.preventDefault();
         if (imageDatas.length.length < 1) {
@@ -107,7 +116,7 @@ const Imagestopdf = () => {
             setMsg("Please wait...");
             //--------------------------------------------------------------------
             setTimeout(() => {
-                imageDatas.forEach((item,i) => {
+                imageDatas.forEach((item) => {
                     const ratio = item.width / item.height;
                     let img = {};
                     if (ratio > 1) {
@@ -120,12 +129,24 @@ const Imagestopdf = () => {
                     const x = Math.round((210 - img.width) / 2);
                     const y = Math.round((297 - img.height) / 3);
 
-                    doc.addImage(`${item.url}`, `${originType}`, x, y, img.width, img.height);
+                    doc.addImage(`${item.url} `, `${originType} `, x, y, img.width, img.height);
 
-                    // const nm = item.name.split(".").slice(0, -1).join(".");
+
+                    const nm = item.name;
+                    const splitNm = nm.split(".");
+                    const firstPart = splitNm[0];
+                    const secondPart = splitNm[1];
+                    const thirdPart = splitNm[2];
+                    let st = "";
+                    if (splitNm.length === 2) {
+                         st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}).${secondPart}`;
+                    }else{
+                        st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}_${secondPart}).${thirdPart}`;  
+                    }
+
                     const textY = y + img.height + 10;
-                    const nm = `Activity_${activity}_${qt}_CMES(${unit[i]}).png`;
-                    doc.text(`${nm}`, 105, textY, null, null, "center");
+                    //  const nm = `Activity_${activity}_${qt} _CMES(${unit[i]}).png`;
+                    doc.text(`${st} `, 105, textY, null, null, "center");
                     doc.addPage();
                 })
                 doc.deletePage(imageDatas.length + 1);
@@ -151,7 +172,7 @@ const Imagestopdf = () => {
                 <form onSubmit={createPdfHandler}>
                     <div className="w-full grid grid-cols-3 gap-3 border p-4">
                         <div className="mt-4">
-                        <input type="file" onChange={fileChangeHandlerImage} accept=".jpg, .jpeg, .png, .bmp" multiple />
+                            <input type="file" onChange={fileChangeHandlerImage} accept=".jpg, .jpeg, .png, .bmp" multiple />
                         </div>
                         <DropdownEn Title="Quarter" Id="qt" Change={e => setQt(e.target.value)} Value={qt}>
                             <option value="Q1">Q1</option>
@@ -159,7 +180,7 @@ const Imagestopdf = () => {
                             <option value="Q3">Q3</option>
                             <option value="Q4">Q4</option>
                         </DropdownEn>
-                         <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
+                        <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
                     </div>
                     <BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />
                 </form>
