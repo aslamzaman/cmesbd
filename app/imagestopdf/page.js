@@ -19,13 +19,22 @@ const Imagestopdf = () => {
         setImageDatas([]);
     }, [])
 
+
+
+
+    const convertPxToMm = (n) => {
+        return Math.round(n / 3.7795275591);
+    }
+
+
+
     const getImageWidthHeight = (url) => {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.src = url;
             img.onload = () => {
-                const imgWidth = img.width;
-                const imgHeight = img.height;
+                const imgWidth = convertPxToMm(img.width);
+                const imgHeight = convertPxToMm(img.height);
                 resolve({ imgWidth, imgHeight });
             };
             img.onerror = (error) => reject(error);
@@ -58,33 +67,33 @@ const Imagestopdf = () => {
 
     //---------------------------------------------------------------
 
-    const convertPxToMm = (n) => {
-        return Math.round(n / 3.7795275591);
-    }
+
 
     const cropLandscape = (w, h) => {
         let width = 0;
         let height = 0;
-        if (convertPxToMm(w) > 170) {
+        if (w >= 170) {
             width = 170;
-            height = Math.round((170 / convertPxToMm(w)) * convertPxToMm(h));
+            height = Math.round((170 / w) * h);
         } else {
-            width = convertPxToMm(w);
-            height = convertPxToMm(h);
+            width = w;
+            height = h;
         }
+        console.log({width, height})
         return { width, height };
     }
 
     const cropPotrait = (w, h) => {
         let width = 0;
         let height = 0;
-        if (convertPxToMm(h) > 242) {
-            width = Math.round((242 / convertPxToMm(h)) * convertPxToMm(w));
+        if (h >= 242) {
+            width = Math.round((242 / h) * w);
             height = 242;
         } else {
-            width = convertPxToMm(w);
-            height = convertPxToMm(h);
+            width = w;
+            height = h;
         }
+        console.log({width, height})
         return { width, height };
     }
 
@@ -117,19 +126,21 @@ const Imagestopdf = () => {
             //--------------------------------------------------------------------
             setTimeout(() => {
                 imageDatas.forEach((item) => {
-                    const ratio = item.width / item.height;
+                    const ratio = parseInt(item.width) / parseInt(item.height);
+                    console.log(ratio > 1 ? "land" : "port");
                     let img = {};
                     if (ratio > 1) {
                         img = cropLandscape(item.width, item.height);
                     } else {
                         img = cropPotrait(item.width, item.height);
+                        console.log(img)
                     }
 
-                    const originType = item.name.split(".").slice(-1)[0].toUpperCase();
+      
                     const x = Math.round((210 - img.width) / 2);
                     const y = Math.round((297 - img.height) / 3);
 
-                    doc.addImage(`${item.url} `, `${originType} `, x, y, img.width, img.height);
+                    doc.addImage(`${item.url}`, "PNG", x, y, img.width, img.height);
 
 
                     const nm = item.name;
@@ -139,9 +150,9 @@ const Imagestopdf = () => {
                     const thirdPart = splitNm[2];
                     let st = "";
                     if (splitNm.length === 2) {
-                         st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}).${secondPart}`;
-                    }else{
-                        st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}_${secondPart}).${thirdPart}`;  
+                        st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}).${secondPart}`;
+                    } else {
+                        st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}_${secondPart}).${thirdPart}`;
                     }
 
                     const textY = y + img.height + 10;
