@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { BtnEn } from "@/components/Form";
 import { useReactToPrint } from "react-to-print";
 import { useRouter } from "next/navigation";
+import Printpdf from "@/components/imagesprintpdf/printpdf";
 
 
 const Createpdf = () => {
@@ -10,7 +11,6 @@ const Createpdf = () => {
     const [msg, setMsg] = useState("");
     const [qt, setQt] = useState("");
     const [activity, setActivity] = useState("");
-
 
     const componentRef = useRef(null);
     const router = useRouter();
@@ -191,15 +191,13 @@ const Createpdf = () => {
 
             <div className="w-full h-auto p-16 overflow-auto">
                 <div ref={componentRef} className="w-full h-full text-black">
-
-
-
-
                     {imageDatas.length ? (
                         imageDatas.map((data, i) => (
                             <div id="flexbox" key={i} className="w-full h-[610px]">
-                                <img src={data.url} className="mx-auto" style={{ width: data.w, height: data.h }} />                              
-                                <footer className="w-full text-center text-xl text-gray-600 font-bold mt-1">{data.nm}</footer>
+                                <div className="mx-auto" style={{ width: data.w, height: data.h }}>
+                                    <Printpdf url={data.url} w={data.width} h={data.height} className="w-full h-auto" />
+                                    <footer className="w-full text-center text-xl text-gray-600 font-bold mt-1">{data.nm}</footer>
+                                </div>
                             </div>
                         ))
                     ) : null}
