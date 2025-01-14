@@ -72,9 +72,15 @@ const Createpdf = () => {
 
     const nameCreate = (nm) => {
         const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
-        const num = nm.substring(0, 1);
-        const num2 = nm.substring(1, nm.length).trim();
-        const st = `Activity_${activity}_${qt}_CMES_${unit[num]}_${num2}`;
+		const splitName = nm.split(".");
+		const num = splitName[0].substring(0, 1);
+		let s = "";
+		if(splitName[0].length > 1){
+			s = `_${splitName[0].substring(1, splitName[0].length).trim()}`;
+		}else{
+		    s = '';
+		}
+        const st = `Activity_${activity}_${qt}_CMES_${unit[parseInt(num)]}${s}.${splitName[1]}`;
         return st;
     }
 
