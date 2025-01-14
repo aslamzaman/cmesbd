@@ -5,57 +5,57 @@ import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedD
 
 const priceData = [
     {
-        "id": "1733758767653",
+        "id": "2ihLY7ZNyJgYKT3fO03v",
         "name": "Rod",
-        "taka": "125"
+        "taka": "140"
     },
     {
-        "id": "1733758778716",
+        "id": "4wIhMnVTz4T63tuiNl5o",
         "name": "Tiles",
         "taka": "80"
     },
     {
-        "id": "1733758787476",
+        "id": "7sr2LdUOcYRCuWzeDvaF",
         "name": "Labor",
         "taka": "400"
     },
     {
-        "id": "1733758796668",
+        "id": "AXc2dF5VYHRVc0KtW5i7",
         "name": "Brick",
         "taka": "12"
     },
     {
-        "id": "1733758806292",
+        "id": "BPdiFFWadoXdzVhBg9tj",
         "name": "Flatbar",
         "taka": "120"
     },
     {
-        "id": "1733758814756",
+        "id": "PoYjiI0qdpXEPpHSvbmx",
         "name": "Khoa",
         "taka": "80"
     },
     {
-        "id": "1733758823444",
+        "id": "SFlvASnMa3RjbPgzz0Tw",
         "name": "Sand",
         "taka": "20"
     },
     {
-        "id": "1733758832748",
+        "id": "SXTILtVdWvOfdubnzuKn",
         "name": "Mason",
         "taka": "600"
     },
     {
-        "id": "1733758840844",
+        "id": "aj4THFRGdOZjs0QNPlrF",
         "name": "Cement",
         "taka": "550"
     },
     {
-        "id": "1733758848852",
+        "id": "mtgAaRyWBPxCOLjBXHn4",
         "name": "Angel Bar",
         "taka": "125"
     },
     {
-        "id": "1733758856172",
+        "id": "s62d8HMIXkC2Wh2CtNVd",
         "name": "Paint",
         "taka": "1500"
     }
