@@ -22,11 +22,11 @@ const Createpdf = () => {
             const { qt, activity } = JSON.parse(data);
             setQt(qt);
             setActivity(activity);
+            setMsg(`Activity_${activity}_${qt}_CMES...`);
         } else {
             setQt("");
             setActivity("");
         }
-        setMsg('Activity_1322.1_Q1_CMES...');
     }, [])
 
 
@@ -112,7 +112,7 @@ const Createpdf = () => {
             const imageData = await Promise.all(imageDataPromises);
             console.log(imageData);
             setImageDatas(imageData);
-            setMsg('Activity_1322.1_Q1_CMES...');
+            setMsg(`Activity_${activity}_${qt}_CMES...`);
         } catch (error) {
             console.error("Error processing images:", error);
         }
@@ -167,7 +167,7 @@ const Createpdf = () => {
             return false;
         }
         printHandler();
-        setMsg('Activity_1322.1_Q1_CMES...');
+        setMsg(`Activity_${activity}_${qt}_CMES...`);
     }
 
 
