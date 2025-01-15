@@ -152,7 +152,7 @@ const Createpdf = () => {
     const printFn = useReactToPrint({
         contentRef: componentRef,
         pageStyle: pageStyle,
-        documentTitle: `${new Date().toISOString()}_cmesbd_image_compiler`,
+        documentTitle: `Activity_${activity}_${qt}_CMES`,
     });
 
 
