@@ -26,7 +26,7 @@ const Createpdf = () => {
             setQt("");
             setActivity("");
         }
-        setMsg("");
+        setMsg('Activity_1322.1_Q1_CMES...');
     }, [])
 
 
@@ -72,14 +72,14 @@ const Createpdf = () => {
 
     const nameCreate = (nm) => {
         const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
-		const splitName = nm.split(".");
-		const num = splitName[0].substring(0, 1);
-		let s = "";
-		if(splitName[0].length > 1){
-			s = `_${splitName[0].substring(1, splitName[0].length).trim()}`;
-		}else{
-		    s = '';
-		}
+        const splitName = nm.split(".");
+        const num = splitName[0].substring(0, 1);
+        let s = "";
+        if (splitName[0].length > 1) {
+            s = `_${splitName[0].substring(1, splitName[0].length).trim()}`;
+        } else {
+            s = '';
+        }
         const st = `Activity_${activity}_${qt}_CMES_${unit[parseInt(num)]}${s}.${splitName[1]}`;
         return st;
     }
@@ -112,6 +112,7 @@ const Createpdf = () => {
             const imageData = await Promise.all(imageDataPromises);
             console.log(imageData);
             setImageDatas(imageData);
+            setMsg('Activity_1322.1_Q1_CMES...');
         } catch (error) {
             console.error("Error processing images:", error);
         }
@@ -166,7 +167,7 @@ const Createpdf = () => {
             return false;
         }
         printHandler();
-        setMsg("");
+        setMsg('Activity_1322.1_Q1_CMES...');
     }
 
 
