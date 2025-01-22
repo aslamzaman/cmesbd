@@ -6,7 +6,6 @@ import { jsPDF } from "jspdf";
 
 
 
-
 const Imagestopdf = () => {
 
     const [imageDatas, setImageDatas] = useState("");
@@ -37,6 +36,7 @@ const Imagestopdf = () => {
         });
     };
 
+
     const compressedImage = (file) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -47,9 +47,7 @@ const Imagestopdf = () => {
                 };
 
                 const compressedFile = await imageCompression(file, options);
-                const binaryData = await compressedFile.arrayBuffer();
-                const blob = new Blob([binaryData], { type: "image/png" });
-                const url = URL.createObjectURL(blob);
+                const url = URL.createObjectURL(compressedFile);
                 resolve(url);
             } catch (error) {
                 console.error('Error compressing the image:', reject(error));
@@ -59,16 +57,15 @@ const Imagestopdf = () => {
 
     const fileChangeHandlerImage = async (e) => {
         setBtnPrint(false);
+        setMsg("Please wait. Files are loading...");
         try {
             const files = e.target.files;
             const imageDataPromises = Array.from(files).map(async (file) => {
                 const dataUrl = await compressedImage(file);
                 const { imgWidth, imgHeight, orientation } = await getImageWidthHeight(dataUrl);
-                const nm = file.name;
-                const nm1 = nm.slice(-3);
-                const type2 = nm1 === 'png' ? 'PNG' : 'JPG';
-                console.log(type2);
-
+                const type1 = file.type
+                    .split("/")[1]
+                    .toUpperCase();
 
                 return {
                     url: dataUrl,
@@ -77,8 +74,8 @@ const Imagestopdf = () => {
                     name: file.name,
                     type: file.type,
                     size: file.size,
-                    type2: type2,
-                    orientation: orientation
+                    orientation: orientation,
+                    type1: type1,
                 };
             });
 
@@ -86,6 +83,7 @@ const Imagestopdf = () => {
             console.log(imageData);
             setImageDatas(imageData);
             setBtnPrint(true);
+            setMsg("Files was loaded.");
         } catch (error) {
             console.error("Error processing images:", error);
         }
@@ -126,7 +124,6 @@ const Imagestopdf = () => {
 
 
 
-
     //------------------------------------------
 
 
@@ -137,7 +134,7 @@ const Imagestopdf = () => {
         if (imageDatas.length.length < 1) {
             return false;
         }
-       
+
         try {
             const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
             const doc = new jsPDF({
@@ -155,23 +152,17 @@ const Imagestopdf = () => {
                 imageDatas.forEach((item) => {
 
                     const orientation = item.orientation;
-
                     let img = {};
                     if (orientation === 'landscape') {
                         img = cropLandscape(item.width, item.height);
                     } else {
                         img = cropPotrait(item.width, item.height);
-                        console.log(img)
                     }
-
 
                     const x = Math.round((631.4175 - img.width) / 2);
                     const y = Math.round((446.46 - img.height) / 2) - 10;
-
-
-
-
-                    doc.addImage(`${item.url}`, `${item.type2}`, x, y, img.width, img.height);
+                    
+                    doc.addImage(`${item.url}`, `${item.type1}`, x, y, img.width, img.height);
 
 
                     const nm = item.name;
@@ -185,10 +176,10 @@ const Imagestopdf = () => {
                     doc.addPage();
                 })
                 doc.deletePage(imageDatas.length + 1);
-                const fileName =  `Activity_${activity}_${qt}_CMES.pdf`;
+                const fileName = `Activity_${activity}_${qt}_CMES.pdf`;
                 doc.save(fileName);
                 setMsg("PDF created completed.");
-                setImageDatas([]);               
+                setImageDatas([]);
             }, 100);
 
         } catch (error) {
@@ -218,7 +209,7 @@ const Imagestopdf = () => {
                         </DropdownEn>
                         <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
                     </div>
-                    {btnPrint?(<BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />):null}
+                    {btnPrint ? (<BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />) : null}
                 </form>
             </div>
         </>
