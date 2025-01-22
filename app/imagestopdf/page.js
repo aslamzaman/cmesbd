@@ -1,6 +1,7 @@
 "use client";
-import { BtnSubmit, DropdownEn, TextEn } from "@/components/Form";
 import React, { useEffect, useState } from "react";
+import { BtnSubmit, DropdownEn, TextEn } from "@/components/Form";
+import imageCompression from 'browser-image-compression';
 import { jsPDF } from "jspdf";
 
 
@@ -12,6 +13,7 @@ const Imagestopdf = () => {
     const [qt, setQt] = useState("");
     const [activity, setActivity] = useState("1322.1");
     const [msg, setMsg] = useState("");
+    const [btnPrint, setBtnPrint] = useState(false);
 
 
     useEffect(() => {
@@ -21,45 +23,69 @@ const Imagestopdf = () => {
 
 
 
-
-    const convertPxToMm = (n) => {
-        return Math.round(n / 3.7795275591);
-    }
-
-
-
     const getImageWidthHeight = (url) => {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.src = url;
             img.onload = () => {
-                const imgWidth = convertPxToMm(img.width);
-                const imgHeight = convertPxToMm(img.height);
-                resolve({ imgWidth, imgHeight });
+                const imgWidth = img.width;
+                const imgHeight = img.height;
+                const orientation = imgWidth / imgHeight > 1 ? 'landscape' : 'portrait';
+                resolve({ imgWidth, imgHeight, orientation });
             };
             img.onerror = (error) => reject(error);
         });
     };
 
+    const compressedImage = (file) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const options = {
+                    maxSizeMB: 0.45, // Maximum size in MB
+                    maxWidthOrHeight: 960, // Maximum width or height
+                    useWebWorker: true,
+                };
+
+                const compressedFile = await imageCompression(file, options);
+                const binaryData = await compressedFile.arrayBuffer();
+                const blob = new Blob([binaryData], { type: "image/png" });
+                const url = URL.createObjectURL(blob);
+                resolve(url);
+            } catch (error) {
+                console.error('Error compressing the image:', reject(error));
+            }
+        })
+    }
+
     const fileChangeHandlerImage = async (e) => {
+        setBtnPrint(false);
         try {
             const files = e.target.files;
             const imageDataPromises = Array.from(files).map(async (file) => {
-                const imagBlobUrl = URL.createObjectURL(file);
-                const { imgWidth, imgHeight } = await getImageWidthHeight(imagBlobUrl);
+                const dataUrl = await compressedImage(file);
+                const { imgWidth, imgHeight, orientation } = await getImageWidthHeight(dataUrl);
+                const nm = file.name;
+                const nm1 = nm.slice(-3);
+                const type2 = nm1 === 'png' ? 'PNG' : 'JPG';
+                console.log(type2);
+
+
                 return {
-                    url: imagBlobUrl,
+                    url: dataUrl,
                     width: imgWidth,
                     height: imgHeight,
                     name: file.name,
                     type: file.type,
                     size: file.size,
+                    type2: type2,
+                    orientation: orientation
                 };
             });
 
             const imageData = await Promise.all(imageDataPromises);
             console.log(imageData);
             setImageDatas(imageData);
+            setBtnPrint(true);
         } catch (error) {
             console.error("Error processing images:", error);
         }
@@ -72,28 +98,28 @@ const Imagestopdf = () => {
     const cropLandscape = (w, h) => {
         let width = 0;
         let height = 0;
-        if (w >= 170) {
-            width = 170;
-            height = Math.round((170 / w) * h);
+        if (w >= 517) {
+            width = 517;
+            height = Math.round((517 / w) * h);
         } else {
             width = w;
             height = h;
         }
-        console.log({width, height})
+        // console.log({width, height})
         return { width, height };
     }
 
     const cropPotrait = (w, h) => {
         let width = 0;
         let height = 0;
-        if (h >= 242) {
-            width = Math.round((242 / h) * w);
-            height = 242;
+        if (h >= 338) {
+            width = Math.round((338 / h) * w);
+            height = 338;
         } else {
             width = w;
             height = h;
         }
-        console.log({width, height})
+        // console.log({width, height})
         return { width, height };
     }
 
@@ -103,7 +129,6 @@ const Imagestopdf = () => {
 
     //------------------------------------------
 
-    const unit = ['SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
 
 
 
@@ -112,58 +137,58 @@ const Imagestopdf = () => {
         if (imageDatas.length.length < 1) {
             return false;
         }
-
+       
         try {
+            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
             const doc = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
+                orientation: 'l',
+                unit: 'px',
                 format: 'a4',
                 putOnlyUsedFonts: true,
                 floatPrecision: 16 // or "smart", default is 16
             });
 
+            // 446.46 631.4175
             setMsg("Please wait...");
             //--------------------------------------------------------------------
             setTimeout(() => {
                 imageDatas.forEach((item) => {
-                    const ratio = parseInt(item.width) / parseInt(item.height);
-                    console.log(ratio > 1 ? "land" : "port");
+
+                    const orientation = item.orientation;
+
                     let img = {};
-                    if (ratio > 1) {
+                    if (orientation === 'landscape') {
                         img = cropLandscape(item.width, item.height);
                     } else {
                         img = cropPotrait(item.width, item.height);
                         console.log(img)
                     }
 
-      
-                    const x = Math.round((210 - img.width) / 2);
-                    const y = Math.round((297 - img.height) / 3);
 
-                    doc.addImage(`${item.url}`, "PNG", x, y, img.width, img.height);
+                    const x = Math.round((631.4175 - img.width) / 2);
+                    const y = Math.round((446.46 - img.height) / 2) - 10;
+
+
+
+
+                    doc.addImage(`${item.url}`, `${item.type2}`, x, y, img.width, img.height);
 
 
                     const nm = item.name;
-                    const splitNm = nm.split(".");
-                    const firstPart = splitNm[0];
-                    const secondPart = splitNm[1];
-                    const thirdPart = splitNm[2];
-                    let st = "";
-                    if (splitNm.length === 2) {
-                        st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}).${secondPart}`;
-                    } else {
-                        st = `Activity_${activity}_${qt}_CMES(${unit[firstPart - 1]}_${secondPart}).${thirdPart}`;
-                    }
+                    const ln = nm.length - 1;
+                    const firstPart = parseInt(nm.charAt(0));
+                    const secondPart = nm.slice(-ln);
+                    let st = `Activity_${activity}_${qt}_CMES_${unit[firstPart]}${secondPart}`;
 
-                    const textY = y + img.height + 10;
-                    //  const nm = `Activity_${activity}_${qt} _CMES(${unit[i]}).png`;
-                    doc.text(`${st} `, 105, textY, null, null, "center");
+                    const textY = y + img.height + 15;
+                    doc.text(`${st} `, 316, textY, null, null, "center");
                     doc.addPage();
                 })
                 doc.deletePage(imageDatas.length + 1);
-                doc.save(new Date().toISOString() + "-CMES-COL.pdf");
+                const fileName =  `Activity_${activity}_${qt}_CMES.pdf`;
+                doc.save(fileName);
                 setMsg("PDF created completed.");
-                setImageDatas([]);
+                setImageDatas([]);               
             }, 100);
 
         } catch (error) {
@@ -193,7 +218,7 @@ const Imagestopdf = () => {
                         </DropdownEn>
                         <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
                     </div>
-                    <BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />
+                    {btnPrint?(<BtnSubmit Title="Create PDF" Class="text-white bg-blue-600 hover:bg-blue-900" />):null}
                 </form>
             </div>
         </>
