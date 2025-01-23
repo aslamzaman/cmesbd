@@ -55,6 +55,7 @@ const Imagestopdf = () => {
 
     const fileChangeHandlerImage = async (e) => {
         setBtnPrint(false);
+        setMsg("Please wait. Image compresing and loading...");
         try {
             const files = e.target.files;
             const imageDataPromises = Array.from(files).map(async (file) => {
@@ -80,6 +81,7 @@ const Imagestopdf = () => {
             const imageData = await Promise.all(imageDataPromises);
             console.log(imageData);
             setImageDatas(imageData);
+            setMsg("Ready to creating pdf.");
             setBtnPrint(true);
         } catch (error) {
             console.error("Error processing images:", error);
