@@ -5,7 +5,6 @@ import imageCompression from 'browser-image-compression';
 import { jsPDF } from "jspdf";
 
 
-
 const Imagestopdf = () => {
 
     const [imageDatas, setImageDatas] = useState("");
@@ -36,13 +35,12 @@ const Imagestopdf = () => {
         });
     };
 
-
     const compressedImage = (file) => {
         return new Promise(async (resolve, reject) => {
             try {
                 const options = {
-                    maxSizeMB: 0.45, // Maximum size in MB
-                    maxWidthOrHeight: 960, // Maximum width or height
+                    maxSizeMB: 0.5, // Maximum size in MB
+                    maxWidthOrHeight: 1024, // Maximum width or height
                     useWebWorker: true,
                 };
 
@@ -57,15 +55,15 @@ const Imagestopdf = () => {
 
     const fileChangeHandlerImage = async (e) => {
         setBtnPrint(false);
-        setMsg("Please wait. Files are loading...");
         try {
             const files = e.target.files;
             const imageDataPromises = Array.from(files).map(async (file) => {
                 const dataUrl = await compressedImage(file);
                 const { imgWidth, imgHeight, orientation } = await getImageWidthHeight(dataUrl);
-                const type1 = file.type
-                    .split("/")[1]
-                    .toUpperCase();
+                const type2 = file.type
+                .split("/")[1]
+                .toUpperCase();
+                console.log(type2);
 
                 return {
                     url: dataUrl,
@@ -74,8 +72,8 @@ const Imagestopdf = () => {
                     name: file.name,
                     type: file.type,
                     size: file.size,
-                    orientation: orientation,
-                    type1: type1,
+                    type2: type2,
+                    orientation: orientation
                 };
             });
 
@@ -83,51 +81,12 @@ const Imagestopdf = () => {
             console.log(imageData);
             setImageDatas(imageData);
             setBtnPrint(true);
-            setMsg("Files was loaded.");
         } catch (error) {
             console.error("Error processing images:", error);
         }
     };
 
     //---------------------------------------------------------------
-
-
-
-    const cropLandscape = (w, h) => {
-        let width = 0;
-        let height = 0;
-        if (w >= 517) {
-            width = 517;
-            height = Math.round((517 / w) * h);
-        } else {
-            width = w;
-            height = h;
-        }
-        // console.log({width, height})
-        return { width, height };
-    }
-
-    const cropPotrait = (w, h) => {
-        let width = 0;
-        let height = 0;
-        if (h >= 338) {
-            width = Math.round((338 / h) * w);
-            height = 338;
-        } else {
-            width = w;
-            height = h;
-        }
-        // console.log({width, height})
-        return { width, height };
-    }
-
-
-
-
-    //------------------------------------------
-
-
-
 
     const createPdfHandler = (e) => {
         e.preventDefault();
@@ -138,32 +97,43 @@ const Imagestopdf = () => {
         try {
             const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
             const doc = new jsPDF({
-                orientation: 'l',
+                orientation: 'landscape',
                 unit: 'px',
                 format: 'a4',
-                putOnlyUsedFonts: true,
-                floatPrecision: 16 // or "smart", default is 16
+                putOnlyUsedFonts: true
             });
 
-            // 446.46 631.4175
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = doc.internal.pageSize.getHeight();
+            doc.text("Aslam", 10, 10, null, null, "left");
+
             setMsg("Please wait...");
             //--------------------------------------------------------------------
             setTimeout(() => {
                 imageDatas.forEach((item) => {
 
                     const orientation = item.orientation;
-                    let img = {};
+                    doc.addPage('a4', `${orientation}`);
+
+                    const imageWidth = item.width * 0.5;
+                    const imageHeight = item.height * 0.5;
+
+                    let x = 0;
+                    let y = 0;
+                    let textLeft = 0;
                     if (orientation === 'landscape') {
-                        img = cropLandscape(item.width, item.height);
+                        x = (pdfWidth - imageWidth) / 2;
+                        y = (pdfHeight - imageHeight) / 2;
+                        textLeft = pdfWidth / 2;
                     } else {
-                        img = cropPotrait(item.width, item.height);
+                        x = (pdfHeight - imageWidth) / 2;
+                        y = (pdfWidth - imageHeight) / 2;
+                        textLeft = pdfHeight / 2;
+
                     }
+                    //  console.log({ x, y, pw: pdfWidth, ph: pdfHeight, w: imageWidth, h: imageHeight })
 
-                    const x = Math.round((631.4175 - img.width) / 2);
-                    const y = Math.round((446.46 - img.height) / 2) - 10;
-                    
-                    doc.addImage(`${item.url}`, `${item.type1}`, x, y, img.width, img.height);
-
+                    doc.addImage(`${item.url}`, `${item.type2}`, x, y, imageWidth, imageHeight);
 
                     const nm = item.name;
                     const ln = nm.length - 1;
@@ -171,11 +141,11 @@ const Imagestopdf = () => {
                     const secondPart = nm.slice(-ln);
                     let st = `Activity_${activity}_${qt}_CMES_${unit[firstPart]}${secondPart}`;
 
-                    const textY = y + img.height + 15;
-                    doc.text(`${st} `, 316, textY, null, null, "center");
-                    doc.addPage();
+                    const textY = y + imageHeight + 15;
+                    doc.text(`${st} `, textLeft, textY, null, null, "center");
+
                 })
-                doc.deletePage(imageDatas.length + 1);
+                doc.deletePage(1);
                 const fileName = `Activity_${activity}_${qt}_CMES.pdf`;
                 doc.save(fileName);
                 setMsg("PDF created completed.");
