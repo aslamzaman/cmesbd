@@ -9,6 +9,8 @@ const Imagestopdf = () => {
 
     const [imageDatas, setImageDatas] = useState("");
     const [qt, setQt] = useState("");
+    const [yr, setYr] = useState("");
+    const [event, setEvent] = useState("");
     const [activity, setActivity] = useState("1322.1");
     const [msg, setMsg] = useState("");
     const [btnPrint, setBtnPrint] = useState(false);
@@ -97,7 +99,7 @@ const Imagestopdf = () => {
         }
 
         try {
-            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP'];
+            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP','HQ'];
             const doc = new jsPDF({
                 orientation: 'landscape',
                 unit: 'px',
@@ -141,15 +143,15 @@ const Imagestopdf = () => {
                     const ln = nm.length - 1;
                     const firstPart = parseInt(nm.charAt(0));
                     const secondPart = nm.slice(-ln);
-                    let st = `Activity_${activity}_${qt}_CMES_${unit[firstPart]}${secondPart}`;
+                   // let st = `Activity_${activity}_${qt}_CMES_${unit[firstPart]}${secondPart}`;
+                    let st = `Picture_${event}_${activity}_${qt}_${yr}_CMES_${unit[firstPart]}${secondPart}`;
 
                     const textY = y + imageHeight + 15;
                     doc.text(`${st} `, textLeft, textY, null, null, "center");
 
                 })
                 doc.deletePage(1);
-                const fileName = `Activity_${activity}_${qt}_CMES.pdf`;
-                doc.save(fileName);
+                doc.save(`Picture_${event}_${activity}_${qt}_${yr}_CMES.pdf`);
                 setMsg("PDF created completed.");
                 setImageDatas([]);
             }, 100);
@@ -178,6 +180,18 @@ const Imagestopdf = () => {
                             <option value="Q2">Q2</option>
                             <option value="Q3">Q3</option>
                             <option value="Q4">Q4</option>
+                        </DropdownEn>
+                        <DropdownEn Title="Year" Id="yr" Change={e => setYr(e.target.value)} Value={yr}>
+                            <option value="Y2">Y2</option>
+                            <option value="Y3">Y3</option>
+                            <option value="Y4">Y4</option>
+                            <option value="Y5">Y5</option>
+                        </DropdownEn>
+                        <DropdownEn Title="Event" Id="event" Change={e => setEvent(e.target.value)} Value={event}>
+                            <option value="Training">Training</option>
+                            <option value="Awarness">Awarness</option>
+                            <option value="Meeting">Meeting</option>
+                            <option value="Workshop">Workshop</option>
                         </DropdownEn>
                         <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
                     </div>
