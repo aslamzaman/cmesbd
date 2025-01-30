@@ -64,8 +64,8 @@ const Imagestopdf = () => {
                 const dataUrl = await compressedImage(file);
                 const { imgWidth, imgHeight, orientation } = await getImageWidthHeight(dataUrl);
                 const type2 = file.type
-                .split("/")[1]
-                .toUpperCase();
+                    .split("/")[1]
+                    .toUpperCase();
                 console.log(type2);
 
                 return {
@@ -99,7 +99,7 @@ const Imagestopdf = () => {
         }
 
         try {
-            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP','HQ'];
+            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP', 'HQ'];
             const doc = new jsPDF({
                 orientation: 'landscape',
                 unit: 'px',
@@ -143,7 +143,7 @@ const Imagestopdf = () => {
                     const ln = nm.length - 1;
                     const firstPart = parseInt(nm.charAt(0));
                     const secondPart = nm.slice(-ln);
-                   // let st = `Activity_${activity}_${qt}_CMES_${unit[firstPart]}${secondPart}`;
+                    // let st = `Activity_${activity}_${qt}_CMES_${unit[firstPart]}${secondPart}`;
                     let st = `Picture_${event}_${activity}_${qt}_${yr}_CMES_${unit[firstPart]}${secondPart}`;
 
                     const textY = y + imageHeight + 15;
@@ -169,10 +169,10 @@ const Imagestopdf = () => {
             </div>
 
 
-            <div className="w-full lg:w-3/4 p-4 mx-auto mt-20 grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
+            <div className="w-full lg:w-10/12 p-4 mx-auto mt-20 grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
                 <form onSubmit={createPdfHandler}>
-                    <div className="w-full grid grid-cols-3 gap-3 border p-4">
-                        <div className="mt-4">
+                    <div className="w-full grid grid-cols-6 gap-2 border p-4">
+                        <div className="col-span-2 mt-4">
                             <input type="file" onChange={fileChangeHandlerImage} accept=".jpg, .jpeg, .png, .bmp" multiple />
                         </div>
                         <DropdownEn Title="Quarter" Id="qt" Change={e => setQt(e.target.value)} Value={qt}>
@@ -181,6 +181,7 @@ const Imagestopdf = () => {
                             <option value="Q3">Q3</option>
                             <option value="Q4">Q4</option>
                         </DropdownEn>
+
                         <DropdownEn Title="Year" Id="yr" Change={e => setYr(e.target.value)} Value={yr}>
                             <option value="Y2">Y2</option>
                             <option value="Y3">Y3</option>
