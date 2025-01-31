@@ -193,6 +193,16 @@ const Imagestopdf = () => {
                             <option value="Awarness">Awarness</option>
                             <option value="Meeting">Meeting</option>
                             <option value="Workshop">Workshop</option>
+                            <option value="Mobilize">Mobilize</option>
+                            <option value="Campaign">Mobilize</option>
+                            <option value="Collaboration">Collaboration</option>
+                            <option value="Reintegrating">Reintegrating</option>
+                            <option value="Employment">Employment</option>
+                            <option value="Legal service">Legal service</option>
+                            <option value="Club">Club</option>
+                            <option value="Skills training">Skills training</option>
+                            <option value="Connect and support">Connect and support</option>
+                            <option value="Microfinancing and Bank credit">Microfinancing and Bank credit</option>
                         </DropdownEn>
                         <TextEn Title="Activity" Id="activity" Change={e => setActivity(e.target.value)} Value={activity} Chr={150} />
                     </div>
