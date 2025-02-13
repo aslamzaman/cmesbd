@@ -7,7 +7,7 @@ import Edit from "@/components/bayprostab/Edit";
 import Delete from "@/components/bayprostab/Delete";
 import { dateAdd, formatedDate } from '@/lib/utils';
 import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
-import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { addDataToIndexedDB, deleteKeyFromIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
@@ -29,7 +29,7 @@ const Bayprostab = () => {
   const [note, setNote] = useState(`Mvwoi R¡vjvwb (AK‡Ub) cÖ‡qvRb Abyhvqx wewfbœ cv¤ú †_‡K µq Kiv n‡e`);
   const [total, setTotal] = useState("");
   const [budgetHead, setBudgetHead] = useState("Utilities");
-  const [payType, setPayType] = useState("");
+  const [payType, setPayType] = useState("br");
   const [cheque, setCheque] = useState("");
 
   const [vatTax, setVatTax] = useState("");
@@ -155,6 +155,21 @@ const Bayprostab = () => {
   }
 
 
+  const clearAllHandler = async () => {
+    if (confirm("Be careful! All data will be deleted.")) {
+      const msg = await deleteKeyFromIndexedDB('bayprostab');
+      setMsg(msg);
+    } else {
+      setMsg("Canceled!");
+    }
+
+
+  }
+
+
+
+
+
   return (
     <>
       <div className="w-full mb-3 mt-8">
@@ -183,7 +198,7 @@ const Bayprostab = () => {
               <TextBn Title="Department (SutonnyMJ)" Id="dpt" Change={(e) => { setDpt(e.target.value) }} Value={dpt} Chr="50" />
 
               <div className="w-full col-span-2">
-                <TextBn Title="Subject (SutonnyMJ)" Id="subject" Change={(e) => { setSubject(e.target.value) }} Value={subject} Chr="150" />
+                <TextBn Title="Subject (SutonnyMJ)" Id="subject" Change={(e) => { setSubject(e.target.value) }} Value={subject} Chr="100" />
               </div>
 
 
@@ -215,6 +230,11 @@ const Bayprostab = () => {
 
         <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
           <div className="px-4 lg:px-6 overflow-auto">
+
+            <div className='px-4 py-2 flex justify-end'>
+              <BtnEn Title="Clear All" Click={clearAllHandler} Class="bg-fuchsia-200 hover:bg-fuchsia-300 text-black mt-4" />
+            </div>
+
             <p className="w-full text-sm text-red-700">{msg}</p>
 
             <div className="overflow-auto">

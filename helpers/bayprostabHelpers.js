@@ -1,7 +1,7 @@
 import { evaluate } from 'mathjs';
 import { getDataFromIndexedDB } from '@/lib/DatabaseIndexedDB';
 import { formatedDateDot, inwordBangla, numberWithComma, sortArray } from "@/lib/utils";
-// bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, payment 
+
 
 export const bayprostabHelpers = async () => {
     try {
