@@ -8,6 +8,7 @@ import Delete from "@/components/bayprostab/Delete";
 import { dateAdd, formatedDate } from '@/lib/utils';
 import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
 import { addDataToIndexedDB, deleteKeyFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { evaluate } from 'mathjs';
 
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
@@ -33,7 +34,7 @@ const Bayprostab = () => {
   const [cheque, setCheque] = useState("");
 
   const [vatTax, setVatTax] = useState("");
-  const [vt, setVt] = useState("10.5");
+  const [vt, setVt] = useState("12.5");
 
   useEffect(() => {
 
@@ -130,10 +131,10 @@ const Bayprostab = () => {
 
 
   const addVatTaxHandler = async () => {
-    if (vatTax === "") return false;
-
-    const numbers = vatTax.split(",").map(item => item.trim());
+    if (vatTax === "" || vt === "") return false;
+    const numbers = vatTax.split(",").map(item =>item.trim()).filter(item => Number(item));
     const uniqueArr = [...new Set(numbers)];
+    console.log(uniqueArr);
     const indexes = uniqueArr.sort().map(item => (parseInt(item) - 1));
     const result = bayprostabs.filter(bay => indexes.some(indx => parseInt(indx) === bayprostabs.indexOf(bay)));
     const tk = result.reduce((t, c) => t + parseFloat(c.subtotal), 0);
