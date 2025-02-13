@@ -1,26 +1,22 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { jsPDF } from "jspdf";
-import { BtnSubmit, DropdownEn, TextBn, TextEn, TextDt, TextareaBn } from "@/components/Form";
+import { BtnSubmit, DropdownEn, TextBn, TextEn, TextDt, TextareaBn, TextNum, BtnEn } from "@/components/Form";
 import Add from "@/components/bayprostab/Add";
 import Edit from "@/components/bayprostab/Edit";
 import Delete from "@/components/bayprostab/Delete";
+import { dateAdd, formatedDate } from '@/lib/utils';
+import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
+import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
-
-import { dateAdd, formatedDate, sortArray } from '@/lib/utils';
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
-import { BayprostabPreparation } from '@/lib/BayprostabPreparation';
-import { getDataFromIndexedDB } from '@/lib/DatabaseIndexedDB';
-import { evaluate } from 'mathjs';
-
 
 
 const Bayprostab = () => {
   const [bayprostabs, setBayprostabs] = useState([]);
   const [waitMsg, setWaitMsg] = useState('');
   const [msg, setMsg] = useState("Data ready");
-
 
   const [staffData, setStaffData] = useState([]);
   const [projectData, setProjectData] = useState([]);
@@ -36,45 +32,33 @@ const Bayprostab = () => {
   const [payType, setPayType] = useState("");
   const [cheque, setCheque] = useState("");
 
+  const [vatTax, setVatTax] = useState("");
+  const [vt, setVt] = useState("10.5");
+
   useEffect(() => {
-    setDt(formatedDate(new Date()));
 
     const getData = async () => {
       setWaitMsg('Please wait...');
       try {
-        const [staffs, projects, locaData] = await Promise.all([
-          getDataFromIndexedDB('staff'),
-          getDataFromIndexedDB('project'),
-          getDataFromIndexedDB('bayprostab')
-        ]);
+        const data = await bayprostabHelpers();
+        console.log(data)
+        const locaData = data.localDataWithSubTotal;
 
-        const sortData = staffs.sort((a, b) => sortArray(a.nameEn, b.nameEn));
-        setStaffData(sortData);
-
-        const deductGoIfGo = projects.filter(project => project.name !== "GO")
-        const withGO = [{ id: 1733394915043, name: "GO" }, ...deductGoIfGo];
-        setProjectData(withGO);
-
-        //-------------------------------------------------------
-        const addSubTotal = locaData.map(bayprostab => {
-          const subtotal = parseFloat(bayprostab.nos) * evaluate(bayprostab.taka);
-          return {
-            ...bayprostab, subtotal,
-            evalTaka: evaluate(bayprostab.taka)
-          }
-        })
-
-        const gt = addSubTotal.reduce((t, c) => t + parseFloat(c.subtotal), 0);
-        setBayprostabs(addSubTotal);
-        setTotal(gt);
-        setPayType('');
+        setStaffData(data.staffData);
+        setProjectData(data.projectWithGO);
+        setBayprostabs(locaData);
+        setTotal(data.gt);
 
         setWaitMsg('');
+        setDt(formatedDate(new Date()));
+        const pageNumbers = locaData.map(item => (locaData.indexOf(item) + 1)).join(",");
+        setVatTax(pageNumbers);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
     getData();
+
   }, [msg])
 
 
@@ -86,6 +70,7 @@ const Bayprostab = () => {
 
   const handleCreate = (e) => {
     e.preventDefault();
+
     if (bayprostabs.length < 1) {
       setWaitMsg("No data found!");
       return false;
@@ -115,29 +100,27 @@ const Bayprostab = () => {
       cheque: cheque
     }
 
-
     setTimeout(() => {
-      BayprostabPreparation.central({ doc, data });
-      BayprostabPreparation.tableOne({ doc }, bayprostabs, 101);
-      BayprostabPreparation.payment({ doc }, data, payType);
+      printCentral({ doc, data });
+      tableOne({ doc }, bayprostabs, 101);
+      payment({ doc }, data, payType);
 
       doc.addPage("a4", "p");
-      BayprostabPreparation.completePlan({ doc, data });
-      BayprostabPreparation.tableOne({ doc }, bayprostabs, 107);
-      BayprostabPreparation.payment({ doc }, data, payType);
+      printCompletePlan({ doc, data });
+      tableOne({ doc }, bayprostabs, 107);
+      paymentComplete({ doc }, data, payType);
 
       if (project === 'GO') {
         doc.addPage("a4", "p");
-        BayprostabPreparation.go({ doc, data });
-        BayprostabPreparation.tableTwo({ doc }, bayprostabs, 77);
+        printGo({ doc, data });
+        tableTwo({ doc }, bayprostabs, 77);
       }
 
       if (payType === 'br') {
         doc.addPage("a4", "p");
-        BayprostabPreparation.bearer({ doc, data });
-        BayprostabPreparation.tableTwo({ doc }, bayprostabs, 121);
+        printBearer({ doc, data });
+        bearerTable({ doc }, bayprostabs, 121);
       }
-
 
       doc.save(new Date().toISOString() + "-Bayprostab.pdf");
       setWaitMsg("");
@@ -146,6 +129,31 @@ const Bayprostab = () => {
   }
 
 
+  const addVatTaxHandler = async () => {
+    if (vatTax === "") return false;
+
+    const numbers = vatTax.split(",").map(item => item.trim());
+    const uniqueArr = [...new Set(numbers)];
+    const indexes = uniqueArr.sort().map(item => (parseInt(item) - 1));
+    const result = bayprostabs.filter(bay => indexes.some(indx => parseInt(indx) === bayprostabs.indexOf(bay)));
+    const tk = result.reduce((t, c) => t + parseFloat(c.subtotal), 0);
+    const vatTaxPercent = Math.round(tk * (vt / 100));
+    console.log(vatTaxPercent);
+
+    const createObject = () => {
+      return {
+        id: Date.now(),
+        item: `f¨vU Ges U¨v· (${vt}%)`,
+        nos: 1,
+        taka: vatTaxPercent
+      }
+    }
+
+    const newObject = createObject();
+    const msg = await addDataToIndexedDB('bayprostab', newObject);
+    setMsg(msg);
+  }
+
 
   return (
     <>
@@ -153,6 +161,7 @@ const Bayprostab = () => {
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Bayprostab</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
+
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-x-4">
         <div className="w-full border-2 p-4 shadow-md rounded-md">
 
@@ -204,13 +213,18 @@ const Bayprostab = () => {
 
         </div>
 
-
-
         <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
           <div className="px-4 lg:px-6 overflow-auto">
             <p className="w-full text-sm text-red-700">{msg}</p>
 
             <div className="overflow-auto">
+              <div className='px-4 py-2 grid grid-cols-5 gap-2 border border-gray-200'>
+                <TextNum Title="Vat-Tax (Percent)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
+                <div className='col-span-3'>
+                  <TextEn Title="VAT and tax based on item number" Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
+                </div>
+                <BtnEn Title="Add Vat&Tax" Click={addVatTaxHandler} Class="bg-pink-700 hover:bg-pink-900 text-white mt-4" />
+              </div>
               <table className="w-full border border-gray-200">
                 <thead>
                   <tr className="w-full bg-gray-200">
