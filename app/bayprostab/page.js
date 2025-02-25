@@ -247,13 +247,23 @@ const Bayprostab = () => {
             <p className="w-full text-sm text-red-700">{msg}</p>
 
             <div className="overflow-auto">
-              <div className='px-4 py-2 grid grid-cols-5 gap-2 border border-gray-200'>
-                <TextNum Title="Vat-Tax (Percent)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
-                <div className='col-span-3'>
-                  <TextEn Title="VAT and tax based on item number" Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
+            
+              <div className='w-full py-2 grid grid-cols-1 lg:grid-cols-3 gap-2 border border-gray-200'>
+                
+                <div className='w-full col-span-2 grid grid-cols-4 gap-2'>
+                    <TextNum Title="VatTax(%)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
+                 
+                  <div className='col-span-3'>
+                    <TextEn Title="VAT and tax based on item number" Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
+                  </div>
                 </div>
-                <BtnEn Title="Add Vat&Tax" Click={addVatTaxHandler} Class="bg-pink-700 hover:bg-pink-900 text-white mt-4" />
+
+                <div className='full'>
+                  <BtnEn Title="Add Vat&Tax" Click={addVatTaxHandler} Class="bg-pink-700 hover:bg-pink-900 text-white mt-4" />
+                </div>
+
               </div>
+
               <table className="w-full border border-gray-200">
                 <thead>
                   <tr className="w-full bg-gray-200">
