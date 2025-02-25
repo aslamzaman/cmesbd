@@ -6,7 +6,7 @@ import Link from 'next/link';
 const Home = ({ children }) => {
 
   return (
-    <div className="w-full lg:w-3/4 mx-auto">
+    <div className="w-full lg:w-11/12 mx-auto">
       <div className='w-full py-8 lg:py-12'>
         <h1 className='text-center text-3xl font-bold text-gray-400'>Dashboard</h1>
       </div>
@@ -29,7 +29,7 @@ export default Home;
 
 
 const ContentBlock = ({ title, link, color }) => {
-  return <Link href={link} className={`flex items-center justify-center text-center px-4 py-4 font-bold text-white rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${color} cursor-pointer`}>
+  return <Link href={link} className={`w-[150px] h-[150px] mx-auto flex items-center justify-center text-center px-4 py-4 font-bold text-white rounded-full ring-2 ring-blue-300 ring-offset-4 duration-300 ${color} cursor-pointer`}>
     {title}
   </Link>
 }

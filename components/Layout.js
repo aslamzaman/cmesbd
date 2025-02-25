@@ -226,7 +226,7 @@ const Home = ({ children }) => {
 
             {menu ? (<>
                 <div id="leftMenu" onClick={menuHideHandler} className='fixed left-0 top-[60px] right-0 bottom-0 z-40'>
-                    <div className='w-[250px] h-[calc(100vh-60px)] pb-[70px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
+                    <div className='w-[250px] h-[calc(100vh-60px)] pb-[100px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
                         <LeftMenu />
                     </div>
                 </div>
@@ -236,13 +236,13 @@ const Home = ({ children }) => {
 
 
             <div id="container" className='fixed left-0 top-[60px] right-0 bottom-0 flex'>
-                <div id="leftBar" className="hidden lg:block w-[300px] h-[calc(100vh-60px)] pb-[70px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
+                <div id="leftBar" className="hidden lg:block w-[300px] h-[calc(100vh-60px)] pb-[100px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
                     <LeftMenu />
                 </div>
 
 
 
-                <div className='w-full h-[calc(100vh-60px)] px-4 pt-4 pb-[70px] bg-white overflow-auto'>
+                <div className='w-full h-[calc(100vh-60px)] px-4 pt-4 pb-[100px] bg-white overflow-auto'>
                     {children}
                 </div>
             </div>

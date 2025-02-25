@@ -240,27 +240,30 @@ const Bayprostab = () => {
         <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
           <div className="px-4 lg:px-6 overflow-auto">
 
-            <div className='px-4 py-2 flex justify-end'>
+            <div className='w-full py-2 flex justify-end'>
               <BtnEn Title="Clear All" Click={clearAllHandler} Class="bg-fuchsia-200 hover:bg-fuchsia-300 text-black mt-4" />
             </div>
 
             <p className="w-full text-sm text-red-700">{msg}</p>
 
             <div className="overflow-auto">
-            
-              <div className='w-full py-2 grid grid-cols-1 lg:grid-cols-3 gap-2 border border-gray-200'>
-                
-                <div className='w-full col-span-2 grid grid-cols-4 gap-2'>
+
+
+              <div className='w-full py-2 flex items-center justify-center space-x-2 border border-gray-200'>
+
+                <div className='w-full flex space-x-2'>
+                  <div className='w-[90px]'>
                     <TextNum Title="VatTax(%)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
-                 
-                  <div className='col-span-3'>
+                  </div>
+                  <div className='w-full'>
                     <TextEn Title="VAT and tax based on item number" Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
                   </div>
                 </div>
 
-                <div className='full'>
-                  <BtnEn Title="Add Vat&Tax" Click={addVatTaxHandler} Class="bg-pink-700 hover:bg-pink-900 text-white mt-4" />
-                </div>
+               
+                  <button onClick={addVatTaxHandler} className="w-[150px] text-center px-2 py-1.5 mt-5 bg-pink-700 hover:bg-pink-900 text-white font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${Class} cursor-pointer">Add Vat&Tax</button>
+
+             
 
               </div>
 
