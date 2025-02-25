@@ -203,6 +203,8 @@ const Home = ({ children }) => {
 
     return (
         <>
+
+
             <div id="header" className="fixed h-[60px] left-0 top-0 right-0 px-4 lg:p-6 flex items-center justify-between bg-white border-b-2 border-gray-300 drop-shadow-lg z-50">
                 <div className='flex items-center space-x-3 lg:space-x-0'>
                     <div className='block lg:hidden'>
@@ -214,11 +216,9 @@ const Home = ({ children }) => {
                 </div>
                 <Link href="/" className='text-center text-2xl font-bold uppercase'>cmesbd</Link>
                 <div className='flex items-center justify-end space-x-4'>
-                    <a href='#' className='hover:underline underline-offset-2 decoration-2'>About</a>
-                    <a href='#' className='hover:underline underline-offset-2 decoration-2'>Contact</a>
-                    <a href='#' className='hover:underline underline-offset-2 decoration-2'>Gallary</a>
+                    <Link href='/about' className='hover:underline underline-offset-2 decoration-2'>About</Link>
+                    <Link href='/contact' className='hover:underline underline-offset-2 decoration-2'>Contact</Link>
                 </div>
-
             </div>
 
 
@@ -226,7 +226,7 @@ const Home = ({ children }) => {
 
             {menu ? (<>
                 <div id="leftMenu" onClick={menuHideHandler} className='fixed left-0 top-[60px] right-0 bottom-0 z-40'>
-                    <div className='w-[250px] md:w-[350px] h-[calc(100vh-60px)] pb-[50px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
+                    <div className='w-[250px] h-[calc(100vh-60px)] pb-[50px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
                         <LeftMenu />
                     </div>
                 </div>
@@ -236,10 +236,10 @@ const Home = ({ children }) => {
 
 
             <div id="container" className='fixed left-0 top-[60px] right-0 bottom-0 flex'>
-
-                <div id="leftBar" className="hidden lg:block w-[350px] h-[calc(100vh-60px)] pb-[50px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
+                <div id="leftBar" className="hidden lg:block w-[300px] h-[calc(100vh-60px)] pb-[50px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
                     <LeftMenu />
                 </div>
+
 
 
                 <div className='w-full h-[calc(100vh-60px)] p-4 bg-white overflow-auto'>
@@ -262,7 +262,7 @@ const LeftMenu = () => {
                 const menus = data.group;
                 return (
                     <div className='flex flex-col' key={i}>
-                        <label className='pl-4 pt-4 text-xl text-gray-500 font-semibold border-b-2 border-gray-200'>{menuTitle}</label>
+                        <label className='pl-4 pt-4 text-xl text-gray-400 font-semibold border-b-2 border-gray-200'>{menuTitle}</label>
                         {menus ? menus.map((item, index) => <Link href={item.url} className='pl-8 hover:bg-gray-300' key={index}>{item.label}</Link>) : null}
                     </div>
                 )
