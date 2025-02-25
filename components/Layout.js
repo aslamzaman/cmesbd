@@ -1,98 +1,284 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Image from "next/image";
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { MenuData } from '@/lib/MenuData';
 
+const MenuData = [
+    {
+        title: 'Accounts',
+        group: [
+            {
+                label: 'BFTN',
+                url: '/beftn'
+            },
 
-const MenuWraper = ({ Title, children }) => {
-    return <div className="flex flex-col p-2 md:p-4 items-center bg-gradient-to-t from-white to-pink-100 rounded-lg">
-        <h1 className='w-full text-start text-xs font-bold text-gray-500 italic'>{Title}</h1>
-        <div className="flex flex-col items-start">
-            {children}
-        </div>
-    </div>
-}
+            {
+                label: 'Bayprostab',
+                url: '/bayprostab'
+            },
+            {
+                label: 'Bayprostab Execution',
+                url: '/bayprostabexecution'
+            }
+        ]
+    },
+    {
+        title: 'Bills',
+        group: [
+            {
+                label: 'Any Bill',
+                url: '/anybill'
+            },
+            {
+                label: 'Local TA',
+                url: '/localta'
+            },
+            {
+                label: 'Unit TA Bill',
+                url: '/tabill'
+            }
+        ]
+    },
+    {
+        title: 'Settings(Basic)',
+        group: [
+            {
+                label: 'Author',
+                url: '/author'
+            },
+            {
+                label: 'Project',
+                url: '/project'
+            },
+            {
+                label: 'Price',
+                url: '/price'
+            }
+        ]
+    },
+    {
+        title: 'Setting(Accounts)',
+        group: [
+            {
+                label: 'Receiver Bank',
+                url: '/receiver'
+            },
+            {
+                label: 'Sender Bank',
+                url: '/sender'
+            },
+            {
+                label: 'Staff',
+                url: '/staff'
+            }
+        ]
+    },
+    {
+        title: 'Constructions',
+        group: [
+            {
+                label: 'Brick Flat Solling',
+                url: '/construction/bfs'
+            },
+            {
+                label: 'Brick Works',
+                url: '/construction/bw'
+            },
+            {
+                label: 'CC Works',
+                url: '/construction/cc'
+            },
+            {
+                label: 'Plaster Works',
+                url: '/construction/plaster'
+            },
+            {
+                label: 'RCC Works',
+                url: '/construction/rcc'
+            },
+        ]
+    },
+    {
+        title: 'Generate',
+        group: [
 
-
-const MenuItem = ({ Href, Title, Menu }) => {
-    const router = useRouter();
-    const cmdClick = () => {
-        router.push(Href);
-        Menu(false);
+            {
+                label: 'Bkash Send Money',
+                url: '/bkashsend'
+            },
+            {
+                label: 'VAT & TAX Calculator',
+                url: '/vattax'
+            },
+            {
+                label: 'Staff Benefit Calculator',
+                url: '/benefit'
+            },
+            {
+                label: 'COL Percipant Organize',
+                url: '/colhelper'
+            },
+            {
+                label: 'COL Certificate',
+                url: '/certificate'
+            },
+            {
+                label: 'Challan Verification',
+                url: '/challancheck'
+            }
+        ]
+    },
+    {
+        title: 'Converter',
+        group: [
+            {
+                label: 'Land Area Converter',
+                url: '/landareaconverter'
+            },
+            {
+                label: 'Inword Converter',
+                url: '/inwordconverter'
+            },
+            {
+                label: 'Property Works',
+                url: '/construction/property'
+            },
+            {
+                label: 'Images to PDF',
+                url: '/imagestopdf'
+            }
+        ]
+    },
+    {
+        title: 'Formats/Application',
+        group: [
+            {
+                label: 'CMES Formats',
+                url: '/format'
+            },
+            {
+                label: 'Leave Application',
+                url: '/leave'
+            },
+            {
+                label: 'Experience Certificate',
+                url: '/experiencecertificate'
+            },
+            {
+                label: 'CMES Manual',
+                url: '/cmesmanual'
+            },
+        ]
     }
-    return (
-        <button onClick={cmdClick} className="px-1 mb-2 hover:border-l-2 border-indigo-400 underline-offset-4 decoration-4 decoration-indigo-300 hover:text-indigo-400">{Title}</button>
-    )
-}
+]
 
 
-const Layout = ({ children }) => {
+const Home = ({ children }) => {
     const [menu, setMenu] = useState(false);
 
 
-    const menuBackClickHandler = (e) => {
-        const id = e.target.id;
-        if (id === 'menuBack') {
+
+    useEffect(() => {
+
+        window.addEventListener("resize", () => setMenu(false));
+
+        return () => {
+            window.removeEventListener("resize", () => setMenu(false));
+        };
+
+    }, [])
+
+    const menuCloseHander = () => {
+        setMenu(menu ? false : true);
+    }
+
+
+
+    const menuHideHandler = (e) => {
+        if (e.target.id === 'leftMenu') {
             setMenu(false);
         }
     }
 
 
-
     return (
         <>
-            <header id="top" className="fixed h-[60px] top-0 left-0 right-0 px-4 lg:px-6 bg-gray-100 border-b-2 border-white flex justify-between items-center shadow-lg z-10">
-                <div className="text-lg font-bold">
-                    {menu ? (<h1>Menu</h1>) : (<Link href="/">CMESBD</Link>)}
-                </div>
-                <button onClick={() => menu ? setMenu(false) : setMenu(true)}>
-                    {menu ? (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
-                    )}
-                </button>
-            </header>
-
-            {menu && (
-                <nav className="fixed w-full top-[60px] z-10">
-
-                    <div id="menuBack" onClick={menuBackClickHandler} className='w-full h-[calc(100vh-60px)] p-4 bg-gray-400 shadow-lg transition duration-500 overflow-auto'>
-                        <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3'>
-                            {
-                                MenuData.map((m, i) => {
-                                    const btn = m.group;
-                                    return (
-                                        <MenuWraper Title={m.title} key={i}>
-                                            {btn.map((b, j) => <MenuItem Href={b.url} Title={b.label} Menu={(data) => setMenu(data)} key={j} />)}
-                                        </MenuWraper>
-                                    )
-                                })
-                            }
-                        </div>
+            <div id="header" className="fixed h-[60px] left-0 top-0 right-0 px-4 lg:p-6 flex items-center justify-between bg-white border-b-2 border-gray-300 drop-shadow-lg z-50">
+                <div className='flex items-center space-x-3 lg:space-x-0'>
+                    <div className='block lg:hidden'>
+                        <MenuBar click={menuCloseHander} />
                     </div>
-                </nav>)}
+                    <Link href="/">
+                        <Image src='/images/logo/logo.png' alt='Logo' width={256} height={256} className='w-8 h-auto' />
+                    </Link>
+                </div>
+                <Link href="/" className='text-center text-2xl font-bold uppercase'>cmesbd</Link>
+                <div className='flex items-center justify-end space-x-4'>
+                    <a href='#' className='hover:underline underline-offset-2 decoration-2'>About</a>
+                    <a href='#' className='hover:underline underline-offset-2 decoration-2'>Contact</a>
+                    <a href='#' className='hover:underline underline-offset-2 decoration-2'>Gallary</a>
+                </div>
+
+            </div>
 
 
-            <main className="w-full mt-[60px] bg-white">
-                <div className='p-2 overflow-auto'>
+
+
+            {menu ? (<>
+                <div id="leftMenu" onClick={menuHideHandler} className='fixed left-0 top-[60px] right-0 bottom-0 z-40'>
+                    <div className='w-[250px] md:w-[350px] h-[calc(100vh-60px)] pb-[50px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
+                        <LeftMenu />
+                    </div>
+                </div>
+            </>) : null}
+
+
+
+
+            <div id="container" className='fixed left-0 top-[60px] right-0 bottom-0 flex'>
+
+                <div id="leftBar" className="hidden lg:block w-[350px] h-[calc(100vh-60px)] pb-[50px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
+                    <LeftMenu />
+                </div>
+
+
+                <div className='w-full h-[calc(100vh-60px)] p-4 bg-white overflow-auto'>
                     {children}
                 </div>
-                <div className='my-40'></div>
-            </main>
-
-
-            <footer className="w-full py-10 text-center text-sm bg-gray-100 border-t-2 border-white">
-                <p className='text-center'>Copyright @ 2024 Aslam Zaman. Email: aslamcmes@gmail.com</p>
-            </footer>
+            </div>
         </>
     )
 }
 
-export default Layout
+export default Home
+
+
+const LeftMenu = () => {
+
+    return (
+        <>
+            {MenuData ? MenuData.map((data, i) => {
+                const menuTitle = data.title;
+                const menus = data.group;
+                return (
+                    <div className='flex flex-col' key={i}>
+                        <label className='pl-4 pt-4 text-xl text-gray-500 font-semibold border-b-2 border-gray-200'>{menuTitle}</label>
+                        {menus ? menus.map((item, index) => <Link href={item.url} className='pl-8 hover:bg-gray-300' key={index}>{item.label}</Link>) : null}
+                    </div>
+                )
+            }) : null}
+
+        </>
+    )
+
+}
 
 
 
+
+const MenuBar = ({ click }) => {
+    return <button onClick={click}><svg height="30" width="30" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 8 L28 8 M2 15 L28 15 M2 22 L28 22"
+            className="fill-none stroke-gray-500" style={{ strokeWidth: '4px' }} />
+    </svg></button>
+}
