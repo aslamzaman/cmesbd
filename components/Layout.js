@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 
 const MenuData = [
     {
@@ -164,10 +166,6 @@ const MenuData = [
                 label: 'Experience Certificate',
                 url: '/experiencecertificate'
             },
-            {
-                label: 'CMES Manual',
-                url: '/cmesmanual'
-            },
         ]
     }
 ]
@@ -175,7 +173,7 @@ const MenuData = [
 
 const Home = ({ children }) => {
     const [menu, setMenu] = useState(false);
-
+const router = useRouter(null);
 
 
     useEffect(() => {
@@ -199,6 +197,12 @@ const Home = ({ children }) => {
             setMenu(false);
         }
     }
+
+const manualClickHandler = ()=>{
+    const pw = prompt("Enter password!");
+    if(pw !=='aslam') return false;
+    router.push("/cmesmanual");
+}
 
 
     return (
@@ -228,6 +232,7 @@ const Home = ({ children }) => {
                 <div id="leftMenu" onClick={menuHideHandler} className='fixed left-0 top-[60px] right-0 bottom-0 z-40'>
                     <div className='w-[250px] h-[calc(100vh-60px)] pb-[100px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
                         <LeftMenu />
+                        <button onClick={manualClickHandler} className='text-start pl-8 hover:bg-gray-300'>CMES Manual</button>
                     </div>
                 </div>
             </>) : null}
@@ -238,6 +243,7 @@ const Home = ({ children }) => {
             <div id="container" className='fixed left-0 top-[60px] right-0 bottom-0 flex'>
                 <div id="leftBar" className="hidden lg:block w-[300px] h-[calc(100vh-60px)] pb-[100px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
                     <LeftMenu />
+                    <button onClick={manualClickHandler} className='text-start pl-8 hover:bg-gray-300'>CMES Manual</button>
                 </div>
 
 
