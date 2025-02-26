@@ -214,11 +214,11 @@ const manualClickHandler = ()=>{
                     <div className='block lg:hidden'>
                         <MenuBar click={menuCloseHander} />
                     </div>
-                    <Link href="/">
+                    <Link href="/" className='flex items-center justify-start space-x-3'>
                         <Image src='/images/logo/logo.png' alt='Logo' width={256} height={256} className='w-8 h-auto' />
+                        <h1 className='text-start pb-1.5 text-2xl text-blue-600 font-bold uppercase'>cmesbd</h1>
                     </Link>
                 </div>
-                <Link href="/" className='text-center text-2xl font-bold uppercase'>cmesbd</Link>
                 <div className='flex items-center justify-end space-x-4'>
                     <Link href='/about' className='hover:underline underline-offset-2 decoration-2'>About</Link>
                     <Link href='/contact' className='hover:underline underline-offset-2 decoration-2'>Contact</Link>
@@ -232,7 +232,7 @@ const manualClickHandler = ()=>{
                 <div id="leftMenu" onClick={menuHideHandler} className='fixed left-0 top-[60px] right-0 bottom-0 z-40'>
                     <div className='w-[250px] h-[calc(100vh-60px)] pb-[100px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
                         <LeftMenu />
-                        <button onClick={manualClickHandler} className='text-start pl-8 hover:bg-gray-300'>CMES Manual</button>
+                        <button onClick={manualClickHandler} className='w-full text-start pl-8 hover:bg-gray-300 transition-all duration-500'>CMES Manual</button>
                     </div>
                 </div>
             </>) : null}
@@ -243,7 +243,7 @@ const manualClickHandler = ()=>{
             <div id="container" className='fixed left-0 top-[60px] right-0 bottom-0 flex'>
                 <div id="leftBar" className="hidden lg:block w-[300px] h-[calc(100vh-60px)] pb-[100px] flex flex-col bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto">
                     <LeftMenu />
-                    <button onClick={manualClickHandler} className='text-start pl-8 hover:bg-gray-300'>CMES Manual</button>
+                    <button onClick={manualClickHandler} className='w-full text-start pl-8 hover:bg-gray-300 transition-all duration-500'>CMES Manual</button>
                 </div>
 
 
@@ -268,8 +268,8 @@ const LeftMenu = () => {
                 const menus = data.group;
                 return (
                     <div className='flex flex-col' key={i}>
-                        <label className='pl-4 pt-4 text-xl text-gray-400 font-semibold border-b-2 border-gray-200'>{menuTitle}</label>
-                        {menus ? menus.map((item, index) => <Link href={item.url} className='pl-8 hover:bg-gray-300' key={index}>{item.label}</Link>) : null}
+                        <label className='pl-4 pt-4 pb-0.5 text-xl text-gray-400 font-semibold border-b-2 border-gray-200'>{menuTitle}</label>
+                        {menus ? menus.map((item, index) => <Link href={item.url} className='pl-8 hover:bg-gray-300 transition-all duration-500' key={index}>{item.label}</Link>) : null}
                     </div>
                 )
             }) : null}

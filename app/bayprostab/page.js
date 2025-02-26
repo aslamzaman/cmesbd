@@ -248,23 +248,14 @@ const Bayprostab = () => {
 
             <div className="overflow-auto">
 
-
-              <div className='w-full py-2 flex items-center justify-center space-x-2 border border-gray-200'>
-
-                <div className='w-full flex space-x-2'>
-                  <div className='w-[90px]'>
+              <div className='w-full py-2 flex items-center space-x-2 border border-gray-200'>
+                  <div className='w-[195px]'>
                     <TextNum Title="VatTax(%)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
                   </div>
                   <div className='w-full'>
-                    <TextEn Title="VAT and tax based on item number" Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
+                    <TextEn Title="VAT & TAX based on item nos." Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
                   </div>
-                </div>
-
-               
-                  <button onClick={addVatTaxHandler} className="w-[150px] text-center px-2 py-1.5 mt-5 bg-pink-700 hover:bg-pink-900 text-white font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${Class} cursor-pointer">Add Vat&Tax</button>
-
-             
-
+                <button onClick={addVatTaxHandler} className="w-[250px] text-center px-2 py-1.5 mt-5 bg-pink-700 hover:bg-pink-900 text-white font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${Class} cursor-pointer">Add Vat&Tax</button>
               </div>
 
               <table className="w-full border border-gray-200">
@@ -310,6 +301,7 @@ const Bayprostab = () => {
 
                 </tbody>
               </table>
+
             </div>
 
           </div>
