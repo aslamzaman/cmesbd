@@ -1,5 +1,7 @@
 import React from "react";
 
+
+
 export const BtnEn = ({ Title, Click, Class }) => {
   return (
     <button onClick={Click} className={`text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${Class} cursor-pointer`}>{Title}</button>
@@ -61,7 +63,7 @@ export const TextUn = ({ Title, Id, Change, Value, Chr }) => {
   return (
     <div className="w-full flex flex-col items-start">
       <label className='text-xs font-semibold mb-1 opacity-50' htmlFor={Id}>{Title}</label>
-      <input onChange={Change} value={Value} type="text" id={Id} name={Id} required maxLength={Chr} className="w-full px-4 py-1.5 font-tiroN text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" />
+      <input onChange={Change} value={Value} type="text" id={Id} name={Id} required maxLength={Chr} className={`w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300`} />
     </div>
   )
 }

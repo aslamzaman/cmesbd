@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { BtnSubmit, DropdownEn, TextareaBn, TextDt, TextNum } from "@/components/Form";
+import { TextEn, BtnSubmit, DropdownEn, TextareaBn, TextDt, TextNum } from "@/components/Form";
 import { jsPDF } from "jspdf";
 import Add from "@/components/bayprostabexecution/Add";
 import Edit from "@/components/bayprostabexecution/Edit";
@@ -10,6 +10,7 @@ import { formatedDate } from "@/lib/utils";
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
 import { bayprostabExecutionHelpers, printHeaderFooter, table } from '@/helpers/bayprostabexecutionHelpers';
+import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 
 const Bayprostabexecution = () => {
@@ -30,6 +31,10 @@ const Bayprostabexecution = () => {
   const [total, setTotal] = useState("");
 
 
+  const [vatTax, setVatTax] = useState("");
+  const [vt, setVt] = useState("12.5");
+
+
   useEffect(() => {
     const getData = async () => {
       setWaitMsg("Please wait...");
@@ -41,6 +46,11 @@ const Bayprostabexecution = () => {
         setTotal(data.gt);
         //---------------------------------------------------
         setDt2(formatedDate(new Date()));
+        //-------------VAT and TAX--------------------------------------
+        const locaData = data.localDataWithSubTotal;
+        const pageNumbers = locaData.map(item => (locaData.indexOf(item) + 1)).join(",");
+        setVatTax(pageNumbers);
+
         setWaitMsg("");
       } catch (err) {
         console.log(err);
@@ -81,6 +91,43 @@ const Bayprostabexecution = () => {
   }
 
 
+
+  const addVatTaxHandler = async () => {
+    if (vatTax === "" || vt === "") return false;
+    try {
+      const numbers = vatTax
+        .split(",")
+        .map(item => item.trim())
+        .filter(item => Number(item));
+
+      const uniqueArr = [...new Set(numbers)];
+      console.log(uniqueArr);
+      const indexes = uniqueArr.sort().map(item => (parseInt(item) - 1));
+      const result = bayprostabexecutions.filter(bay => indexes.some(index => parseInt(index) === bayprostabexecutions.indexOf(bay)));
+      const tk = result.reduce((t, c) => t + parseFloat(c.subtotal), 0);
+      const vatTaxPercent = Math.round(tk * (vt / 100));
+      console.log(vatTaxPercent);
+
+      const createObject = () => {
+        return {
+          id: Date.now(),
+          item: `f¨vU Ges U¨v· (${vt}%)`,
+          nos: 1,
+          taka: vatTaxPercent
+        }
+      }
+
+      const newObject = createObject();
+      const msg = await addDataToIndexedDB('bayprostabexecution', newObject);
+      setMsg(msg);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+
+
   return (
     <>
       <div className="w-full mb-3 mt-8">
@@ -116,8 +163,25 @@ const Bayprostabexecution = () => {
           </div>
           <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
             <div className="px-4 lg:px-6 overflow-auto">
+
+
               <p className="w-full text-sm text-red-700">{msg}</p>
               <div className="overflow-auto">
+
+
+                <div className='w-full py-2 flex items-center space-x-2 border border-gray-200'>
+                  <div className='w-[195px]'>
+                    <TextNum Title="VatTax(%)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
+                  </div>
+                  <div className='w-full'>
+                    <TextEn Title="VAT & TAX based on item nos." Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
+                  </div>
+                  <button onClick={addVatTaxHandler} className="w-[250px] text-center px-2 py-1.5 mt-5 bg-pink-700 hover:bg-pink-900 text-white font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${Class} cursor-pointer">Add Vat&Tax</button>
+                </div>
+
+
+
+
                 <table className="w-full border border-gray-200">
                   <thead>
                     <tr className="w-full bg-gray-200">
@@ -137,7 +201,7 @@ const Bayprostabexecution = () => {
                       bayprostabexecutions.length ? bayprostabexecutions.map((bayprostabexecution, i) => {
                         return (
                           <tr className="border-b border-gray-200 hover:bg-gray-100" key={bayprostabexecution.id}>
-                            <td className="text-center py-2 px-4">{i+1}.</td>
+                            <td className="text-center py-2 px-4">{i + 1}.</td>
                             <td className="text-start py-2 px-4 font-sutonnyN">{bayprostabexecution.item}</td>
                             <td className="text-center py-2 px-4">{bayprostabexecution.nos}</td>
                             <td title={bayprostabexecution.subtotal} className="text-center py-2 px-4">{bayprostabexecution.taka}</td>
