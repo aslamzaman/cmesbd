@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 
+
 const MenuData = [
     {
         title: 'Accounts',
@@ -171,52 +172,66 @@ const MenuData = [
 ]
 
 
+
+
 const Home = ({ children }) => {
     const [menu, setMenu] = useState(false);
-const router = useRouter(null);
+    const [menuPos, setMenuPos] = useState("left-[-100vw]");
+
+
+    const router = useRouter(null);
+    const posFull = "left-0 right-0";
+    const posLeft = "left-[-100vw]";
+
 
 
     useEffect(() => {
-
         window.addEventListener("resize", () => setMenu(false));
-
         return () => {
             window.removeEventListener("resize", () => setMenu(false));
         };
 
     }, [])
 
+
+
     const menuCloseHander = () => {
-        setMenu(menu ? false : true);
+        if (menuPos === posFull) {
+            setMenuPos(posLeft);
+        } else {
+            setMenuPos(posFull);
+        }
     }
 
 
 
     const menuHideHandler = (e) => {
         if (e.target.id === 'leftMenu') {
-            setMenu(false);
+            setMenuPos(posLeft);
         }
     }
 
-const manualClickHandler = ()=>{
-    const pw = prompt("Enter password!");
-    if(pw !=='aslam') return false;
-    router.push("/cmesmanual");
-}
+
+
+    const manualClickHandler = () => {
+        const pw = prompt("Enter password!");
+        if (pw !== 'aslam') return false;
+        router.push("/cmesmanual");
+    }
+
+
 
 
     return (
         <>
-
-
             <div id="header" className="fixed h-[60px] left-0 top-0 right-0 px-4 lg:p-6 flex items-center justify-between bg-white border-b-2 border-gray-300 drop-shadow-lg z-50">
-                <div className='flex items-center space-x-3 lg:space-x-0'>
+                <div className='flex items-center justify-center space-x-3 lg:space-x-0'>
                     <div className='block lg:hidden'>
                         <MenuBar click={menuCloseHander} />
                     </div>
-                    <Link href="/" className='flex items-center justify-start space-x-3'>
-                        <Image src='/images/logo/logo.png' alt='Logo' width={256} height={256} className='w-8 h-auto' />
-                        <h1 className='text-start pb-1.5 text-2xl text-blue-600 font-bold uppercase'>cmesbd</h1>
+                    <Link href="/" className='flex items-center justify-start space-x-2'>
+                        <Image src='/images/logo/logo.png' alt='Logo' width={256} height={256} className='w-7 lg:w-8 h-auto' />
+                        <h1 className='text-start text-base lg:text-xl text-blue-600 font-bold uppercase scale-y-150'>cmesbd</h1>
                     </Link>
                 </div>
                 <div className='flex items-center justify-end space-x-4'>
@@ -227,16 +242,12 @@ const manualClickHandler = ()=>{
 
 
 
-
-            {menu ? (<>
-                <div id="leftMenu" onClick={menuHideHandler} className='fixed left-0 top-[60px] right-0 bottom-0 z-40'>
-                    <div className='w-[250px] h-[calc(100vh-60px)] pb-[100px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
-                        <LeftMenu />
-                        <button onClick={manualClickHandler} className='w-full text-start pl-8 hover:bg-gray-300 transition-all duration-500'>CMES Manual</button>
-                    </div>
+            <div id="leftMenu" onClick={menuHideHandler} className={`fixed ${menuPos} top-[60px] bottom-0 transition-all duration-500 z-40`}>
+                <div className='w-[250px] h-[calc(100vh-60px)] pb-[100px] flex flex-col text-sm md:text-base bg-gray-100 border-r-2 border-gray-200 drop-shadow-xl overflow-auto'>
+                    <LeftMenu />
+                    <button onClick={manualClickHandler} className='w-full text-start pl-8 hover:bg-gray-300 transition-all duration-500'>CMES Manual</button>
                 </div>
-            </>) : null}
-
+            </div>
 
 
 
@@ -259,8 +270,10 @@ const manualClickHandler = ()=>{
 export default Home
 
 
-const LeftMenu = () => {
 
+
+
+const LeftMenu = () => {
     return (
         <>
             {MenuData ? MenuData.map((data, i) => {
@@ -283,7 +296,7 @@ const LeftMenu = () => {
 
 
 const MenuBar = ({ click }) => {
-    return <button onClick={click}><svg height="30" width="30" xmlns="http://www.w3.org/2000/svg">
+    return <button onClick={click} className='w-7 h-7 flex item-center'><svg xmlns="http://www.w3.org/2000/svg" fill='none' viewBox='0 0 30 30'>
         <path d="M2 8 L28 8 M2 15 L28 15 M2 22 L28 22"
             className="fill-none stroke-gray-500" style={{ strokeWidth: '4px' }} />
     </svg></button>

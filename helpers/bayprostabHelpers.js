@@ -1,21 +1,22 @@
 import { evaluate } from 'mathjs';
 import { getDataFromIndexedDB } from '@/lib/DatabaseIndexedDB';
 import { formatedDateDot, inwordBangla, numberWithComma, sortArray } from "@/lib/utils";
+import { localStorageAddItem, localStorageGetItem } from '@/lib/DatabaseLocalStorage';
 
 
 export const bayprostabHelpers = async () => {
     try {
-        const [staffs, projects, locaData] = await Promise.all([
+        const [staffs, projects] = await Promise.all([
             getDataFromIndexedDB('staff'),
-            getDataFromIndexedDB('project'),
-            getDataFromIndexedDB('bayprostab')
+            getDataFromIndexedDB('project')
         ]);
         const staffData = staffs.sort((a, b) => sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
         //-----------------------------------------------------------
         const withoutGO = projects.filter(project => project.name !== "GO")
         const projectWithGO = [{ id: 1733394915043, name: "GO" }, ...withoutGO];
         //-------------------------------------------------------
-        const localDataWithSubTotal = locaData.map(bayprostab => {
+        const localStorageData = localStorageGetItem('bayprostab');
+        const localDataWithSubTotal = localStorageData.map(bayprostab => {
             const subtotal = parseFloat(bayprostab.nos) * evaluate(`0+${bayprostab.taka}`);
             return {
                 ...bayprostab, subtotal,
@@ -29,6 +30,59 @@ export const bayprostabHelpers = async () => {
         return {};
     }
 }
+
+
+
+export const addVatTax = (data = [], serial = [], vt = 0) => {
+    try {
+        const filtersData = data.filter((item, i) => serial.some((index) => parseInt(index) === i));
+        const tk = filtersData.reduce((t, c) => t + parseFloat(c.subtotal), 0);
+        const vatTaxPercent = Math.round(tk * (vt / 100));
+
+        const newObject = {
+            id: Date.now(),
+            item: `f¨vU Ges U¨v· (${vt}%)`,
+            nos: 1,
+            taka: vatTaxPercent
+        }
+
+        const msg = localStorageAddItem('bayprostab', newObject);
+        return msg;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
+export const addBkash = (data = [], serial = [], bk = 0, sendCharge = 0) => {
+    try {
+        const filtersData = data.filter((item, i) => serial.some((index) => parseInt(index) === i));
+        const tk = filtersData.reduce((t, c) => t + parseFloat(c.subtotal), 0);
+        const bkashCharge = Math.round(tk * (bk / 1000));
+        const totalSendCharge = filtersData.length * sendCharge;
+
+        const slStr = serial.map(item => (parseInt(item) + 1)).join(",");
+        const newObject = {
+            id: Date.now(),
+            item: `PvR©: (weKvk= ${bk}, †mÛ= ${sendCharge})`,
+            nos: 1,
+            taka: (bkashCharge + totalSendCharge)
+        }
+
+        const msg = localStorageAddItem('bayprostab', newObject);
+        return msg;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
+//---------------------------------------------------------------------
+
+
+
 
 
 export const printCentral = ({ doc, data }) => {

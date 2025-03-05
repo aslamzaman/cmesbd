@@ -5,10 +5,15 @@ import { BtnSubmit, DropdownEn, TextBn, TextEn, TextDt, TextareaBn, TextNum, Btn
 import Add from "@/components/bayprostab/Add";
 import Edit from "@/components/bayprostab/Edit";
 import Delete from "@/components/bayprostab/Delete";
-import { dateAdd, formatedDate } from '@/lib/utils';
+import Download from '@/components/bayprostab/Download';
+import Upload from '@/components/bayprostab/Upload';
+import Plus from '@/components/bayprostab/Plus';
+
+
+import { dateAdd, formatedDate, localStorageRemoveItem } from '@/lib/utils';
 import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
 import { addDataToIndexedDB, deleteKeyFromIndexedDB } from "@/lib/DatabaseIndexedDB";
-import { evaluate } from 'mathjs';
+
 
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
@@ -35,6 +40,8 @@ const Bayprostab = () => {
 
   const [vatTax, setVatTax] = useState("");
   const [vt, setVt] = useState("12.5");
+
+
 
   useEffect(() => {
 
@@ -130,40 +137,11 @@ const Bayprostab = () => {
   }
 
 
-  const addVatTaxHandler = async () => {
-    if (vatTax === "" || vt === "") return false;
-    try {
-      const numbers = vatTax.split(",").map(item => item.trim()).filter(item => Number(item));
-      const uniqueArr = [...new Set(numbers)];
-      console.log(uniqueArr);
-      const indexes = uniqueArr.sort().map(item => (parseInt(item) - 1));
-      const result = bayprostabs.filter(bay => indexes.some(index => parseInt(index) === bayprostabs.indexOf(bay)));
-      const tk = result.reduce((t, c) => t + parseFloat(c.subtotal), 0);
-      const vatTaxPercent = Math.round(tk * (vt / 100));
-      console.log(vatTaxPercent);
 
-      const createObject = () => {
-        return {
-          id: Date.now(),
-          item: `f¨vU Ges U¨v· (${vt}%)`,
-          nos: 1,
-          taka: vatTaxPercent
-        }
-      }
-
-      const newObject = createObject();
-      const msg = await addDataToIndexedDB('bayprostab', newObject);
-      setMsg(msg);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-
-  const clearAllHandler = async () => {
+  const clearAllHandler = () => {
     if (confirm("Be careful! All data will be deleted.")) {
       try {
-        const msg = await deleteKeyFromIndexedDB('bayprostab');
+        const msg = localStorageRemoveItem('bayprostab');
         setMsg(msg);
       } catch (error) {
         console.error(error);
@@ -171,8 +149,6 @@ const Bayprostab = () => {
     } else {
       setMsg("Canceled!");
     }
-
-
   }
 
 
@@ -237,6 +213,8 @@ const Bayprostab = () => {
 
         </div>
 
+
+
         <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
           <div className="px-4 lg:px-6 overflow-auto">
 
@@ -244,19 +222,23 @@ const Bayprostab = () => {
               <BtnEn Title="Clear All" Click={clearAllHandler} Class="bg-fuchsia-200 hover:bg-fuchsia-300 text-black mt-4" />
             </div>
 
-            <p className="w-full text-sm text-red-700">{msg}</p>
 
-            <div className="overflow-auto">
 
-              <div className='w-full py-2 flex items-center space-x-2 border border-gray-200'>
-                  <div className='w-[195px]'>
-                    <TextNum Title="VatTax(%)" Id="vt" Change={e => setVt(e.target.value)} Value={vt} />
-                  </div>
-                  <div className='w-full'>
-                    <TextEn Title="VAT & TAX based on item nos." Id="vatTax" Change={e => setVatTax(e.target.value)} Value={vatTax} />
-                  </div>
-                <button onClick={addVatTaxHandler} className="w-[250px] text-center px-2 py-1.5 mt-5 bg-pink-700 hover:bg-pink-900 text-white font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 ${Class} cursor-pointer">Add Vat&Tax</button>
+
+            <div className="w-full overflow-auto">
+
+              <p className="w-full text-sm text-center text-pink-600">&nbsp;{msg}&nbsp;</p>
+
+              <div className="w-full flex justify-end">
+                <div className="w-auto flex items-center">
+                  <Plus message={messageHandler} data={bayprostabs} />
+                  <Download message={messageHandler} />
+                  <Upload message={messageHandler} />
+                </div>
               </div>
+
+
+
 
               <table className="w-full border border-gray-200">
                 <thead>

@@ -1,12 +1,12 @@
 import React from "react";
-import {  getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageGetItem } from "@/lib/DatabaseLocalStorage";
 
 
 const Download = ({ message }) => {
 
 
-  const downloadHandler = async () => {
-    let localData = await getDataFromIndexedDB("bayprostab");
+  const downloadHandler =  () => {
+    let localData =  localStorageGetItem("bayprostab");
     if (localData) {
       const blob = new Blob([JSON.stringify(localData)], { type: "application/json"});
       const url = URL.createObjectURL(blob);

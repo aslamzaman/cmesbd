@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { BtnSubmit, TextBn, TextEn, TextNum } from "@/components/Form";
-import { updateDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageUpdateItem } from "@/lib/DatabaseLocalStorage";
+
+
 
 const Edit = ({ message, id, data }) => {
     const [item, setItem] = useState('');
@@ -39,7 +41,7 @@ const Edit = ({ message, id, data }) => {
     }
 
 
-    const updateHandler = async (e) => {
+    const updateHandler =  (e) => {
         e.preventDefault();
 
         const extraOperator = taka.slice(- 1);
@@ -50,7 +52,7 @@ const Edit = ({ message, id, data }) => {
 
         try {
             const newObject = createObject();
-            const msg = await updateDataToIndexedDB('bayprostab', id, newObject);
+            const msg =  localStorageUpdateItem('bayprostab', id, newObject);
             message(msg);
         } catch (error) {
             console.error("Error updating bayprostab data:", error);

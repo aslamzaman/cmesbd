@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { BtnSubmit, TextBn, TextEn, TextNum } from "@/components/Form";
-import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageAddItem } from "@/lib/DatabaseLocalStorage";
+
+
 
 const Add = ({ message }) => {
     const [item, setItem] = useState('');
@@ -39,7 +41,7 @@ const Add = ({ message }) => {
     }
 
 
-    const saveHandler = async (e) => {
+    const saveHandler =  (e) => {
         e.preventDefault();
         const extraOperator = taka.slice(- 1);
         if (extraOperator === "+" || extraOperator === "-") {
@@ -49,7 +51,7 @@ const Add = ({ message }) => {
 
         try {
             const newObject = createObject();
-            const msg = await addDataToIndexedDB('bayprostab', newObject);
+            const msg =  localStorageAddItem('bayprostab', newObject);
             message(msg);
         } catch (error) {
             console.error("Error saving bayprostab data:", error);

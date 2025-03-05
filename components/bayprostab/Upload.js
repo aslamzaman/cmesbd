@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { BtnEn } from "../Form";
 import { Close } from "../Icons";
-import {  setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageSetItem } from "@/lib/DatabaseLocalStorage";
+
+
 
 
 const Upload = ({ message }) => {
@@ -13,15 +15,15 @@ const Upload = ({ message }) => {
 
 	const showModal = () => {
 		setShow(true);
-    }
+	}
 
 
 	const uploadHandler = (e) => {
 		if (file) {
 			const reader = new FileReader();
-			reader.onload = (async () => {
+			reader.onload = (() => {
 				let jsonData = JSON.parse(reader.result);
-				await setDataToIndexedDB("bayprostab", jsonData);
+				localStorageSetItem("bayprostab", jsonData);
 				message("Data loaded successfully");
 				setShow(false);
 			})
@@ -62,4 +64,3 @@ const Upload = ({ message }) => {
 }
 export default Upload;
 
-      
