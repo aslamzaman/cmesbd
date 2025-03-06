@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BtnEn, TextEn, TextNum } from "../Form";
 import { Close } from "../Icons";
 
-import { addVatTax, addBkash } from "@/helpers/bayprostabexecutionHelpers";
+import { addVatTax, addBkash } from "@/helpers/bayprostabHelpers";
 
 const Plus = ({ message, data }) => {
 
