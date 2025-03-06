@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { BtnSubmit, TextEn, TextBn, TextNum } from "@/components/Form";
-import { updateDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageUpdateItem } from "@/lib/DatabaseLocalStorage";
+
+
 
 const Edit = ({ message, id, data }) => {
     const [item, setItem] = useState('');
@@ -9,6 +11,8 @@ const Edit = ({ message, id, data }) => {
     const [show, setShow] = useState(false);
 
     const [msg, setMsg] = useState("");
+
+
 
     const showEditForm = () => {
         message("Ready to edit");
@@ -24,9 +28,11 @@ const Edit = ({ message, id, data }) => {
     };
 
 
+
     const closeEditForm = () => {
         setShow(false);
     };
+
 
 
     const createObject = () => {
@@ -39,11 +45,12 @@ const Edit = ({ message, id, data }) => {
     }
 
 
-    const updateHandler = async (e) => {
+
+    const updateHandler = (e) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await updateDataToIndexedDB('bayprostabexecution', id, newObject);
+            const msg =  localStorageUpdateItem('bayprostabexecution', id, newObject);
             message(msg);
         } catch (error) {
             console.error("Error updating bayprostabexecution data:", error);

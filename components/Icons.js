@@ -174,7 +174,7 @@ export const Question = ({ Click, Size }) => {
 
 export const Info = ({ Click, Size }) => {
   return (
-    <button Click={()=>Click()} className={`p-0.5 bg-gray-50 hover:bg-gray-300 ${Size}`}>
+    <button Click={() => Click()} className={`p-0.5 bg-gray-50 hover:bg-gray-300 ${Size}`}>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-full h-full p-[1px] stroke-black">
         <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
       </svg>
@@ -217,4 +217,14 @@ export const Saveas = ({ Click, Size }) => {
 }
 
 
+export const Clear = ({ Click, Size }) => {
+  return (
+    <button title="Clear" onClick={() => Click()} className={`${Size} p-1 bg-white hover:bg-gray-300 rounded-full`}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" strokeWidth="1.5" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2 2 L28 28 M28 2 L2 28" />
+        <circle cx="15" cy="15" r="13" />
+      </svg>
+    </button>
+  )
+}
 

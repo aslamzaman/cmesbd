@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { BtnEn } from "@/components/Form";
-import { deleteDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageDeleteItem } from "@/lib/DatabaseLocalStorage";
+
+
 
 const Delete = ({ message, id, data }) => {
     const [item, setItem] = useState("");
@@ -18,14 +20,16 @@ const Delete = ({ message, id, data }) => {
     }
 
 
+
     const closeDeleteForm = () => {
         setShow(false);
     }
 
 
-    const deleteYesClick =  async  () => {
+
+    const deleteYesClick = () => {
         try {
-            const msg = await deleteDataFromIndexedDB('bayprostabexecution', id);
+            const msg = localStorageDeleteItem('bayprostabexecution', id);
             message(msg);
         } catch (error) {
             console.log(error);
@@ -33,6 +37,7 @@ const Delete = ({ message, id, data }) => {
         }
         setShow(false);
     }
+
 
 
     return (
@@ -59,7 +64,7 @@ const Delete = ({ message, id, data }) => {
 
                                 <h1 className="text-sm text-center text-gray-600 mt-4">
                                     Are you sure to proceed with the deletion?</h1>
-                                <h1 className="text-center text-gray-600 font-bold">{item}</h1>
+                                <h1 className="text-center text-gray-600 font-bold font-sutonnyN">{item}</h1>
                             </div>
                             <div className="w-full flex justify-start">
                                 <BtnEn Title="Close" Click={closeDeleteForm} Class="bg-pink-700 hover:bg-pink-900 text-white mr-1" />
@@ -78,4 +83,4 @@ const Delete = ({ message, id, data }) => {
     )
 }
 export default Delete;
-  
+

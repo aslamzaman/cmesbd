@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { BtnSubmit, TextBn, TextEn, TextNum } from "@/components/Form";
-import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageAddItem } from "@/lib/DatabaseLocalStorage";
+
+
 
 const Add = ({ message }) => {
     const [item, setItem] = useState('');
@@ -17,15 +19,18 @@ const Add = ({ message }) => {
     }
 
 
+
     const showAddForm = () => {
         setShow(true);
         resetVariables();
     }
 
 
+
     const closeAddForm = () => {
         setShow(false);
     }
+
 
 
     const createObject = () => {
@@ -38,11 +43,12 @@ const Add = ({ message }) => {
     }
 
 
-    const saveHandler = async (e) => {
+
+    const saveHandler = (e) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await addDataToIndexedDB('bayprostabexecution', newObject);
+            const msg = localStorageAddItem('bayprostabexecution', newObject);
             message(msg);
         } catch (error) {
             console.error("Error saving bayprostabexecution data:", error);

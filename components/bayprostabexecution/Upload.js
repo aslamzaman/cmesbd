@@ -23,7 +23,7 @@ const Upload = ({ message }) => {
 			const reader = new FileReader();
 			reader.onload = (() => {
 				let jsonData = JSON.parse(reader.result);
-				localStorageSetItem("bayprostab", jsonData);
+				localStorageSetItem("bayprostabexecution", jsonData);
 				message("Data loaded successfully");
 				setShow(false);
 			})

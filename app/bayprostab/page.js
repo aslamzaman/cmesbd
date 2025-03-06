@@ -10,9 +10,10 @@ import Upload from '@/components/bayprostab/Upload';
 import Plus from '@/components/bayprostab/Plus';
 
 
-import { dateAdd, formatedDate, localStorageRemoveItem } from '@/lib/utils';
+import { dateAdd, formatedDate } from '@/lib/utils';
 import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
-import { addDataToIndexedDB, deleteKeyFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageRemoveItem } from "@/lib/DatabaseLocalStorage";
+import { Clear } from '@/components/Icons';
 
 
 require("@/public/fonts/SUTOM_MJ-normal");
@@ -38,9 +39,6 @@ const Bayprostab = () => {
   const [payType, setPayType] = useState("br");
   const [cheque, setCheque] = useState("");
 
-  const [vatTax, setVatTax] = useState("");
-  const [vt, setVt] = useState("12.5");
-
 
 
   useEffect(() => {
@@ -59,8 +57,6 @@ const Bayprostab = () => {
 
         setWaitMsg('');
         setDt(formatedDate(new Date()));
-        const pageNumbers = locaData.map(item => (locaData.indexOf(item) + 1)).join(",");
-        setVatTax(pageNumbers);
       } catch (err) {
         console.error(err);
       }
@@ -154,7 +150,6 @@ const Bayprostab = () => {
 
 
 
-
   return (
     <>
       <div className="w-full mb-3 mt-8">
@@ -216,29 +211,18 @@ const Bayprostab = () => {
 
 
         <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
-          <div className="px-4 lg:px-6 overflow-auto">
-
-            <div className='w-full py-2 flex justify-end'>
-              <BtnEn Title="Clear All" Click={clearAllHandler} Class="bg-fuchsia-200 hover:bg-fuchsia-300 text-black mt-4" />
-            </div>
-
-
-
 
             <div className="w-full overflow-auto">
 
-              <p className="w-full text-sm text-center text-pink-600">&nbsp;{msg}&nbsp;</p>
+              <p className="w-full text-sm text-start text-pink-600">&nbsp;{msg}&nbsp;</p>
 
-              <div className="w-full flex justify-end">
-                <div className="w-auto flex items-center">
-                  <Plus message={messageHandler} data={bayprostabs} />
-                  <Download message={messageHandler} />
-                  <Upload message={messageHandler} />
-                </div>
+
+              <div className="w-auto flex items-center justify-end space-x-1">
+                <Clear Click={clearAllHandler} Size="w-7 h-7" />
+                <Plus message={messageHandler} data={bayprostabs} />
+                <Download message={messageHandler} />
+                <Upload message={messageHandler} />
               </div>
-
-
-
 
               <table className="w-full border border-gray-200">
                 <thead>
@@ -285,8 +269,7 @@ const Bayprostab = () => {
               </table>
 
             </div>
-
-          </div>
+       
         </div>
       </div>
 
