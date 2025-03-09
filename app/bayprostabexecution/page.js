@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { BtnSubmit, DropdownEn, TextareaBn, TextDt, TextNum, BtnEn } from "@/components/Form";
+import { BtnSubmit, DropdownEn, TextareaBn, TextDt, TextNum } from "@/components/Form";
 import { jsPDF } from "jspdf";
 import Add from "@/components/bayprostabexecution/Add";
 import Edit from "@/components/bayprostabexecution/Edit";
@@ -16,7 +16,7 @@ require("@/public/fonts/SUTOM_MJ-bold");
 import { getIndexedDbData, getLocalData, printHeaderFooter, table } from '@/helpers/bayprostabexecutionHelpers';
 import { localStorageRemoveItem } from "@/lib/DatabaseLocalStorage";
 import { Clear } from "@/components/Icons";
-
+import Loading from '@/components/Loading';
 
 
 const Bayprostabexecution = () => {
@@ -26,6 +26,7 @@ const Bayprostabexecution = () => {
 
   const [msg, setMsg] = useState("Data ready");
   const [waitMsg, setWaitMsg] = useState("");
+  const [waitPage, setWaitPage] = useState(false);
 
   const [staff, setStaff] = useState("");
   const [project, setProject] = useState("");
@@ -81,13 +82,13 @@ const Bayprostabexecution = () => {
       setWaitMsg("No data!!");
       return false;
     }
-    setWaitMsg("Please wait...");
+    setWaitPage(true);
     setTimeout(() => {
       const data = { staff, project, dt1, dt2, advance, note, total };
       printHeaderFooter({ doc }, data);
       table({ doc }, bayprostabexecutions);
       doc.save(new Date().toISOString() + "Bayprostab-Execution.pdf");
-      setWaitMsg("");
+      setWaitPage(false);
     }, 0);
   }
 
@@ -105,6 +106,11 @@ const Bayprostabexecution = () => {
     }
   }
 
+
+
+  if (waitPage) {
+    return <Loading message="Please wait" />
+  }
 
 
 

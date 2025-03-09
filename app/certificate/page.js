@@ -6,6 +6,8 @@ require("@/public/fonts/Lobster-Regular-normal");
 require("@/public/fonts/OpenSansCondensed-Light-normal");
 import { BtnSubmit, DropdownEn, TextDt, TextEn, TextPw } from "@/components/Form";
 import { formatedDateSlash, formatedDate } from "@/lib/utils";
+import Loading from '@/components/Loading';
+
 
 
 const jsonDataFromExcelSheet = (file, headerArray) => {
@@ -31,6 +33,8 @@ const Certificate = () => {
     const [dt, setDt] = useState("");
     const [quart, setQuart] = useState("");
     const [msg, setMsg] = useState("Seclect an excel file");
+    const [waitPage, setWaitPage] = useState(false);
+
 
 
     useEffect(() => {
@@ -43,7 +47,7 @@ const Certificate = () => {
             const data = await jsonDataFromExcelSheet(e.target.files[0], ["sl", "name", "trade", "reg"]);
             setStdData(data);
         } catch (err) {
-            console.log("Messages: "+err);
+            console.log("Messages: " + err);
         }
     }
 
@@ -70,6 +74,7 @@ const Certificate = () => {
         });
 
         setMsg("Please wait...");
+        setWaitPage(true);
         //  console.log(stdData);
 
         let i = 0;
@@ -104,13 +109,22 @@ const Certificate = () => {
             if (i >= stdData.length) {
                 clearInterval(myTimer);
                 doc.deletePage((stdData.length + 1));
+                setWaitPage(false);
                 doc.save(Date.now() + ".pdf");
             }
 
         }, 500)
-
-
     }
+
+
+
+
+
+    if (waitPage) {
+        return <Loading message={msg} />
+      }
+    
+    
 
 
     return (

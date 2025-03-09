@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { jsPDF } from "jspdf";
-import { BtnSubmit, DropdownEn, TextBn, TextEn, TextDt, TextareaBn, TextNum, BtnEn } from "@/components/Form";
+import { BtnSubmit, DropdownEn, TextBn, TextEn, TextDt, TextareaBn} from "@/components/Form";
 import Add from "@/components/bayprostab/Add";
 import Edit from "@/components/bayprostab/Edit";
 import Delete from "@/components/bayprostab/Delete";
@@ -14,6 +14,7 @@ import { dateAdd, formatedDate } from '@/lib/utils';
 import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
 import { localStorageRemoveItem } from "@/lib/DatabaseLocalStorage";
 import { Clear } from '@/components/Icons';
+import Loading from '@/components/Loading';
 
 
 require("@/public/fonts/SUTOM_MJ-normal");
@@ -24,6 +25,7 @@ const Bayprostab = () => {
   const [bayprostabs, setBayprostabs] = useState([]);
   const [waitMsg, setWaitMsg] = useState('');
   const [msg, setMsg] = useState("Data ready");
+  const [waitPage, setWaitPage] = useState(false);
 
   const [staffData, setStaffData] = useState([]);
   const [projectData, setProjectData] = useState([]);
@@ -79,7 +81,7 @@ const Bayprostab = () => {
       setWaitMsg("No data found!");
       return false;
     }
-    setWaitMsg("Please wait...");
+    setWaitPage(true);
 
     const doc = new jsPDF({
       orientation: 'p',
@@ -104,6 +106,7 @@ const Bayprostab = () => {
       cheque: cheque
     }
 
+
     setTimeout(() => {
       printCentral({ doc, data });
       tableOne({ doc }, bayprostabs, 101);
@@ -114,20 +117,21 @@ const Bayprostab = () => {
       tableOne({ doc }, bayprostabs, 107);
       paymentComplete({ doc }, data, payType);
 
+
       if (project === 'GO') {
         doc.addPage("a4", "p");
         printGo({ doc, data });
         tableTwo({ doc }, bayprostabs, 77);
       }
 
+
       if (payType === 'br') {
         doc.addPage("a4", "p");
         printBearer({ doc, data });
         bearerTable({ doc }, bayprostabs, 121);
       }
-
       doc.save(new Date().toISOString() + "-Bayprostab.pdf");
-      setWaitMsg("");
+      setWaitPage(false);
     }, 100);
 
   }
@@ -145,6 +149,12 @@ const Bayprostab = () => {
     } else {
       setMsg("Canceled!");
     }
+  }
+
+
+
+  if (waitPage) {
+    return <Loading message="Please wait" />
   }
 
 
@@ -212,64 +222,64 @@ const Bayprostab = () => {
 
         <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
 
-            <div className="w-full overflow-auto">
+          <div className="w-full overflow-auto">
 
-              <p className="w-full text-sm text-start text-pink-600">&nbsp;{msg}&nbsp;</p>
+            <p className="w-full text-sm text-start text-pink-600">&nbsp;{msg}&nbsp;</p>
 
 
-              <div className="w-auto flex items-center justify-end space-x-1">
-                <Clear Click={clearAllHandler} Size="w-7 h-7" />
-                <Plus message={messageHandler} data={bayprostabs} />
-                <Download message={messageHandler} />
-                <Upload message={messageHandler} />
-              </div>
-
-              <table className="w-full border border-gray-200">
-                <thead>
-                  <tr className="w-full bg-gray-200">
-                    <th className="text-center border-b border-gray-200 px-4 py-2">SL</th>
-                    <th className="text-start border-b border-gray-200 px-4 py-2">Item</th>
-                    <th className="text-center border-b border-gray-200 px-4 py-2">Nos</th>
-                    <th className="text-end border-b border-gray-200 px-4 py-2">Taka</th>
-                    <th className="w-[100px] font-normal">
-                      <div className="w-full flex justify-end mt-1 pr-[3px] lg:pr-2">
-                        <Add message={messageHandler} />
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    bayprostabs.length ? bayprostabs.map((bayprostab, i) => {
-                      return (
-                        <tr className="border-b border-gray-200 hover:bg-gray-100" key={bayprostab.id}>
-                          <td className="text-center py-2 px-4">{i + 1}.</td>
-                          <td className="text-start py-2 px-4 font-sutonnyN">{bayprostab.item}</td>
-                          <td className="text-center py-2 px-4">{bayprostab.nos}</td>
-                          <td title={bayprostab.subtotal} className="text-end py-2 px-4">{bayprostab.taka}</td>
-                          <td className="flex justify-end items-center mt-1">
-                            <Edit message={messageHandler} id={bayprostab.id} data={bayprostab} />
-                            <Delete message={messageHandler} id={bayprostab.id} data={bayprostab} />
-                          </td>
-                        </tr>
-                      )
-                    })
-                      : null
-                  }
-
-                  <tr className="border-b border-gray-200 hover:bg-gray-100">
-                    <td className="font-bold"></td>
-                    <td className="text-start py-2 px-4 font-bold">Total</td>
-                    <td></td>
-                    <td className="text-end py-2 px-4 font-bold">{total}</td>
-                    <td></td>
-                  </tr>
-
-                </tbody>
-              </table>
-
+            <div className="w-auto flex items-center justify-end space-x-1">
+              <Clear Click={clearAllHandler} Size="w-7 h-7" />
+              <Plus message={messageHandler} data={bayprostabs} />
+              <Download message={messageHandler} />
+              <Upload message={messageHandler} />
             </div>
-       
+
+            <table className="w-full border border-gray-200">
+              <thead>
+                <tr className="w-full bg-gray-200">
+                  <th className="text-center border-b border-gray-200 px-4 py-2">SL</th>
+                  <th className="text-start border-b border-gray-200 px-4 py-2">Item</th>
+                  <th className="text-center border-b border-gray-200 px-4 py-2">Nos</th>
+                  <th className="text-end border-b border-gray-200 px-4 py-2">Taka</th>
+                  <th className="w-[100px] font-normal">
+                    <div className="w-full flex justify-end mt-1 pr-[3px] lg:pr-2">
+                      <Add message={messageHandler} />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  bayprostabs.length ? bayprostabs.map((bayprostab, i) => {
+                    return (
+                      <tr className="border-b border-gray-200 hover:bg-gray-100" key={bayprostab.id}>
+                        <td className="text-center py-2 px-4">{i + 1}.</td>
+                        <td className="text-start py-2 px-4 font-sutonnyN">{bayprostab.item}</td>
+                        <td className="text-center py-2 px-4">{bayprostab.nos}</td>
+                        <td title={bayprostab.subtotal} className="text-end py-2 px-4">{bayprostab.taka}</td>
+                        <td className="flex justify-end items-center mt-1">
+                          <Edit message={messageHandler} id={bayprostab.id} data={bayprostab} />
+                          <Delete message={messageHandler} id={bayprostab.id} data={bayprostab} />
+                        </td>
+                      </tr>
+                    )
+                  })
+                    : null
+                }
+
+                <tr className="border-b border-gray-200 hover:bg-gray-100">
+                  <td className="font-bold"></td>
+                  <td className="text-start py-2 px-4 font-bold">Total</td>
+                  <td></td>
+                  <td className="text-end py-2 px-4 font-bold">{total}</td>
+                  <td></td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+
         </div>
       </div>
 
