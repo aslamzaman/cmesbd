@@ -6,10 +6,10 @@ import Add from "@/components/tabill/Add";
 import Edit from "@/components/tabill/Edit";
 import Delete from "@/components/tabill/Delete";
 
-import { DropdownEn, TextDt, BtnSubmit, TextNum, TextBn } from "@/components/Form";
+import { DropdownEn, TextDt, BtnSubmit, TextNum } from "@/components/Form";
 
-import { formatedDateDot, inwordBangla, numberWithComma, dateDifferenceInDays, sortArray, formatedDate } from "@/lib/utils";
-import { addDataToIndexedDB, getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { formatedDateDot, inwordBangla, numberWithComma,  sortArray, formatedDate } from "@/lib/utils";
+import {  getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 
 require("@/public/fonts/SUTOM_MJ-normal");

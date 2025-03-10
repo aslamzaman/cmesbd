@@ -73,6 +73,14 @@ const MenuData = [
             {
                 label: 'Staff',
                 url: '/staff'
+            },
+            {
+                label: 'TA Taka',
+                url: '/dalist'
+            },
+            {
+                label: 'DA Taka',
+                url: '/talist'
             }
         ]
     },
