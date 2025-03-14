@@ -5,68 +5,6 @@ import Edit from "@/components/project/Edit";
 import Delete from "@/components/project/Delete";
 import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 
-const projectData = [
-    {
-        "id": "1733759017410",
-        "name": "3rd AC"
-    },
-    {
-        "id": "1733759026418",
-        "name": "3rd AC Field"
-    },
-    {
-        "id": "1733759035922",
-        "name": "CateringField"
-    },
-    {
-        "id": "1733759044330",
-        "name": "COL"
-    },
-    {
-        "id": "1733759053170",
-        "name": "CORE"
-    },
-    {
-        "id": "1733759062450",
-        "name": "EDM"
-    },
-    {
-        "id": "1733759071586",
-        "name": "GO"
-    },
-    {
-        "id": "1733759081058",
-        "name": "IDCOL"
-    },
-    {
-        "id": "1733759089977",
-        "name": "MC"
-    },
-    {
-        "id": "1733759097721",
-        "name": "PLAN"
-    },
-    {
-        "id": "1733759107553",
-        "name": "SDC & SIDA"
-    },
-    {
-        "id": "1733759117345",
-        "name": "Trade AC"
-    },
-    {
-        "id": "1733759125297",
-        "name": "TrustFund"
-    },
-    {
-        "id": "1733759133785",
-        "name": "Unicef"
-    },
-    {
-        "id": "1733759143105",
-        "name": "YSES"
-    }
-]
 
 
 const Project = () => {
@@ -80,12 +18,7 @@ const Project = () => {
             setWaitMsg('Please Wait...');
             try {
                 const data = await getDataFromIndexedDB("project");
-                if (data.length > 0) {
-                    setProjects(data);
-                } else {
-                    await setDataToIndexedDB('project', projectData);
-                    setProjects(projectData);
-                }
+                setProjects(data);
                 setWaitMsg('');
             } catch (error) {
                 console.log(error);

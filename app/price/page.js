@@ -1,65 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Edit from "@/components/price/Edit";
-import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
-
-const priceData = [
-    {
-        "id": "2ihLY7ZNyJgYKT3fO03v",
-        "name": "Rod",
-        "taka": "140"
-    },
-    {
-        "id": "4wIhMnVTz4T63tuiNl5o",
-        "name": "Tiles",
-        "taka": "80"
-    },
-    {
-        "id": "7sr2LdUOcYRCuWzeDvaF",
-        "name": "Labor",
-        "taka": "400"
-    },
-    {
-        "id": "AXc2dF5VYHRVc0KtW5i7",
-        "name": "Brick",
-        "taka": "12"
-    },
-    {
-        "id": "BPdiFFWadoXdzVhBg9tj",
-        "name": "Flatbar",
-        "taka": "120"
-    },
-    {
-        "id": "PoYjiI0qdpXEPpHSvbmx",
-        "name": "Khoa",
-        "taka": "80"
-    },
-    {
-        "id": "SFlvASnMa3RjbPgzz0Tw",
-        "name": "Sand",
-        "taka": "20"
-    },
-    {
-        "id": "SXTILtVdWvOfdubnzuKn",
-        "name": "Mason",
-        "taka": "600"
-    },
-    {
-        "id": "aj4THFRGdOZjs0QNPlrF",
-        "name": "Cement",
-        "taka": "550"
-    },
-    {
-        "id": "mtgAaRyWBPxCOLjBXHn4",
-        "name": "Angel Bar",
-        "taka": "125"
-    },
-    {
-        "id": "s62d8HMIXkC2Wh2CtNVd",
-        "name": "Paint",
-        "taka": "1500"
-    }
-];
+import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
 
 const Price = () => {
     const [prices, setPrices] = useState([]);
@@ -72,12 +14,7 @@ const Price = () => {
             setWaitMsg('Please Wait...');
             try {
                 const data = await getDataFromIndexedDB("price");
-                if (data.length > 0) {
-                    setPrices(data);
-                } else {
-                    await setDataToIndexedDB('price', priceData);
-                    setPrices(priceData);
-                }
+                setPrices(data);
                 setWaitMsg('');
             } catch (error) {
                 console.log(error);
@@ -117,10 +54,10 @@ const Price = () => {
                         </thead>
                         <tbody>
                             {
-                                prices.length ? prices.map((price,i) => {
+                                prices.length ? prices.map((price, i) => {
                                     return (
                                         <tr className="border-b border-gray-200 hover:bg-gray-100" key={price.id}>
-                                            <td className="text-center py-2 px-4">{i+1}</td>
+                                            <td className="text-center py-2 px-4">{i + 1}</td>
                                             <td className="text-start py-2 px-4">{price.name}</td>
                                             <td className="text-center py-2 px-4">{price.taka}</td>
                                             <td className="flex justify-end items-center mt-1">

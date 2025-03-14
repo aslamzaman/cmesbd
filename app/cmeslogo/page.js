@@ -43,12 +43,12 @@ const Cmeslogo = () => {
 
             <div className="w-fit flex space-x-8 mx-auto my-6">
                 <div className="flex flex-col space-y-4">
-                    <p className="text-center text-2xl text-blue-500">PNG</p>
+                    <p className="text-center text-2xl text-blue-500 leading-4">PNG<br /><span className="text-sm">Raster Image</span></p>
                     <Image src="/images/cmes_logo/cmes_logo.png" width={3024} height={4683} alt="cmes_logo" className="w-[200px] h-auto" />
                     <button onClick={btnPng} className="text-center text-md text-blue-500 underline decoration-2">PNG Downlod</button>
                 </div>
                 <div className="flex flex-col space-y-4">
-                    <p className="text-center text-2xl text-blue-500">SVG</p>
+                    <p className="text-center text-2xl text-blue-500 leading-4">SVG<br /><span className="text-sm">Vector Image</span></p>
                     <Image src="/images/cmes_logo/cmes_logo.svg" width={3024} height={4683} alt="cmes_logo" className="w-[200px] h-auto" />
                     <button onClick={btnSvg} className="text-center text-md text-blue-500 underline decoration-2">SVG Downlod</button>
                 </div>
