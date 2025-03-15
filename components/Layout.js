@@ -3,10 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { delay } from '@/lib/utils';
 import { getDataFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
-import { keys } from 'idb-keyval';
-import { forEach } from 'mathjs';
+
 
 const setting = {
     author: [
@@ -780,42 +778,19 @@ const MenuData = [
 
 
 const Home = ({ children }) => {
-    const [menu, setMenu] = useState(false);
     const [menuPos, setMenuPos] = useState("left-[-100vw]");
 
-
+    
     const router = useRouter(null);
     const posFull = "left-0 right-0";
     const posLeft = "left-[-100vw]";
 
 
 
-
-
-    const processData = async () => {
-        try {
-            const athors = await getDataFromIndexedDB('author');
-            if (!athors.length) {
-                console.log(setting);
-                const key = Object.keys(setting);
-                const val = Object.values(setting);
-                key.forEach(async (item, i) => {
-                    await setDataToIndexedDB(item, val[i]);
-                })
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
-
-
     useEffect(() => {
-        processData();
-        window.addEventListener("resize", () => setMenu(false));
+        window.addEventListener("resize", () => setMenuPos(posLeft));
         return () => {
-            window.removeEventListener("resize", () => setMenu(false));
+            window.removeEventListener("resize", () => setMenuPos(posLeft));
         };
 
     }, [])
