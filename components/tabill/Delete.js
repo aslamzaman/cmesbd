@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BtnEn } from "@/components/Form";
-import { deleteDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageDeleteItem } from "@/lib/DatabaseLocalStorage";
+
 
 const Delete = ({ message, id, data }) => {
     const [dt, setDt] = useState("");
@@ -23,9 +24,9 @@ const Delete = ({ message, id, data }) => {
     }
 
 
-    const deleteYesClick =  async  () => {
+    const deleteYesClick = () => {
         try {
-            const msg = await deleteDataFromIndexedDB('tabill', id);
+            const msg = localStorageDeleteItem('tabill', id);
             message(msg);
         } catch (error) {
             console.log(error);
@@ -78,4 +79,4 @@ const Delete = ({ message, id, data }) => {
     )
 }
 export default Delete;
-  
+

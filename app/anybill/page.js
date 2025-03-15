@@ -9,7 +9,7 @@ import { jsPDF } from "jspdf";
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
 import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
-import { inwordBangla, numberWithComma, formatedDate, formatedDateDot, sortArray } from "@/lib/utils";
+import { inwordBangla, numberWithComma, formatedDate, formatedDateDot, sortArray, localStorageGetItem } from "@/lib/utils";
 
 
 const Anybill = () => {
@@ -28,14 +28,11 @@ const Anybill = () => {
         const load = async () => {
             setWaitMsg('Please Wait...');
             try {
-                const [staffData, anybillData] = await Promise.all([
-                    getDataFromIndexedDB('staff'),
-                    getDataFromIndexedDB('anybill')
-                ]);
-                console.log({ staffData, anybillData })
+                const staffData = await  getDataFromIndexedDB('staff');
                 const sortedData = staffData.sort((a, b) => sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
                 setStaffs(sortedData);
                 //--------------------------------------------------------------------
+                const anybillData = localStorageGetItem('anybill');
                 setAnybills(anybillData);
                 //-----------------------------------------------------------------------
                 const grandTotal = anybillData.reduce((t, c) => t + (parseFloat(c.no) * parseFloat(c.taka)), 0);

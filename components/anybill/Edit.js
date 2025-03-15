@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BtnSubmit, TextBn, TextNum } from "@/components/Form";
-import { updateDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageUpdateItem } from "@/lib/DatabaseLocalStorage";
+
 
 const Edit = ({ message, id, data  }) => {
     const [item, setItem] = useState('');
@@ -38,11 +39,11 @@ const Edit = ({ message, id, data  }) => {
     }
 
 
-    const updateHandler = async (e) => {
+    const updateHandler =  (e) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await updateDataToIndexedDB('anybill', id, newObject);
+            const msg = localStorageUpdateItem('anybill', id, newObject);
             message(msg);
         } catch (error) {
             console.error("Error updating anybill data:", error);

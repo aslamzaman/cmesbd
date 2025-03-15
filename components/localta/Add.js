@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BtnSubmit, DropdownBn, TextBn, TextNum } from "@/components/Form";
-import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageAddItem } from "@/lib/DatabaseLocalStorage";
+
 
 const Add = ({ message }) => {
     const [place1, setPlace1] = useState('');
@@ -46,11 +47,11 @@ const Add = ({ message }) => {
     }
 
 
-    const saveHandler = async (e) => {
+    const saveHandler = (e) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await addDataToIndexedDB('localta', newObject);
+            const msg = localStorageAddItem('localta', newObject);
             message(msg);
         } catch (error) {
             console.error("Error saving localta data:", error);
@@ -77,6 +78,7 @@ const Add = ({ message }) => {
                         <div className="px-4 pb-6 text-black">
                             <form onSubmit={saveHandler}>
                                 <div className="grid grid-cols-1 gap-4 my-4">
+                                    <TextBn Title="Start Place (SutonnyMJ)" Id="place1" Change={e => setPlace1(e.target.value)} Value={place1} Chr={150} />
                                     <TextBn Title="Start Time (SutonnyMJ)" Id="t1" Change={e => setT1(e.target.value)} Value={t1} Chr={150} />
                                     <TextBn Title="End Place (SutonnyMJ)" Id="place2" Change={e => setPlace2(e.target.value)} Value={place2} Chr={150} />
                                     <TextBn Title="End Time (SutonnyMJ)" Id="t2" Change={e => setT2(e.target.value)} Value={t2} Chr={150} />

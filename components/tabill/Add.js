@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BtnSubmit, DropdownBn, TextBn, TextDt, TextNum } from "@/components/Form";
-import { addDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
 import { formatedDate } from "@/lib/utils";
+import { localStorageAddItem } from "@/lib/DatabaseLocalStorage";
 
 const Add = ({ message }) => {
     const [dt, setDt] = useState('');
@@ -53,11 +53,11 @@ const Add = ({ message }) => {
     }
 
 
-    const saveHandler = async (e) => {
+    const saveHandler = (e) => {
         e.preventDefault();
         try {
             const newObject = createObject();
-            const msg = await addDataToIndexedDB('tabill', newObject);
+            const msg = localStorageAddItem('tabill', newObject);
             message(msg);
         } catch (error) {
             console.error("Error saving tabill data:", error);

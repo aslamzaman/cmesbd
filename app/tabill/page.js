@@ -8,8 +8,9 @@ import Delete from "@/components/tabill/Delete";
 
 import { DropdownEn, TextDt, BtnSubmit, TextNum } from "@/components/Form";
 
-import { formatedDateDot, inwordBangla, numberWithComma,  sortArray, formatedDate } from "@/lib/utils";
-import {  getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { formatedDateDot, inwordBangla, numberWithComma, sortArray, formatedDate } from "@/lib/utils";
+import { getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageGetItem } from "@/lib/DatabaseLocalStorage";
 
 
 require("@/public/fonts/SUTOM_MJ-normal");
@@ -42,34 +43,18 @@ const Tabill = () => {
         const getData = async () => {
             setWaitMsg('Please Wait...');
             try {
-                const [staffs, projects, tabills] = await Promise.all([
+                const [staffs, projects] = await Promise.all([
                     getDataFromIndexedDB("staff"),
-                    getDataFromIndexedDB("project"),
-                    getDataFromIndexedDB("tabill")
+                    getDataFromIndexedDB("project")
                 ]);
                 const sortedData = staffs.sort((a, b) => sortArray(a.nameEn, b.nameEn));
                 setStaffData(sortedData);
                 setProjectData(projects);
                 //---------------------------------------
-
+                const tabills = localStorageGetItem('tabill');
                 setTabills(tabills);
                 const result = tabills.reduce((t, c) => t + parseFloat(c.taka), 0);
                 setTotal(result);
-                //--------------------------------------------
-                const taDatas = await getValueFromIndexedDB("taData");
-                if (taDatas) {
-                    setStaff(taDatas.staff);
-                    setProject(taDatas.project);
-                    setDt1(formatedDate(taDatas.dt1));
-                    setDa(taDatas.da);
-                    setTotalDay(taDatas.totalDay);
-                } else {
-                    setStaff("");
-                    setProject("");
-                    setDt1(formatedDate(new Date()));
-                    setDa("");
-                    setTotalDay("");
-                }
                 setWaitMsg('');
             } catch (err) {
                 console.log(err);
@@ -222,7 +207,7 @@ const Tabill = () => {
                                                         <td className="text-start py-2 pl-4 font-sutonnyN">{ta.place1} ({ta.tm1})</td>
                                                         <td className="text-start py-2 pl-4 font-sutonnyN">{ta.place2} ({ta.tm2})</td>
                                                         <td className="text-center py-2 font-sutonnyN">{ta.vehicle}</td>
-                                                        <td className="text-end py-2 pr-4 font-sutonnyN">{numberWithComma(ta.taka,false)}/-</td>
+                                                        <td className="text-end py-2 pr-4 font-sutonnyN">{numberWithComma(ta.taka, false)}/-</td>
                                                         <td className="text-start py-2 pl-4 font-sutonnyN">{ta.cause}</td>
                                                         <td className="flex justify-end items-center mt-1">
                                                             <Edit message={msgHandler} id={ta.id} data={ta} />

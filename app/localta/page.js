@@ -8,6 +8,7 @@ import Delete from "@/components/localta/Delete";
 import { DropdownEn, TextDt, TextBn, BtnSubmit, TextNum } from "@/components/Form";
 import { formatedDate, inwordBangla, sortArray } from "@/lib/utils";
 import { getDataFromIndexedDB, getValueFromIndexedDB, setDataToIndexedDB } from "@/lib/DatabaseIndexedDB";
+import { localStorageGetItem } from "@/lib/DatabaseLocalStorage";
 
 require("@/public/fonts/SUTOM_MJ-normal");
 require("@/public/fonts/SUTOM_MJ-bold");
@@ -110,19 +111,11 @@ const Localta = () => {
                 setStaffs(sortedData);
                 setProjectData(projects);
                 //------------------------------------------------------
-                const data = await getDataFromIndexedDB("localta");
+                const data = localStorageGetItem("localta");
                 setLocaltas(data);
                 const result = data.reduce((t, c) => t + parseFloat(c.taka), 0);
                 setTotal(result);
                 //-------------------------------------------
-                const localTaData = await getValueFromIndexedDB('localTaData');
-                if (localTaData) {
-                    setStaff(localTaData.staff);
-                    setProject(localTaData.project);
-                    setSubject(localTaData.subject);
-                    setTk(localTaData.tk);
-                }
-
                 setWaitMsg('');
             } catch (err) {
                 console.log(err);
