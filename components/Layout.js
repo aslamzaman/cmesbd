@@ -717,7 +717,7 @@ const MenuData = [
                 url: '/cmeslogo'
             },
             {
-                label: 'COL Percipant Organize',
+                label: 'COL Participant Organize',
                 url: '/colhelper'
             },
             {
