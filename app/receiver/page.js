@@ -47,14 +47,14 @@ const Receiver = () => {
                     <table className="w-full border border-gray-200">
                         <thead>
                             <tr className="w-full bg-gray-200">
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Identify</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Name</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Bank</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Account</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Branch</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Routing</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">Thana</th>
-                                    <th className="text-center border-b border-gray-200 px-4 py-2">District</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Identify</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Name</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Bank</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Account</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Branch</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Routing</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">Thana</th>
+                                    <th className="text-start border-b border-gray-200 px-4 py-2">District</th>
                                     <th className="text-center border-b border-gray-200 px-4 py-2">Mobile</th>
                                 <th className="w-[100px] font-normal">
                                     <div className="w-full flex justify-end items-center pr-2.5 font-normal">
@@ -68,14 +68,14 @@ const Receiver = () => {
                                 receivers.length ? receivers.map(receiver => {
                                     return (
                                         <tr className="border-b border-gray-200 hover:bg-gray-100" key={receiver.id}>
-                                                <td className="text-center py-2 px-4">{receiver.identify}</td>
-                                                <td className="text-center py-2 px-4">{receiver.name}</td>
-                                                <td className="text-center py-2 px-4">{receiver.bank}</td>
-                                                <td className="text-center py-2 px-4">{receiver.account}</td>
-                                                <td className="text-center py-2 px-4">{receiver.branch}</td>
-                                                <td className="text-center py-2 px-4">{receiver.routing}</td>
-                                                <td className="text-center py-2 px-4">{receiver.thana}</td>
-                                                <td className="text-center py-2 px-4">{receiver.district}</td>
+                                                <td className="text-start py-2 px-4">{receiver.identify}</td>
+                                                <td className="text-start py-2 px-4">{receiver.name}</td>
+                                                <td className="text-start py-2 px-4">{receiver.bank}</td>
+                                                <td className="text-start py-2 px-4">{receiver.account}</td>
+                                                <td className="text-start py-2 px-4">{receiver.branch}</td>
+                                                <td className="text-start py-2 px-4">{receiver.routing}</td>
+                                                <td className="text-start py-2 px-4">{receiver.thana}</td>
+                                                <td className="text-start py-2 px-4">{receiver.district}</td>
                                                 <td className="text-center py-2 px-4">{receiver.mobile}</td>                                            
                                             <td className="flex justify-end items-center mt-1">
                                                 <Edit message={messageHandler} id={receiver.id} data={receiver} />

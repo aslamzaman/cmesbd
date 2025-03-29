@@ -34,13 +34,13 @@ const Dalist = () => {
                 <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
             </div>
 
-            <div className="w-full lg:w-11/12 mx-auto">
+            <div className="w-full overflow-auto border border-gray-400 shadow-lg rounded-lg">
                 <table className="w-full">
                     <thead>
-                        <tr className="border-b border-gray-300">
-                            <th className="text-center">SL</th>
-                            <th className="text-start pl-4">Post</th>
-                            <th className="text-end pr-4">Taka</th>
+                    <tr className="border-b border-gray-300 bg-gray-300">
+                            <th className="py-2 text-center">SL</th>
+                            <th className="py-2 text-start pl-4">Post</th>
+                            <th className="py-2 text-end pr-4">Taka</th>
                         </tr>
                     </thead>
                     <tbody>

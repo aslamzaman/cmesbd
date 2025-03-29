@@ -16,7 +16,7 @@ require("@/public/fonts/SUTOM_MJ-bold");
 import { getIndexedDbData, getLocalData, printHeaderFooter, table } from '@/helpers/bayprostabexecutionHelpers';
 import { localStorageRemoveItem } from "@/lib/DatabaseLocalStorage";
 import { Clear } from "@/components/Icons";
-import Loading from '@/components/Loading';
+import LoadingDot from '@/components/LoadingDot';
 
 
 const Bayprostabexecution = () => {
@@ -108,14 +108,12 @@ const Bayprostabexecution = () => {
 
 
 
-  if (waitPage) {
-    return <Loading message="Please wait" />
-  }
-
-
 
   return (
     <>
+     {waitPage?<LoadingDot message="Please wait" />:null}
+
+     
       <div className="w-full mb-3 mt-8">
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Bayprostab Execution</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>

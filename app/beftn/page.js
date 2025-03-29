@@ -4,10 +4,13 @@ import { jsPDF } from "jspdf";
 import { BtnSubmit, TextDt, TextEn, DropdownEn, TextNum } from "@/components/Form";
 import { formatedDate, formatedDateDot, inwordEnglish, numberWithComma, sortArray, titleCamelCase } from "@/lib/utils";
 import { getDataFromIndexedDB } from "@/lib/DatabaseIndexedDB";
+import LoadingDot from '@/components/LoadingDot';
+
 
 
 const Beftn = () => {
     const [waitMsg, setWaitMsg] = useState("");
+    const [busy, setBusy] = useState(false);
 
 
     const [dt, setDt] = useState('');
@@ -33,7 +36,7 @@ const Beftn = () => {
 
                 setSenders(responseSender);
                 setReceivers(responseReceiver);
-                const sortStaff = responseStaff.sort((a,b)=> sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
+                const sortStaff = responseStaff.sort((a, b) => sortArray(a.nameEn.toUpperCase(), b.nameEn.toUpperCase()));
                 setStaffs(sortStaff);
 
                 console.log({ responseSender, responseReceiver, responseStaff })
@@ -50,11 +53,12 @@ const Beftn = () => {
     const saveHandler = async (e) => {
         e.preventDefault();
         setWaitMsg('Please Wait...');
+        setBusy(true);
         try {
             const sender = senders.find(sender => parseInt(sender.id) === parseInt(senderId));
             const receiver = receivers.find(receiver => parseInt(receiver.id) === parseInt(receiverId));
             const staff = staffs.find(staff => parseInt(staff.id) === parseInt(staffId));
-            console.log({ sender, receiver, staff, senderId, receiverId, staffId});
+            console.log({ sender, receiver, staff, senderId, receiverId, staffId });
 
 
             const doc = new jsPDF({
@@ -67,38 +71,41 @@ const Beftn = () => {
 
             const inW = `${titleCamelCase(inwordEnglish(taka))} Taka Only`;
             let y = 0;
-            if(inW.length > 37){
-                y =100;
-            }else{
+            if (inW.length > 37) {
+                y = 100;
+            } else {
                 y = 104;
             }
-            doc.setFontSize(14);
-            doc.addImage(`/images/accounts/beftn.png`, "PNG", 0, 0, 210, 297 );
-            doc.text(`${branch}`, 112, 37, null, null, "center"); 
-            doc.text(`${formatedDateDot(dt,true)}`, 39, 50, null, null, "left"); 
-            doc.text(`${sender.name}`, 61, 81, null, null, "left"); 
-            doc.text(`${sender.number}`, 61, 88.5, null, null, "left"); 
-            doc.text(`${numberWithComma(taka)}/-`, 61, 94.7, null, null, "left"); 
-            doc.text(`${inW}`, 61, y, { maxWidth: 115, align: 'left' }); 
+            setTimeout(() => {
+                doc.setFontSize(14);
+                doc.addImage(`/images/accounts/beftn.png`, "PNG", 0, 0, 210, 297);
+                doc.text(`${branch}`, 112, 37, null, null, "center");
+                doc.text(`${formatedDateDot(dt, true)}`, 39, 50, null, null, "left");
+                doc.text(`${sender.name}`, 61, 81, null, null, "left");
+                doc.text(`${sender.number}`, 61, 88.5, null, null, "left");
+                doc.text(`${numberWithComma(taka)}/-`, 61, 94.7, null, null, "left");
+                doc.text(`${inW}`, 61, y, { maxWidth: 115, align: 'left' });
 
 
-            doc.text(`${receiver.name}`, 61, 120, null, null, "left"); 
-            doc.text(`${receiver.account}`, 61, 127, null, null, "left"); 
-            doc.text(`${receiver.bank}`, 61, 134.8, null, null, "left"); 
-            doc.text(`${receiver.branch}`, 61, 141.8, null, null, "left"); 
-            doc.text(`${receiver.mobile}`, 149, 141.8, null, null, "left"); 
-            doc.text(`${receiver.routing}`, 61, 147.5, null, null, "left"); 
-            doc.text(`${receiver.thana}`, 61, 153.7, null, null, "left"); 
-            doc.text(`${receiver.district}`, 122, 153.7, null, null, "left"); 
+                doc.text(`${receiver.name}`, 61, 120, null, null, "left");
+                doc.text(`${receiver.account}`, 61, 127, null, null, "left");
+                doc.text(`${receiver.bank}`, 61, 134.8, null, null, "left");
+                doc.text(`${receiver.branch}`, 61, 141.8, null, null, "left");
+                doc.text(`${receiver.mobile}`, 149, 141.8, null, null, "left");
+                doc.text(`${receiver.routing}`, 61, 147.5, null, null, "left");
+                doc.text(`${receiver.thana}`, 61, 153.7, null, null, "left");
+                doc.text(`${receiver.district}`, 122, 153.7, null, null, "left");
 
 
-            doc.text(`${staff.nameEn}`, 82, 197, null, null, "left"); 
-            doc.text(`${staff.mobile}`, 62, 203.5, null, null, "left"); 
-            doc.text(`${staff.address}`, 62, 211, null, null, "left"); 
+                doc.text(`${staff.nameEn}`, 82, 197, null, null, "left");
+                doc.text(`${staff.mobile}`, 62, 203.5, null, null, "left");
+                doc.text(`${staff.address}`, 62, 211, null, null, "left");
 
-            doc.save(Date.now() + ".pdf");
+                doc.save(Date.now() + ".pdf");
 
-            setWaitMsg(' ');
+                setWaitMsg(' ');
+                setBusy(false);
+            }, [100])
         } catch (error) {
             console.error("Error saving beftn data:", error);
         }
@@ -108,6 +115,8 @@ const Beftn = () => {
 
     return (
         <>
+            {busy ? <LoadingDot message="Please wait" /> : null}
+
             <div className="w-full mb-3 mt-8">
                 <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">BEFTN</h1>
                 <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>

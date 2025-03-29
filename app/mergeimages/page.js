@@ -4,6 +4,8 @@ import { BtnSubmit } from "@/components/Form";
 import imageCompression from 'browser-image-compression';
 import { jsPDF } from "jspdf";
 import { delay } from "@/lib/utils";
+import LoadingDot from "@/components/LoadingDot";
+import { del } from "idb-keyval";
 
 
 
@@ -12,6 +14,7 @@ const Mergeimages = () => {
     const [imageDatas, setImageDatas] = useState("");
     const [msg, setMsg] = useState("");
     const [btnPrint, setBtnPrint] = useState(false);
+    const [busy, setBusy] = useState(false);
 
 
     useEffect(() => {
@@ -59,6 +62,7 @@ const Mergeimages = () => {
 
     const fileChangeHandlerImage = async (e) => {
         setBtnPrint(false);
+        setBusy(true);
         setMsg("Please wait. Image compresing and loading...");
         try {
             const files = e.target.files;
@@ -71,7 +75,7 @@ const Mergeimages = () => {
                 const type2 = file.type
                     .split("/")[1]
                     .toUpperCase();
-                console.log(type2);
+                // console.log(type2);
                 return {
                     url: dataUrl,
                     width: imgWidth,
@@ -87,8 +91,10 @@ const Mergeimages = () => {
             const imageData = await Promise.all(imageDataPromises);
             console.log(imageData);
             setImageDatas(imageData);
+            await delay(100);
             setMsg("Ready to creating pdf.");
             setBtnPrint(true);
+            setBusy(false);
         } catch (error) {
             console.error("Error processing images:", error);
         }
@@ -117,6 +123,7 @@ const Mergeimages = () => {
             doc.text("Aslam", 10, 10, null, null, "left");
 
             setMsg("Please wait...");
+            setBusy(true);
             //--------------------------------------------------------------------
             setTimeout(() => {
                 imageDatas.forEach((item) => {
@@ -150,6 +157,7 @@ const Mergeimages = () => {
                 doc.save(`Merges_Photo.pdf`);
                 setMsg("PDF created completed.");
                 setImageDatas([]);
+                setBusy(false);
             }, 100);
 
         } catch (error) {
@@ -163,10 +171,15 @@ const Mergeimages = () => {
 
     return (
         <>
+            {busy ? <LoadingDot message="Please wait. Image compresing and loading" /> : null}
+
+
             <div className="bg-gray-100 py-4 mb-4">
                 <h1 className="text-center text-2xl font-bold text-gray-500">Merge Images to PDF</h1>
                 <h1 className="text-center text-sm lg:text-lg font-bold text-blue-500">{msg}</h1>
             </div>
+
+
             <p className="px-4 text-center text-gray-500">Create a PDF file with multiple images</p>
             <div className="w-full lg:w-10/12 p-4 mx-auto my-4 grid grid-cols-1 border-2 border-gray-400 shadow-lg rounded-lg">
                 <form onSubmit={createPdfHandler}>

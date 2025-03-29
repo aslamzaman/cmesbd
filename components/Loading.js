@@ -1,8 +1,7 @@
 
 const Loading = ({ message }) => {
     return (
-        <div className='fixed inset-0 bg-gray-100 bg-opacity-10 cursor-auto z-10'>
-            <div className='w-[250px] mt-48 mx-auto flex flex-col items-center justify-center space-y-1'>
+        <div className='fixed inset-0 flex flex-col items-center justify-center space-y-1 bg-white cursor-auto z-50'>
                 <div className="w-12 h-12 mx-auto animate-spin">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" className="w-full h-auto stroke-red-500 animate-spine">
                         <circle
@@ -66,10 +65,11 @@ const Loading = ({ message }) => {
                             cy="5.4785972"
                             r="0.25500405" />
                     </svg>
-
                 </div>
+
+
+
                 <p className='w-fit text-center text-sx'>{message} <span className='animate-ping'>...</span></p>
-            </div>
         </div>
     )
 }

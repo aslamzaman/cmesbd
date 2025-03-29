@@ -51,7 +51,7 @@ const Property = () => {
 
 
     return (
-        <div className="w-11/12 md:w-9/12 mx-auto my-10 bg-white border-2 border-gray-300 rounded-md shadow-md duration-300">
+        <div className="w-full my-10 bg-white border-2 border-gray-300 rounded-md shadow-md duration-300">
             <div className="px-6 md:px-6 py-2 flex justify-between items-center border-b border-gray-300">
                 <h1 className="text-xl font-bold text-blue-600">Rajuk Calulator</h1>
             </div>

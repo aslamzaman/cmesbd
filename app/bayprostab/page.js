@@ -14,7 +14,7 @@ import { dateAdd, formatedDate } from '@/lib/utils';
 import { bayprostabHelpers, printCentral, printCompletePlan, printGo, printBearer, tableOne, tableTwo, bearerTable, payment, paymentComplete } from '@/helpers/bayprostabHelpers';
 import { localStorageRemoveItem } from "@/lib/DatabaseLocalStorage";
 import { Clear } from '@/components/Icons';
-import Loading from '@/components/Loading';
+import LoadingDot from '@/components/LoadingDot';
 
 
 require("@/public/fonts/SUTOM_MJ-normal");
@@ -77,11 +77,15 @@ const Bayprostab = () => {
   const handleCreate = (e) => {
     e.preventDefault();
 
+
     if (bayprostabs.length < 1) {
       setWaitMsg("No data found!");
       return false;
     }
+
+
     setWaitPage(true);
+
 
     const doc = new jsPDF({
       orientation: 'p',
@@ -91,6 +95,7 @@ const Bayprostab = () => {
       floatPrecision: 16 // or "smart", default is 16
     });
 
+    
     const data = {
       name: staff,
       project: project,
@@ -153,15 +158,11 @@ const Bayprostab = () => {
 
 
 
-  if (waitPage) {
-    return <Loading message="Please wait" />
-  }
-
-
-
 
   return (
     <>
+     {waitPage?<LoadingDot message="Please wait" />:null}
+
       <div className="w-full mb-3 mt-8">
         <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Bayprostab</h1>
         <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>

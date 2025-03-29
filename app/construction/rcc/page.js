@@ -110,7 +110,7 @@ const Rccwork = () => {
 
 
     return (
-        <div className="w-full md:w-9/12 mx-auto my-10 bg-white border-2 border-gray-300 rounded-md shadow-md duration-300">
+        <div className="w-full my-10 bg-white border-2 border-gray-300 rounded-md shadow-md duration-300">
             <div className="py-2 border-b border-gray-300">
                 <h1 className="text-center text-xl font-bold text-blue-600">RCC Works</h1>
                 <p className="text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>

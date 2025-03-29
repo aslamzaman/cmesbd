@@ -82,7 +82,7 @@ const Brickflatsolling = () => {
 
     return (
 
-        <div className="w-full md:w-1/2 mx-auto my-10 border-2 border-gray-300 rounded-md shadow-md duration-300">
+        <div className="w-full my-10 border-2 border-gray-300 rounded-md shadow-md duration-300">
 
             <div className="py-2 border-b border-gray-300">
                 <h1 className="text-center text-xl font-bold text-blue-600">Brick Flat Solling</h1>

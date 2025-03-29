@@ -188,7 +188,7 @@ const Localta = () => {
                 <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
             </div>
 
-            <div className="px-4 lg:px-6">
+            <div className="px-4">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-x-4">
                     <div className="w-full border-2 p-4 shadow-md rounded-md">
                         <form onSubmit={handleCreate}>
