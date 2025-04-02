@@ -1,38 +1,82 @@
 "use client";
-import React from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from "react";
+import { BtnSubmit, TextEn, TextPw } from "@/components/Form";
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebaseConfig";
+import { collection, getDocs } from 'firebase/firestore';
 
 
-const Home = ({ children }) => {
+
+
+export default function Home() {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState("");
+  const [pw, setPw] = useState("");
+  const [msg, setMsg] = useState("");
+
+  const router = useRouter();
+
+
+
+  useEffect(() => {
+    const load = async () => {
+      setMsg('Please wait...');
+      try {
+        const collectionRef = collection(db, 'user');
+        const querySnapshot = await getDocs(collectionRef);
+        const data = querySnapshot.docs.map(doc => {
+          return {
+            id: doc.id,
+            ...doc.data()
+          }
+        })
+      //  console.log(data);
+        setUsers(data);
+        setMsg('');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    load();
+  }, [])
+
+
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const findUser = users.find(item => item.userName === user && item.password === pw);
+    if (findUser) {
+      sessionStorage.setItem('user', findUser.id);
+      router.push('/dashboard');
+     // console.log(findUser);
+    } else {
+      setMsg('User name or password not match!')
+      router.push('/');
+    }
+
+  };
+
+
+
+
 
   return (
-    <div className="w-full lg:w-11/12 mx-auto">
-      <div className='w-full py-8 lg:py-12'>
-        <h1 className='text-center text-3xl font-bold text-gray-400'>Dashboard</h1>
-      </div>
-      <div className='w-full max-auto grid grid-cols-2 lg:grid-cols-4 gap-6'>
-        <ContentBlock title="Bayprostab" link="/bayprostab" color="bg-blue-800 hover:bg-blue-600" />
-        <ContentBlock title="Bayprostab Execution" link="/bayprostabexecution" color="bg-green-800 hover:bg-green-600" />
-        <ContentBlock title="Local TA" link="/localta" color="bg-purple-800 hover:bg-purple-600" />
-        <ContentBlock title="VAT and TAX Calculation" link="/vattax" color="bg-pink-800 hover:bg-pink-600" />
-        <ContentBlock title="Bank Challan Check" link="/challancheck" color="bg-gray-800 hover:bg-gray-600" />
-        <ContentBlock title="Formats" link="/format" color="bg-yellow-800 hover:bg-yellow-600" />
-        <ContentBlock title="Area Converter" link="/landareaconverter" color="bg-indigo-800 hover:bg-indigo-600" />
-        <ContentBlock title="Leave Application" link="/leave" color="bg-red-800 hover:bg-red-600" />
+    <div className="w-scree h-screen p-4 flex items-center justify-center">
+      <div className="w-full lg:w-1/2 border-2 border-gray-300 rounded-lg shadow-lg">
+        <div className="w-full border-b-2">
+          <h1 className="py-3 text-center text-2xl font-bold">Log In</h1>
+        </div>
+        <div className="px-4 py-6">
+          <p className="py-2 text-center text-red-500">{msg}</p>
+          <form onSubmit={submitHandler}>
+            <div className="grid grid-cols-1 gap-4">
+              <TextEn Title="User Name" Id="user" Change={e => setUser(e.target.value)} Value={user} Chr={50} />
+              <TextPw Title="Password" Id="pw" Change={e => setPw(e.target.value)} Value={pw} Chr={50} />
+            </div>
+            <BtnSubmit Title="Login" Class="bg-blue-600 hover:bg-blue-800 text-white" />
+          </form>
+        </div>
       </div>
     </div>
-  )
-
+  );
 }
-
-export default Home;
-
-
-const ContentBlock = ({ title, link, color }) => {
-  return <Link href={link} className={`w-[150px] h-[150px] mx-auto flex items-center justify-center text-center px-4 py-4 font-bold text-white rounded-full ring-2 ring-blue-300 ring-offset-4 duration-300 ${color} cursor-pointer`}>
-    {title}
-  </Link>
-}
-
-
-
