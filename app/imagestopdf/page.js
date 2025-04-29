@@ -99,7 +99,7 @@ const Imagestopdf = () => {
         }
 
         try {
-            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP', 'HQ'];
+            const unit = ['', 'SRJ', 'DEUTY', 'DAM', 'JAL', 'NDR', 'RNB', 'JNP', 'GOB', 'KHT', 'HQ'];
             const doc = new jsPDF({
                 orientation: 'landscape',
                 unit: 'px',
