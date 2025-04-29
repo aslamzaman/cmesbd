@@ -183,6 +183,7 @@ const Imagestopdf = () => {
                         </DropdownEn>
 
                         <DropdownEn Title="Year" Id="yr" Change={e => setYr(e.target.value)} Value={yr}>
+                            <option value="Y1">Y1</option>
                             <option value="Y2">Y2</option>
                             <option value="Y3">Y3</option>
                             <option value="Y4">Y4</option>
