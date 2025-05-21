@@ -175,6 +175,10 @@ const MenuData = [
                 label: 'Experience Certificate',
                 url: '/experiencecertificate'
             },
+             {
+                label: 'CMES Logo',
+                url: '/cmeslogo'
+            },
         ]
     }
 ]
