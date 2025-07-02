@@ -146,6 +146,9 @@ const Certificate = () => {
                             <option value="2">Qurter-2</option>
                             <option value="3">Qurter-3</option>
                             <option value="4">Qurter-4</option>
+                             <option value="5">Qurter-1/2024</option>
+                            <option value="6">Qurter-2/2024</option>
+                            <option value="7">Qurter-3/2024</option>
                         </DropdownEn>
                         <TextDt Title="Certificate Issue Date" Id="dt" Change={(e) => { setDt(e.target.value) }} Value={dt} />
                     </div>
