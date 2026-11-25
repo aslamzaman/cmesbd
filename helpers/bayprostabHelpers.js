@@ -22,7 +22,7 @@ export const bayprostabHelpers = async () => {
                 ...bayprostab, subtotal,
                 evalTaka: evaluate(`0+${bayprostab.taka}`)
             }
-        })
+        })        
         const gt = localDataWithSubTotal.reduce((t, c) => t + parseFloat(c.subtotal), 0);
         return { staffData, projectWithGO, gt, localDataWithSubTotal };
     } catch (error) {
@@ -177,14 +177,14 @@ export const tableOne = ({ doc }, db, y) => {
     doc.setFontSize(14);
     for (let i = 0; i < db.length; i++) {
         const no = parseFloat(db[i].nos);
-        const tk = parseFloat(db[i].evalTaka);
+        const tk = parseFloat(db[i].evalTaka);        
         const line = doc.splitTextToSize(`${db[i].item}`, 55);
         doc.text("-", 12, y, { maxWidth: 55, align: 'left' });
         doc.text(line, 14.3, y, { maxWidth: 55, align: 'left' });
         doc.text(`${numberWithComma(db[i].subtotal, false)}/-`, 131.5, y, null, null, 'right');
 
         if (no > 1) {
-            doc.text(`${numberWithComma(tk, false)}/-`, 90.5, y, null, null, 'right');
+            doc.text(`${numberWithComma(tk, true)}/-`, 90.5, y, null, null, 'right');
             doc.text(`${no}`, 102, y, null, null, 'center');
         } else {
             doc.text("-", 80.7, y, null, null, 'center');
@@ -204,7 +204,7 @@ export const tableTwo = ({ doc }, db, y) => {
         doc.text(`${i + 1}.`, 19, y, null, null, 'center');
         const line = doc.splitTextToSize(`${db[i].item}`, 74);
         doc.text(line, 31, y, { maxWidth: 74, align: 'left' });
-        doc.text(`${numberWithComma(db[i].subtotal, false)}/-`, 131, y, null, null, 'right');
+        doc.text(`${numberWithComma(db[i].subtotal, true)}/-`, 131, y, null, null, 'right');
         const lineNumber = line.length;
         y += lineNumber * 6;
     }
