@@ -184,7 +184,7 @@ export const tableOne = ({ doc }, db, y) => {
         doc.text(`${numberWithComma(db[i].subtotal, false)}/-`, 131.5, y, null, null, 'right');
 
         if (no > 1) {
-            doc.text(`${numberWithComma(tk, true)}/-`, 90.5, y, null, null, 'right');
+            doc.text(`${numberWithComma(tk, true)}`, 90.5, y, null, null, 'right');
             doc.text(`${no}`, 102, y, null, null, 'center');
         } else {
             doc.text("-", 80.7, y, null, null, 'center');
