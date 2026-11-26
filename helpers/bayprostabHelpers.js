@@ -204,7 +204,7 @@ export const tableTwo = ({ doc }, db, y) => {
         doc.text(`${i + 1}.`, 19, y, null, null, 'center');
         const line = doc.splitTextToSize(`${db[i].item}`, 74);
         doc.text(line, 31, y, { maxWidth: 74, align: 'left' });
-        doc.text(`${numberWithComma(db[i].subtotal, true)}/-`, 131, y, null, null, 'right');
+        doc.text(`${numberWithComma(db[i].subtotal, true)}`, 131, y, null, null, 'right');
         const lineNumber = line.length;
         y += lineNumber * 6;
     }
